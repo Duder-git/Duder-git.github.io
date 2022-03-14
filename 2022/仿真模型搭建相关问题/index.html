@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+    <head>
+    <meta http-equiv="content-type" content="text/html;charset=utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noodp"/>
+    <meta name="author" content="Duder">
+    <meta name="description" content="About my study and work">
+    <meta name="keywords" content="Blog">
+    
+    
+    <link rel="next" href="https://duder-git.github.io/2022/test/" />
+    <link rel="canonical" href="https://duder-git.github.io/2022/%E4%BB%BF%E7%9C%9F%E6%A8%A1%E5%9E%8B%E6%90%AD%E5%BB%BA%E7%9B%B8%E5%85%B3%E9%97%AE%E9%A2%98/" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    <link rel="manifest" href="/site.webmanifest">
+    <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+    <meta name="msapplication-TileColor" content="#da532c">
+    <meta name="theme-color" content="#ffffff">
+    <title>
+        
+        
+            仿真模型搭建相关问题 | Duder`s Blog
+        
+    </title>
+    <meta name="title" content="仿真模型搭建相关问题 | Duder`s Blog">
+    
+<link rel="stylesheet" href="/css/main.min.css">
+
+
+    
+    
+ 
+
+<script type="application/ld+json">
+{
+    "@context" : "http://schema.org",
+    "@type" : "BlogPosting",
+    "mainEntityOfPage": {
+         "@type": "WebPage",
+         "@id": "https:\/\/duder-git.github.io"
+    },
+    "articleSection" : "posts",
+    "name" : "仿真模型搭建相关问题",
+    "headline" : "仿真模型搭建相关问题",
+    "description" : "仿真模型搭建相关问题 1. comsol仿真 1.1 线圈命名 以聚焦线圈 接收线圈 驱动线圈等 \u002b x y z等表示方向1 2 3 等表示个数，沿轴方向逆序 举例：位于x轴正",
+    "inLanguage" : "zh-cn",
+    "author" : "Duder",
+    "creator" : "Duder",
+    "publisher": "Duder",
+    "accountablePerson" : "Duder",
+    "copyrightHolder" : "Duder",
+    "copyrightYear" : "2022",
+    "datePublished": "2022-03-14 21:14:35 \u002b0800 CST",
+    "dateModified" : "2022-03-14 21:14:35 \u002b0800 CST",
+    "url" : "https:\/\/duder-git.github.io\/2022\/%E4%BB%BF%E7%9C%9F%E6%A8%A1%E5%9E%8B%E6%90%AD%E5%BB%BA%E7%9B%B8%E5%85%B3%E9%97%AE%E9%A2%98\/",
+    "wordCount" : "199",
+    "keywords" : [  "Duder`s Blog"]
+}
+</script>
+
+  </head>
+    <body class="">
+        <div class="wrapper">
+            <nav class="navbar">
+    
+        <progress class="content_progress" max="0" value="0"></progress>
+    
+    <div class="container">
+        
+            <div class="navbar-header header-back2home-logo">
+                <span class="logo_mark" >>$</span>
+                <a href="https://duder-git.github.io">
+                    <span class="logo_text" >cd /home/</span>
+                    <span class="logo_cursor" ></span>
+                </a>
+            </div>
+        
+        <div class="navbar-right">
+                
+                <span class="menu">
+                
+                <a class="menu-item" href="/posts/" title="">Blog</a>
+                
+                <a class="menu-item" href="/categories/" title="">Categories</a>
+                
+                <a class="menu-item" href="/tags/" title="">Tags</a>
+                
+                <a class="menu-item" href="/about/" title="">About</a>
+                
+                <span class="divide"></span>
+                <a href="javascript:void(0);" class="theme-switch"><i class="iconfont icon-dark-mode"></i></a>
+                </span>
+        </div>
+    </div>
+</nav>
+<nav class="navbar-mobile" id="nav-mobile" style="display: none">
+    
+        <progress class="content_progress" max="0" value="0"></progress>
+    
+     <div class="container">
+        <div class="navbar">
+            <div class="navbar-header header-logo">
+                    <a href="https://duder-git.github.io">Duder`s Blog</a>
+            </div>
+            <div class="navbar-right">
+                <div><a href="javascript:void(0);" class="theme-switch"><i class="iconfont icon-dark-mode"></i></a></div>
+                <div class="menu-toggle">
+                    <span></span><span></span><span></span>
+                </div>
+            </div>
+        </div>
+     
+          <div class="menu" id="mobile-menu">
+                <nav class="mb-md">
+                    
+                    
+                        <a class="menu-item" href="/posts/" title="">
+                            <h3>Blog</h3>
+                            <div class="menu-active"></div>
+                        </a>
+                    
+                        <a class="menu-item" href="/categories/" title="">
+                            <h3>Categories</h3>
+                            <div class="menu-active"></div>
+                        </a>
+                    
+                        <a class="menu-item" href="/tags/" title="">
+                            <h3>Tags</h3>
+                            <div class="menu-active"></div>
+                        </a>
+                    
+                        <a class="menu-item" href="/about/" title="">
+                            <h3>About</h3>
+                            <div class="menu-active"></div>
+                        </a>
+                    
+                </nav>
+        </div>
+    </div>
+</nav>
+            <main class="main">
+                <div class="container">
+                    
+<article class="post-warp" itemscope itemtype="http://schema.org/Article">
+    <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">仿真模型搭建相关问题</h1>
+        <div class="post-meta">
+                Written by <a itemprop="name" href="https://duder-git.github.io" rel="author">Duder</a> with ♥
+                <span class="post-time">
+                on <time datetime=2022-03-14 itemprop="datePublished">March 14, 2022</time>
+                </span>
+                in
+                
+                <span class="post-word-count">199 words</span>
+        </div>
+    </header>
+
+    <div class="post-content">
+        
+
+        
+        
+            
+        
+
+        
+        
+        
+        
+        
+
+        
+        
+        
+
+        <h1 id="仿真模型搭建相关问题">仿真模型搭建相关问题</h1>
+<h2 id="1-comsol仿真">1. comsol仿真</h2>
+<h3 id="11-线圈命名">1.1 线圈命名</h3>
+<p>以<code>聚焦线圈</code> <code>接收线圈</code> <code>驱动线圈</code>等 + <code>x</code> <code>y</code> <code>z</code>等表示方向<code>1</code> <code>2</code> <code>3</code> 等表示个数，沿轴方向逆序</p>
+<p>举例：位于x轴正方向的聚焦线圈组命名为<code>聚焦线圈 x1</code></p>
+<p><img src="https://s2.loli.net/2022/03/14/DdPA9blHcagMxsT.png" alt="image-20220216104216162" loading="lazy" ></p>
+<p><img src="https://s2.loli.net/2022/03/14/i8lbJRdjGvcam9L.png" alt="image-20220216104341460" loading="lazy" ></p>
+<h3 id="12-文件命名">1.2 文件命名</h3>
+<p>改动后命名与原文件保持相似 通过添加日期或者其他数字表示区分</p>
+<h2 id="2-结构设计">2. 结构设计</h2>
+<h2 id="21-参数列表">2.1 参数列表</h2>
+<p>应包含外径内径厚度距离等参数</p>
+<p>如不想写可以直接发comsol仿真模型</p>
+<table>
+<thead>
+<tr>
+<th>线圈名称</th>
+<th>内径</th>
+<th>外径</th>
+<th>厚度</th>
+<th>距离</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h3 id="22-有重叠">2.2 有重叠</h3>
+<p>这是不是意味着达不到30*30的成像空间</p>
+<p><img src="https://s2.loli.net/2022/03/14/eIOEC6PWhBgMJdr.png" alt="image-20220214173408186" loading="lazy" ></p>
+
+    </div>
+
+    <div class="post-copyright">
+            
+            <p class="copyright-item">
+                <span>Author:</span>
+                <span>Duder </span>
+                </p>
+            
+
+            
+            <p class="copyright-item">
+                    <span>Link:</span>
+                    <a href=https://duder-git.github.io/2022/%E4%BB%BF%E7%9C%9F%E6%A8%A1%E5%9E%8B%E6%90%AD%E5%BB%BA%E7%9B%B8%E5%85%B3%E9%97%AE%E9%A2%98/>https://duder-git.github.io/2022/%E4%BB%BF%E7%9C%9F%E6%A8%A1%E5%9E%8B%E6%90%AD%E5%BB%BA%E7%9B%B8%E5%85%B3%E9%97%AE%E9%A2%98/</span>
+            </p>
+            
+            
+            <p class="copyright-item lincese">
+                本文采用<a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/" target="_blank">知识共享署名-非商业性使用 4.0 国际许可协议</a>进行许可
+            </p>
+            
+    </div>
+
+
+    <div class="post-tags">
+        
+        <section>
+                <a href="javascript:window.history.back();">back</a></span> ·
+                <span><a href="https://duder-git.github.io">home</a></span>
+        </section>
+    </div>
+
+    <div class="post-nav">
+        
+        
+        <a href="https://duder-git.github.io/2022/test/" class="next" rel="next" title="test">test&nbsp;<i class="iconfont icon-right"></i></a>
+        
+    </div>
+
+    <div class="post-comment">
+        
+            
+                <div id="gitalk-container"></div>
+<link rel="stylesheet" href="https://cdn.bootcss.com/gitalk/1.5.2/gitalk.css">
+<script src="https://cdn.bootcss.com/gitalk/1.5.2/gitalk.min.js"></script>
+<script>
+    const gitalk = new Gitalk({
+
+        clientID: '',
+        clientSecret: '',
+        repo: '',
+        owner: '',
+        admin: [''],
+        id: location.pathname, 
+        distractionFreeMode: false 
+    });
+    (function () {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('gitalk-container').innerHTML = 'Gitalk comments not available by default when the website is previewed locally.';
+            return;
+        }
+        gitalk.render('gitalk-container');
+    })();
+</script>
+
+            
+        
+    </div>
+</article>
+                </div>
+            </main>
+            <footer class="footer">
+    <div class="copyright">
+        &copy;
+        
+        <span class="with-love">
+    	 <i class="iconfont icon-love"></i>
+         </span>
+         
+            <span class="author" itemprop="copyrightHolder"><a href="https://duder-git.github.io">Duder</a> | </span>
+         
+
+         
+		  <span>Powered by <a href="https://gohugo.io/" target="_blank" rel="external nofollow">Hugo</a> & <a href="https://github.com/Mogeko/Mogege" target="_blank" rel="external nofollow">Mogege</a></span>
+    </div>
+</footer>
+
+
+
+
+
+
+<script defer src="/js/vendor_main.min.js"></script>
+
+
+
+
+
+
+
+<script src="https://cdn.jsdelivr.net/npm/pangu@4.0.7/dist/browser/pangu.min.js" integrity="sha256-j+yj56cdEY2CwkVtGyz18fNybFGpMGJ8JxG3GSyO2+I=" crossorigin="anonymous"></script>
+<script> pangu.spacingPage();</script>
+
+
+
+
+
+        </div>
+    </body>
+</html>
