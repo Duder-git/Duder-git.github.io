@@ -22,7 +22,7 @@
       <pubDate>Mon, 14 Mar 2022 21:14:35 +0800</pubDate>
       
       <guid>https://duder-git.github.io/2022/%E4%BB%BF%E7%9C%9F%E6%A8%A1%E5%9E%8B%E6%90%AD%E5%BB%BA%E7%9B%B8%E5%85%B3%E9%97%AE%E9%A2%98/</guid>
-      <description>仿真模型搭建相关问题 1. comsol仿真 1.1 线圈命名 以聚焦线圈 接收线圈 驱动线圈等 + x y z等表示方向1 2 3 等表示个数，沿轴方向逆序 举例：位于x轴正</description>
+      <description>1. comsol仿真 1.1 线圈命名 以聚焦线圈 接收线圈 驱动线圈等 + x y z等表示方向1 2 3 等表示个数，沿轴方向逆序 举例：位于x轴正方向的聚焦线圈组命名</description>
     </item>
     
   </channel>
