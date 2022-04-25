@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+    <head>
+    <meta http-equiv="content-type" content="text/html;charset=utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noodp"/>
+    <meta name="author" content="Duder">
+    <meta name="description" content="About my study and work">
+    <meta name="keywords" content="Blog">
+    
+    <link rel="prev" href="https://duder-git.github.io/about/" />
+    <link rel="next" href="https://duder-git.github.io/%E5%89%8D%E5%90%91%E6%8A%95%E5%BD%B1%E7%9A%84%E8%A7%A3%E6%9E%90%E8%AE%A1%E7%AE%97/" />
+    <link rel="canonical" href="https://duder-git.github.io/%E5%9B%BE%E5%83%8F%E8%AF%BB%E5%8F%96%E4%B8%8E%E6%98%BE%E7%A4%BA/" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    <link rel="manifest" href="/site.webmanifest">
+    <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+    <meta name="msapplication-TileColor" content="#da532c">
+    <meta name="theme-color" content="#ffffff">
+    <title>
+        
+        
+            图像读取于显示 | Duder`s Blog
+        
+    </title>
+    <meta name="title" content="图像读取于显示 | Duder`s Blog">
+    
+<link rel="stylesheet" href="/css/main.min.css">
+
+
+    
+    
+ 
+
+<script type="application/ld+json">
+{
+    "@context" : "http://schema.org",
+    "@type" : "BlogPosting",
+    "mainEntityOfPage": {
+         "@type": "WebPage",
+         "@id": "https:\/\/duder-git.github.io"
+    },
+    "articleSection" : "",
+    "name" : "图像读取于显示",
+    "headline" : "图像读取于显示",
+    "description" : "图像读取与显示 读取并显示raw格式文件 已知文件data1.raw是按照裸数据的形式保存的一张图片，图像大小512×512，像素存储的数据类型",
+    "inLanguage" : "zh-cn",
+    "author" : "Duder",
+    "creator" : "Duder",
+    "publisher": "Duder",
+    "accountablePerson" : "Duder",
+    "copyrightHolder" : "Duder",
+    "copyrightYear" : "2022",
+    "datePublished": "2022-04-25 21:23:18 \u002b0800 CST",
+    "dateModified" : "2022-04-25 21:23:18 \u002b0800 CST",
+    "url" : "https:\/\/duder-git.github.io\/%E5%9B%BE%E5%83%8F%E8%AF%BB%E5%8F%96%E4%B8%8E%E6%98%BE%E7%A4%BA\/",
+    "wordCount" : "767",
+    "keywords" : [ "MATLAB", "Duder`s Blog"]
+}
+</script>
+
+  </head>
+    <body class="">
+        <div class="wrapper">
+            <nav class="navbar">
+    
+        <progress class="content_progress" max="0" value="0"></progress>
+    
+    <div class="container">
+        
+            <div class="navbar-header header-back2home-logo">
+                <span class="logo_mark" >>$</span>
+                <a href="https://duder-git.github.io">
+                    <span class="logo_text" >cd /home/</span>
+                    <span class="logo_cursor" ></span>
+                </a>
+            </div>
+        
+        <div class="navbar-right">
+                
+                <span class="menu">
+                
+                <a class="menu-item" href="/posts/" title="">Blog</a>
+                
+                <a class="menu-item" href="/categories/" title="">Categories</a>
+                
+                <a class="menu-item" href="/tags/" title="">Tags</a>
+                
+                <a class="menu-item" href="/about/" title="">About</a>
+                
+                <span class="divide"></span>
+                <a href="javascript:void(0);" class="theme-switch"><i class="iconfont icon-dark-mode"></i></a>
+                </span>
+        </div>
+    </div>
+</nav>
+<nav class="navbar-mobile" id="nav-mobile" style="display: none">
+    
+        <progress class="content_progress" max="0" value="0"></progress>
+    
+     <div class="container">
+        <div class="navbar">
+            <div class="navbar-header header-logo">
+                    <a href="https://duder-git.github.io">Duder`s Blog</a>
+            </div>
+            <div class="navbar-right">
+                <div><a href="javascript:void(0);" class="theme-switch"><i class="iconfont icon-dark-mode"></i></a></div>
+                <div class="menu-toggle">
+                    <span></span><span></span><span></span>
+                </div>
+            </div>
+        </div>
+     
+          <div class="menu" id="mobile-menu">
+                <nav class="mb-md">
+                    
+                    
+                        <a class="menu-item" href="/posts/" title="">
+                            <h3>Blog</h3>
+                            <div class="menu-active"></div>
+                        </a>
+                    
+                        <a class="menu-item" href="/categories/" title="">
+                            <h3>Categories</h3>
+                            <div class="menu-active"></div>
+                        </a>
+                    
+                        <a class="menu-item" href="/tags/" title="">
+                            <h3>Tags</h3>
+                            <div class="menu-active"></div>
+                        </a>
+                    
+                        <a class="menu-item" href="/about/" title="">
+                            <h3>About</h3>
+                            <div class="menu-active"></div>
+                        </a>
+                    
+                </nav>
+        </div>
+    </div>
+</nav>
+            <main class="main">
+                <div class="container">
+                    
+<div class="post-warp archive">
+    <h2 class="post-title" style="text-align:right;padding-bottom:2em">图像读取于显示</h2>
+    <div class="post-content">
+        <h1 id="图像读取与显示">图像读取与显示</h1>
+<h2 id="读取并显示raw格式文件">读取并显示raw格式文件</h2>
+<p>已知文件<code>data1.raw</code>是按照裸数据的形式保存的一张图片，图像大小512×512，像素存储的数据类型为float型，请编写代码将该图像读出，并以两种不同窗口窗位显示该图像。</p>
+<p>使用<code>fopen()</code>打开文件</p>
+<p>使用<code>fread()</code>以<code>float</code>格式读取文件具体内容</p>
+<p>使用<code>fclose()</code>关闭文件</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-matlab" data-lang="matlab"><span style="display:flex;"><span><span style="color:#75715e">% 本程序用于读取raw格式数据</span>
+</span></span><span style="display:flex;"><span>clc,clear
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">% 读取raw数据</span>
+</span></span><span style="display:flex;"><span>f1 = fopen(<span style="color:#e6db74">&#39;data1.raw&#39;</span>,<span style="color:#e6db74">&#39;rb&#39;</span>);
+</span></span><span style="display:flex;"><span>data = fread(f1,[<span style="color:#ae81ff">512</span>,<span style="color:#ae81ff">512</span>],<span style="color:#e6db74">&#39;float&#39;</span>);
+</span></span><span style="display:flex;"><span>fclose(f1);
+</span></span></code></pre></div><p>使用<code>subplot()</code>构建二分隔</p>
+<p>使用<code>imshow()</code>控制图像颜色范围</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-matlab" data-lang="matlab"><span style="display:flex;"><span><span style="color:#75715e">%% 绘制图窗</span>
+</span></span><span style="display:flex;"><span>figure
+</span></span><span style="display:flex;"><span>subplot(<span style="color:#ae81ff">1</span>,<span style="color:#ae81ff">2</span>,<span style="color:#ae81ff">1</span>)
+</span></span><span style="display:flex;"><span>imshow(data,[])
+</span></span><span style="display:flex;"><span>title(&#34;data1.raw []&#34;)
+</span></span><span style="display:flex;"><span>subplot(<span style="color:#ae81ff">1</span>,<span style="color:#ae81ff">2</span>,<span style="color:#ae81ff">2</span>)
+</span></span><span style="display:flex;"><span>imshow(data,[<span style="color:#ae81ff">0</span>,<span style="color:#ae81ff">0.5</span>])
+</span></span><span style="display:flex;"><span>title(&#34;data1.raw [<span style="color:#ae81ff">0</span>,<span style="color:#ae81ff">0.5</span>]&#34;)
+</span></span></code></pre></div><!-- raw HTML omitted -->
+<h2 id="读取并显示自定义格式文件">读取并显示自定义格式文件</h2>
+<p>已知文件<code>data2.abc</code>以一种自定义格式的存储的一张图片。</p>
+<p>文件分为两部分，第一部分是128个字节的文件头，第二部分是逐行存储的该图片的各个像素值。</p>
+<p>在128个字节的文件头中，1-4字节按照int类型存储图像的宽，5-8字节按照int类型存储图像的高，第9个字节按照char类型存储数据类型的标识字。</p>
+<p>关于数量类型标识字的定义如下：</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">void</th>
+<th style="text-align:center">bit</th>
+<th style="text-align:center">char</th>
+<th style="text-align:center">unsigned char</th>
+<th style="text-align:center">short</th>
+<th style="text-align:center">unsigned short</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">0</td>
+<td style="text-align:center">1</td>
+<td style="text-align:center">2</td>
+<td style="text-align:center">3</td>
+<td style="text-align:center">4</td>
+<td style="text-align:center">5</td>
+</tr>
+<tr>
+<td style="text-align:center">int</td>
+<td style="text-align:center">unsigned int</td>
+<td style="text-align:center">long</td>
+<td style="text-align:center">unsigned long</td>
+<td style="text-align:center">float</td>
+<td style="text-align:center">double</td>
+</tr>
+<tr>
+<td style="text-align:center">6</td>
+<td style="text-align:center">7</td>
+<td style="text-align:center">8</td>
+<td style="text-align:center">9</td>
+<td style="text-align:center">10</td>
+<td style="text-align:center">11</td>
+</tr>
+</tbody>
+</table>
+<p>请编写代码将该图像读出，并以合适的窗口窗位显示该图像，另以伪彩色的形式显示该图像。</p>
+<p>使用<code>fopen()</code>打开文件</p>
+<p>使用<code>fread()</code>以<code>int</code>格式读取文件具体内容，前八个字节用于存放尺寸信息，正好为两个<code>int</code>大小。指针指在第九个字节上，以<code>char</code>类型读取，为文件储存格式</p>
+<p>使用<code>fseek()</code>跳转到129字节位置，以指定尺寸<code>fsize </code>读取图像信息</p>
+<p>使用<code>fclose()</code>关闭文件</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-matlab" data-lang="matlab"><span style="display:flex;"><span><span style="color:#75715e">%% 读取自定义数据</span>
+</span></span><span style="display:flex;"><span>f2 = fopen(<span style="color:#e6db74">&#39;data2.abc&#39;</span>,<span style="color:#e6db74">&#39;rb&#39;</span>);
+</span></span><span style="display:flex;"><span>fsize = fread(f2,[<span style="color:#ae81ff">1</span>,<span style="color:#ae81ff">2</span>],<span style="color:#e6db74">&#39;int&#39;</span>);
+</span></span><span style="display:flex;"><span>fsize = [fsize(<span style="color:#ae81ff">2</span>),fsize(<span style="color:#ae81ff">1</span>)];
+</span></span><span style="display:flex;"><span>ftell(f2)
+</span></span><span style="display:flex;"><span>format = fread(f2,[<span style="color:#ae81ff">1</span>,<span style="color:#ae81ff">1</span>],<span style="color:#e6db74">&#39;char&#39;</span>);
+</span></span><span style="display:flex;"><span>ftell(f2)
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">switch</span> format
+</span></span><span style="display:flex;"><span> <span style="color:#66d9ef">case</span> <span style="color:#ae81ff">0</span>
+</span></span><span style="display:flex;"><span> str = <span style="color:#e6db74">&#39;void&#39;</span>;
+</span></span><span style="display:flex;"><span> <span style="color:#66d9ef">case</span> <span style="color:#ae81ff">1</span>
+</span></span><span style="display:flex;"><span> str = <span style="color:#e6db74">&#39;bit&#39;</span>;
+</span></span><span style="display:flex;"><span> <span style="color:#66d9ef">case</span> <span style="color:#ae81ff">2</span>
+</span></span><span style="display:flex;"><span> str = <span style="color:#e6db74">&#39;char&#39;</span>;
+</span></span><span style="display:flex;"><span> <span style="color:#66d9ef">case</span> <span style="color:#ae81ff">3</span>
+</span></span><span style="display:flex;"><span> str = <span style="color:#e6db74">&#39;unsigned char&#39;</span>;
+</span></span><span style="display:flex;"><span> <span style="color:#66d9ef">case</span> <span style="color:#ae81ff">4</span>
+</span></span><span style="display:flex;"><span> str = <span style="color:#e6db74">&#39;short&#39;</span>;
+</span></span><span style="display:flex;"><span> <span style="color:#66d9ef">case</span> <span style="color:#ae81ff">5</span>
+</span></span><span style="display:flex;"><span> str = <span style="color:#e6db74">&#39;unsigned short&#39;</span>;
+</span></span><span style="display:flex;"><span> <span style="color:#66d9ef">case</span> <span style="color:#ae81ff">6</span>
+</span></span><span style="display:flex;"><span> str = <span style="color:#e6db74">&#39;int&#39;</span>;
+</span></span><span style="display:flex;"><span> <span style="color:#66d9ef">case</span> <span style="color:#ae81ff">7</span>
+</span></span><span style="display:flex;"><span> str = <span style="color:#e6db74">&#39;unsigned int&#39;</span>;
+</span></span><span style="display:flex;"><span> <span style="color:#66d9ef">case</span> <span style="color:#ae81ff">8</span>
+</span></span><span style="display:flex;"><span> str = <span style="color:#e6db74">&#39;long&#39;</span>;
+</span></span><span style="display:flex;"><span> <span style="color:#66d9ef">case</span> <span style="color:#ae81ff">9</span>
+</span></span><span style="display:flex;"><span> str = <span style="color:#e6db74">&#39;unsigned long&#39;</span>;
+</span></span><span style="display:flex;"><span> <span style="color:#66d9ef">case</span> <span style="color:#ae81ff">10</span>
+</span></span><span style="display:flex;"><span> str = <span style="color:#e6db74">&#39;float&#39;</span>;
+</span></span><span style="display:flex;"><span> <span style="color:#66d9ef">case</span> <span style="color:#ae81ff">11</span>
+</span></span><span style="display:flex;"><span> str = <span style="color:#e6db74">&#39;double&#39;</span>;
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">end</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">% 跳转到图像存储空间</span>
+</span></span><span style="display:flex;"><span>fseek(f2,<span style="color:#ae81ff">129</span>,<span style="color:#e6db74">&#39;bof&#39;</span>);
+</span></span><span style="display:flex;"><span>ftell(f2)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>data2= fread(f2,fsize,str);
+</span></span><span style="display:flex;"><span>fclose(f2);
+</span></span></code></pre></div><p>使用<code>imshow()</code>显示图像</p>
+<p>使用<code>colormap</code>为图像赋伪彩</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-matlab" data-lang="matlab"><span style="display:flex;"><span><span style="color:#75715e">%%</span>
+</span></span><span style="display:flex;"><span>figure
+</span></span><span style="display:flex;"><span>imshow(data2,[]);
+</span></span><span style="display:flex;"><span>title(&#34;data2.abc&#34;)
+</span></span><span style="display:flex;"><span>figure
+</span></span><span style="display:flex;"><span>imshow(data2,[]);
+</span></span><span style="display:flex;"><span>colormap default;
+</span></span><span style="display:flex;"><span>title(&#34;data2.abc, colormap default&#34;)
+</span></span></code></pre></div><p><!-- raw HTML omitted --><!-- raw HTML omitted --></p>
+
+    </div>
+</div>
+
+                </div>
+            </main>
+            <footer class="footer">
+    <div class="copyright">
+        &copy;
+        
+        <span class="with-love">
+    	 <i class="iconfont icon-love"></i>
+         </span>
+         
+            <span class="author" itemprop="copyrightHolder"><a href="https://duder-git.github.io">Duder</a> | </span>
+         
+
+         
+		  <span>Powered by <a href="https://gohugo.io/" target="_blank" rel="external nofollow">Hugo</a> & <a href="https://github.com/Mogeko/Mogege" target="_blank" rel="external nofollow">Mogege</a></span>
+    </div>
+</footer>
+
+
+
+
+
+
+<script defer src="/js/vendor_main.min.js"></script>
+
+
+
+
+
+
+
+<script src="https://cdn.jsdelivr.net/npm/pangu@4.0.7/dist/browser/pangu.min.js" integrity="sha256-j+yj56cdEY2CwkVtGyz18fNybFGpMGJ8JxG3GSyO2+I=" crossorigin="anonymous"></script>
+<script> pangu.spacingPage();</script>
+
+
+
+
+
+        </div>
+    </body>
+</html>

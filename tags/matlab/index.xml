@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>MATLAB on Duder`s Blog</title>
+    <link>https://duder-git.github.io/tags/matlab/</link>
+    <description>Recent content in MATLAB on Duder`s Blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-cn</language>
+    <lastBuildDate>Mon, 25 Apr 2022 21:23:18 +0800</lastBuildDate><atom:link href="https://duder-git.github.io/tags/matlab/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>前向投影的解析计算</title>
+      <link>https://duder-git.github.io/%E5%89%8D%E5%90%91%E6%8A%95%E5%BD%B1%E7%9A%84%E8%A7%A3%E6%9E%90%E8%AE%A1%E7%AE%97/</link>
+      <pubDate>Mon, 25 Apr 2022 21:23:18 +0800</pubDate>
+      
+      <guid>https://duder-git.github.io/%E5%89%8D%E5%90%91%E6%8A%95%E5%BD%B1%E7%9A%84%E8%A7%A3%E6%9E%90%E8%AE%A1%E7%AE%97/</guid>
+      <description>前向投影的解析计算 要求 编写实现扇形束或平行束CT前向投影解析计算的代码，获取Shepp Logan仿体的前向投影, 并显示对应的sinogram</description>
+    </item>
+    
+    <item>
+      <title>图像读取于显示</title>
+      <link>https://duder-git.github.io/%E5%9B%BE%E5%83%8F%E8%AF%BB%E5%8F%96%E4%B8%8E%E6%98%BE%E7%A4%BA/</link>
+      <pubDate>Mon, 25 Apr 2022 21:23:18 +0800</pubDate>
+      
+      <guid>https://duder-git.github.io/%E5%9B%BE%E5%83%8F%E8%AF%BB%E5%8F%96%E4%B8%8E%E6%98%BE%E7%A4%BA/</guid>
+      <description>图像读取与显示 读取并显示raw格式文件 已知文件data1.raw是按照裸数据的形式保存的一张图片，图像大小512×512，像素存储的数据类型</description>
+    </item>
+    
+  </channel>
+</rss>
