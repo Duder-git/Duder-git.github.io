@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+    <head>
+    <meta http-equiv="content-type" content="text/html;charset=utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noodp"/>
+    <meta name="author" content="Duder">
+    <meta name="description" content="About my study and work">
+    <meta name="keywords" content="Blog">
+    
+    <link rel="prev" href="https://duder-git.github.io/2022/5.-%E6%8A%95%E5%BD%B1%E6%95%B0%E6%8D%AE%E9%A2%84%E5%A4%84%E7%90%86%E4%B8%8E%E9%87%8D%E5%BB%BA/" />
+    
+    <link rel="canonical" href="https://duder-git.github.io/2022/4.-%E6%BB%A4%E6%B3%A2%E5%8F%8D%E6%8A%95%E5%BD%B1%E9%87%8D%E5%BB%BA/" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    <link rel="manifest" href="/site.webmanifest">
+    <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+    <meta name="msapplication-TileColor" content="#da532c">
+    <meta name="theme-color" content="#ffffff">
+    <title>
+        
+        
+            滤波反投影重建 | Duder`s Blog
+        
+    </title>
+    <meta name="title" content="滤波反投影重建 | Duder`s Blog">
+    
+<link rel="stylesheet" href="/css/main.min.css">
+
+
+    
+    
+ 
+
+<script type="application/ld+json">
+{
+    "@context" : "http://schema.org",
+    "@type" : "BlogPosting",
+    "mainEntityOfPage": {
+         "@type": "WebPage",
+         "@id": "https:\/\/duder-git.github.io"
+    },
+    "articleSection" : "posts",
+    "name" : "滤波反投影重建",
+    "headline" : "滤波反投影重建",
+    "description" : "滤波反投影重建 要求 编程实现扇形束或平行束CT的滤波反投影重建算法，对前期通过解析计算或数值计算得到的Shepp Logan仿体投影数据进行重建",
+    "inLanguage" : "zh-cn",
+    "author" : "Duder",
+    "creator" : "Duder",
+    "publisher": "Duder",
+    "accountablePerson" : "Duder",
+    "copyrightHolder" : "Duder",
+    "copyrightYear" : "2022",
+    "datePublished": "2022-05-09 16:24:18 \u002b0800 CST",
+    "dateModified" : "2022-05-09 16:24:18 \u002b0800 CST",
+    "url" : "https:\/\/duder-git.github.io\/2022\/4.-%E6%BB%A4%E6%B3%A2%E5%8F%8D%E6%8A%95%E5%BD%B1%E9%87%8D%E5%BB%BA\/",
+    "wordCount" : "1715",
+    "keywords" : [ "MATLAB", "Duder`s Blog"]
+}
+</script>
+
+  </head>
+    <body class="">
+        <div class="wrapper">
+            <nav class="navbar">
+    
+        <progress class="content_progress" max="0" value="0"></progress>
+    
+    <div class="container">
+        
+            <div class="navbar-header header-back2home-logo">
+                <span class="logo_mark" >>$</span>
+                <a href="https://duder-git.github.io">
+                    <span class="logo_text" >cd /home/</span>
+                    <span class="logo_cursor" ></span>
+                </a>
+            </div>
+        
+        <div class="navbar-right">
+                
+                <span class="menu">
+                
+                <a class="menu-item" href="/posts/" title="">Blog</a>
+                
+                <a class="menu-item" href="/categories/" title="">Categories</a>
+                
+                <a class="menu-item" href="/tags/" title="">Tags</a>
+                
+                <a class="menu-item" href="/about/" title="">About</a>
+                
+                <span class="divide"></span>
+                <a href="javascript:void(0);" class="theme-switch"><i class="iconfont icon-dark-mode"></i></a>
+                </span>
+        </div>
+    </div>
+</nav>
+<nav class="navbar-mobile" id="nav-mobile" style="display: none">
+    
+        <progress class="content_progress" max="0" value="0"></progress>
+    
+     <div class="container">
+        <div class="navbar">
+            <div class="navbar-header header-logo">
+                    <a href="https://duder-git.github.io">Duder`s Blog</a>
+            </div>
+            <div class="navbar-right">
+                <div><a href="javascript:void(0);" class="theme-switch"><i class="iconfont icon-dark-mode"></i></a></div>
+                <div class="menu-toggle">
+                    <span></span><span></span><span></span>
+                </div>
+            </div>
+        </div>
+     
+          <div class="menu" id="mobile-menu">
+                <nav class="mb-md">
+                    
+                    
+                        <a class="menu-item" href="/posts/" title="">
+                            <h3>Blog</h3>
+                            <div class="menu-active"></div>
+                        </a>
+                    
+                        <a class="menu-item" href="/categories/" title="">
+                            <h3>Categories</h3>
+                            <div class="menu-active"></div>
+                        </a>
+                    
+                        <a class="menu-item" href="/tags/" title="">
+                            <h3>Tags</h3>
+                            <div class="menu-active"></div>
+                        </a>
+                    
+                        <a class="menu-item" href="/about/" title="">
+                            <h3>About</h3>
+                            <div class="menu-active"></div>
+                        </a>
+                    
+                </nav>
+        </div>
+    </div>
+</nav>
+            <main class="main">
+                <div class="container">
+                    
+<article class="post-warp" itemscope itemtype="http://schema.org/Article">
+    <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">滤波反投影重建</h1>
+        <div class="post-meta">
+                Written by <a itemprop="name" href="https://duder-git.github.io" rel="author">Duder</a> with ♥
+                <span class="post-time">
+                on <time datetime=2022-05-09 itemprop="datePublished">May 9, 2022</time>
+                </span>
+                in
+                
+                <i class="iconfont icon-folder"></i>
+                <span class="post-category">
+                        
+                        
+                        
+                          <a href="https://duder-git.github.io/categories/%E5%8C%BB%E5%AD%A6%E6%88%90%E5%83%8F/"> 医学成像, </a>
+                        
+                        
+                </span>
+                <span class="post-word-count">1715 words</span>
+        </div>
+    </header>
+
+    <div class="post-content">
+        
+
+        
+        
+            
+        
+
+        
+        
+        
+        
+        
+
+        
+        
+        
+
+        <h1 id="滤波反投影重建">滤波反投影重建</h1>
+<h2 id="要求">要求</h2>
+<ol>
+<li>
+<p>编程实现扇形束或平行束CT的滤波反投影重建算法，对前期通过解析计算或数值计算得到的Shepp Logan仿体投影数据进行重建；</p>
+</li>
+<li>
+<p>将重建结果与原图进行比较，分析重建质量；</p>
+</li>
+<li>
+<p>提交作业时，请简要描述思路，附上代码与结果（图像），以word或pdf形式提交。文件命名“4_FBP_学号_姓名.doc”</p>
+</li>
+</ol>
+<h2 id="思路">思路</h2>
+<p>​	使用图像旋转+像素累加得到的投影数据进行FBP重建。</p>
+<pre><code>1. 读取投影数据；
+2. 构建R-L和S-L滤波器；
+3. 编写重建算法函数，使用线性插值的方法计算图像每个像素点，遍历所有角度叠加的得到重建图像；
+4. 分析重建图像质量；
+</code></pre>
+<h2 id="结果">结果</h2>
+<h3 id="r-l和s-l滤波器">R-L和S-L滤波器</h3>
+<p><img src="https://s2.loli.net/2022/05/05/zQtseUdjchbCvgT.png" alt="RL-SL" loading="lazy" ></p>
+<h3 id="重建数值计算投影数据">重建数值计算投影数据</h3>
+<p><img src="https://s2.loli.net/2022/05/05/Nxsq7F15wRZz9hS.png" alt="对比图" loading="lazy" ></p>
+<p>从图像可以看出，使用不经过滤波器的投影数据直接重建，重建图像与原图有较大差异，出现明显信号失真。经过滤波器的两个重建图像与原始图像较为相似</p>
+<h3 id="比较重建结果">比较重建结果</h3>
+<table>
+<thead>
+<tr>
+<th style="text-align:center"><strong>PSNR</strong></th>
+<th style="text-align:center"><strong>直接反投影</strong></th>
+<th style="text-align:center"><strong>R-L滤波反投影</strong></th>
+<th style="text-align:center"><strong>S-L滤波反投影</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center"><strong>原始图像</strong></td>
+<td style="text-align:center">6.6571</td>
+<td style="text-align:center">17.2412</td>
+<td style="text-align:center">17.7826</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">SSIM</th>
+<th style="text-align:center"><strong>直接反投影</strong></th>
+<th style="text-align:center"><strong>R-L滤波反投影</strong></th>
+<th style="text-align:center"><strong>S-L滤波反投影</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center"><strong>原始图像</strong></td>
+<td style="text-align:center">0.1687</td>
+<td style="text-align:center">0.3487</td>
+<td style="text-align:center">0.3610</td>
+</tr>
+</tbody>
+</table>
+<p>由结果可知，S-L滤波反投影的信噪比值最好，R-L滤波反投影的图像相似性较高。总而言之，经过滤波处理的重建图像较直接重建图像质量都有明显的提高。</p>
+<h2 id="代码">代码</h2>
+<p><strong>主程序</strong></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-MATLAB" data-lang="MATLAB"><span style="display:flex;"><span><span style="color:#75715e">%% 初始化</span>
+</span></span><span style="display:flex;"><span>clc,clear;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>N = <span style="color:#ae81ff">256</span>;            <span style="color:#75715e">% 图像大小</span>
+</span></span><span style="display:flex;"><span>I = phantom(N);     <span style="color:#75715e">% Shepp-Logan头模型</span>
+</span></span><span style="display:flex;"><span>theta = <span style="color:#ae81ff">0</span>:<span style="color:#ae81ff">1</span>:<span style="color:#ae81ff">179</span>;    <span style="color:#75715e">% 投影角度</span>
+</span></span><span style="display:flex;"><span>theta_num = length(theta);
+</span></span><span style="display:flex;"><span>d = <span style="color:#ae81ff">1</span>;              <span style="color:#75715e">% 平移步长</span>
+</span></span><span style="display:flex;"><span>delta = pi<span style="color:#f92672">/</span><span style="color:#ae81ff">180</span>;     <span style="color:#75715e">% 角度增量</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">%% 读取投影数据</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">% P = radon(I,theta);         % 生成投影数据</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">% [mm,nn] = size(P);          % 计算投影数据矩阵的行、列长度</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">% e = floor((mm+1)/2);</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">% P1 = P(e-N/2:e+N/2-1,:);    % 截取中心N点数据</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>a = load(<span style="color:#e6db74">&#39;Rdata.mat&#39;</span>);
+</span></span><span style="display:flex;"><span>P1 = a.Rdata;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">%% 构建滤波器</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">% 产生滤波函数</span>
+</span></span><span style="display:flex;"><span>fh_RL = medfuncRlfilterfunction(N,d);   <span style="color:#75715e">% R-L滤波函数</span>
+</span></span><span style="display:flex;"><span>fh_SL = medfuncSlfilterfunction(N,d);   <span style="color:#75715e">% S-L滤波函数</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>figure
+</span></span><span style="display:flex;"><span>subplot(<span style="color:#ae81ff">2</span>,<span style="color:#ae81ff">1</span>,<span style="color:#ae81ff">1</span>)
+</span></span><span style="display:flex;"><span>plot(fh_RL)
+</span></span><span style="display:flex;"><span>xlim([N<span style="color:#f92672">/</span><span style="color:#ae81ff">2</span><span style="color:#f92672">-</span><span style="color:#ae81ff">20</span>,N<span style="color:#f92672">/</span><span style="color:#ae81ff">2</span><span style="color:#f92672">+</span><span style="color:#ae81ff">20</span>])
+</span></span><span style="display:flex;"><span>title(<span style="color:#e6db74">&#39;R-L滤波器&#39;</span>)
+</span></span><span style="display:flex;"><span>subplot(<span style="color:#ae81ff">2</span>,<span style="color:#ae81ff">1</span>,<span style="color:#ae81ff">2</span>)
+</span></span><span style="display:flex;"><span>plot(fh_SL)
+</span></span><span style="display:flex;"><span>xlim([N<span style="color:#f92672">/</span><span style="color:#ae81ff">2</span><span style="color:#f92672">-</span><span style="color:#ae81ff">20</span>,N<span style="color:#f92672">/</span><span style="color:#ae81ff">2</span><span style="color:#f92672">+</span><span style="color:#ae81ff">20</span>])
+</span></span><span style="display:flex;"><span>title(<span style="color:#e6db74">&#39;S-L滤波器&#39;</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">% 直接反投影重建</span>
+</span></span><span style="display:flex;"><span>rec = medfuncBackprojection(theta_num,N,P1,delta);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">% R-L函数滤波反投影重建</span>
+</span></span><span style="display:flex;"><span>rec_RL = medfuncfilteredbackprojection(theta_num,N,P1,delta,fh_RL);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">%S-L函数滤波反投影重建</span>
+</span></span><span style="display:flex;"><span>rec_SL = medfuncfilteredbackprojection(theta_num,N,P1,delta,fh_SL);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">%% 图像展示</span>
+</span></span><span style="display:flex;"><span>figure;
+</span></span><span style="display:flex;"><span>subplot(<span style="color:#ae81ff">2</span>,<span style="color:#ae81ff">2</span>,<span style="color:#ae81ff">1</span>),imshow(I),title(<span style="color:#e6db74">&#39;原始图像&#39;</span>);
+</span></span><span style="display:flex;"><span>subplot(<span style="color:#ae81ff">2</span>,<span style="color:#ae81ff">2</span>,<span style="color:#ae81ff">2</span>),imshow(rec,[]),title(<span style="color:#e6db74">&#39;直接反投影重建图像&#39;</span>);
+</span></span><span style="display:flex;"><span>subplot(<span style="color:#ae81ff">2</span>,<span style="color:#ae81ff">2</span>,<span style="color:#ae81ff">3</span>),imshow(rec_RL,[]),title(<span style="color:#e6db74">&#39;R-L函数滤波反投影重建图像&#39;</span>);
+</span></span><span style="display:flex;"><span>subplot(<span style="color:#ae81ff">2</span>,<span style="color:#ae81ff">2</span>,<span style="color:#ae81ff">4</span>),imshow(rec_SL,[]),title(<span style="color:#e6db74">&#39;S-L函数滤波反投影重建图像&#39;</span>);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>a1 = psnr(funnormalization(I),funnormalization(rec));
+</span></span><span style="display:flex;"><span>a2 = ssim(funnormalization(I),funnormalization(rec));
+</span></span><span style="display:flex;"><span>b1 = psnr(funnormalization(I),funnormalization(rec_RL));
+</span></span><span style="display:flex;"><span>b2 = ssim(funnormalization(I),funnormalization(rec_RL));
+</span></span></code></pre></div><p><strong>函数</strong></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-matlab" data-lang="matlab"><span style="display:flex;"><span><span style="color:#66d9ef">function</span> fh_RL = <span style="color:#a6e22e">medfuncRlfilterfunction</span>(N,d)
+</span></span><span style="display:flex;"><span><span style="color:#75715e">% 生成RL滤波器</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">% 输入参数:</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">%	N：图像大小，探测器通道个数</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">%	d:平移步长</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">% 输出参数:</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">%	fh_RL:R-L滤波函数</span>
+</span></span><span style="display:flex;"><span>fh_RL = zeros(<span style="color:#ae81ff">1</span>,N);
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">for</span> k1 = <span style="color:#ae81ff">1</span>:N
+</span></span><span style="display:flex;"><span>    fh_RL(k1) = <span style="color:#f92672">-</span><span style="color:#ae81ff">1</span><span style="color:#f92672">/</span>(pi<span style="color:#f92672">*</span>pi<span style="color:#f92672">*</span>((k1<span style="color:#f92672">-</span>N<span style="color:#f92672">/</span><span style="color:#ae81ff">2</span><span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>)<span style="color:#f92672">*</span>d)^<span style="color:#ae81ff">2</span>);
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> mod(k1<span style="color:#f92672">-</span>N<span style="color:#f92672">/</span><span style="color:#ae81ff">2</span><span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>,<span style="color:#ae81ff">2</span>)<span style="color:#f92672">==</span><span style="color:#ae81ff">0</span>
+</span></span><span style="display:flex;"><span>        fh_RL(k1) = <span style="color:#ae81ff">0</span>;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">end</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">end</span>
+</span></span><span style="display:flex;"><span>fh_RL(N<span style="color:#f92672">/</span><span style="color:#ae81ff">2</span><span style="color:#f92672">+</span><span style="color:#ae81ff">1</span>) = <span style="color:#ae81ff">1</span><span style="color:#f92672">/</span>(<span style="color:#ae81ff">4</span><span style="color:#f92672">*</span>d^<span style="color:#ae81ff">2</span>);
+</span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-matlab" data-lang="matlab"><span style="display:flex;"><span><span style="color:#66d9ef">function</span> fh_SL = <span style="color:#a6e22e">medfuncSlfilterfunction</span>(N,d)
+</span></span><span style="display:flex;"><span><span style="color:#75715e">% 生成SL滤波器</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">% 输入参数:</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">%	N：图像大小，探测器通道个数</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">% 	d:平移步长</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">% 输出参数:</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">%	fh_SL:S-L滤波函数</span>
+</span></span><span style="display:flex;"><span>fh_SL = zeros(<span style="color:#ae81ff">1</span>,N);
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">for</span> k1 = <span style="color:#ae81ff">1</span>:N
+</span></span><span style="display:flex;"><span>    fh_SL(k1) = <span style="color:#f92672">-</span><span style="color:#ae81ff">2</span><span style="color:#f92672">/</span>(pi^<span style="color:#ae81ff">2</span><span style="color:#f92672">*</span>d^<span style="color:#ae81ff">2</span><span style="color:#f92672">*</span>(<span style="color:#ae81ff">4</span><span style="color:#f92672">*</span>(k1<span style="color:#f92672">-</span>N<span style="color:#f92672">/</span><span style="color:#ae81ff">2</span><span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>)^<span style="color:#ae81ff">2</span><span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>));
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">end</span>
+</span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-matlab" data-lang="matlab"><span style="display:flex;"><span><span style="color:#66d9ef">function</span> rec = <span style="color:#a6e22e">medfuncBackprojection</span>(theta_num,N,R1,delta)
+</span></span><span style="display:flex;"><span><span style="color:#75715e">% 不使用滤波器的重建算法</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">% 输入参数</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">%   theta_num:投影角度个数</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">%   N:图像大小</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">%   R1:投影数据矩阵</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">%   delta:角度增量(弧度)</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">% 输出参数:</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">%   rec:反投影重建图像矩阵</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>rec = zeros(N);     <span style="color:#75715e">% 存储重建后的像素值</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">for</span> m = <span style="color:#ae81ff">1</span>:theta_num
+</span></span><span style="display:flex;"><span>    pm = R1(:,m);   <span style="color:#75715e">% 取某一角度的投影数据</span>
+</span></span><span style="display:flex;"><span>    Cm = (N<span style="color:#f92672">/</span><span style="color:#ae81ff">2</span>)<span style="color:#f92672">*</span>(<span style="color:#ae81ff">1</span><span style="color:#f92672">-</span>cos((m<span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>)<span style="color:#f92672">*</span>delta)<span style="color:#f92672">-</span>sin((m<span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>)<span style="color:#f92672">*</span>delta));
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> k1 = <span style="color:#ae81ff">1</span>:N
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">for</span> k2 = <span style="color:#ae81ff">1</span>:N
+</span></span><span style="display:flex;"><span>            <span style="color:#75715e">% 以下为射束计算，射束编号n取值范围为1~N-1</span>
+</span></span><span style="display:flex;"><span>            Xrm = Cm<span style="color:#f92672">+</span>(k2<span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>)<span style="color:#f92672">*</span>cos((m<span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>)<span style="color:#f92672">*</span>delta)<span style="color:#f92672">+</span>(k1<span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>)<span style="color:#f92672">*</span>sin((m<span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>)<span style="color:#f92672">*</span>delta);
+</span></span><span style="display:flex;"><span>            n = floor(Xrm);                     <span style="color:#75715e">% 射束编号的整数部分</span>
+</span></span><span style="display:flex;"><span>            t = Xrm<span style="color:#f92672">-</span>floor(Xrm);                 <span style="color:#75715e">% 射束编号的小数部分</span>
+</span></span><span style="display:flex;"><span>            n = max(<span style="color:#ae81ff">1</span>,n);n = min(n,N<span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>);        <span style="color:#75715e">% 限定n在1~N-1内</span>
+</span></span><span style="display:flex;"><span>            p = (<span style="color:#ae81ff">1</span><span style="color:#f92672">-</span>t)<span style="color:#f92672">*</span>pm(n)<span style="color:#f92672">+</span>t<span style="color:#f92672">*</span>pm(n<span style="color:#f92672">+</span><span style="color:#ae81ff">1</span>);          <span style="color:#75715e">% 线性内插</span>
+</span></span><span style="display:flex;"><span>            rec(N<span style="color:#f92672">+</span><span style="color:#ae81ff">1</span><span style="color:#f92672">-</span>k1,k2) = rec(N<span style="color:#f92672">+</span><span style="color:#ae81ff">1</span><span style="color:#f92672">-</span>k1,k2)<span style="color:#f92672">+</span>p;  <span style="color:#75715e">% 反投影，图像需旋转90°</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">end</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">end</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">end</span>
+</span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-matlab" data-lang="matlab"><span style="display:flex;"><span><span style="color:#66d9ef">function</span> rec = <span style="color:#a6e22e">medfuncfilteredbackprojection</span>(theta_num,N,R1,delta,fh)
+</span></span><span style="display:flex;"><span><span style="color:#75715e">% 使用滤波器的重建算法</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">% 输入参数:</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">%   theta_num:投影角度个数</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">%   N:图像大小、探测器通道个数</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">%   R1:投影数据矩阵</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">%   delta:角度增量(弧度)</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">%   fh:R-L滤波函数 S-L滤波器</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">% 输出参数：</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">%   rec:反投影重建矩阵</span>
+</span></span><span style="display:flex;"><span>rec = zeros(N);
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">for</span> m = <span style="color:#ae81ff">1</span>:theta_num
+</span></span><span style="display:flex;"><span>    pm = R1(:,m);<span style="color:#75715e">%某一角度的投影数据</span>
+</span></span><span style="display:flex;"><span>    pm_Ft = conv(fh,pm,<span style="color:#e6db74">&#39;same&#39;</span>);<span style="color:#75715e">%做卷积</span>
+</span></span><span style="display:flex;"><span>    Cm = (N<span style="color:#f92672">/</span><span style="color:#ae81ff">2</span>)<span style="color:#f92672">*</span>(<span style="color:#ae81ff">1</span><span style="color:#f92672">-</span>cos((m<span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>)<span style="color:#f92672">*</span>delta)<span style="color:#f92672">-</span>sin((m<span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>)<span style="color:#f92672">*</span>delta));
+</span></span><span style="display:flex;"><span>     <span style="color:#66d9ef">for</span> k1 = <span style="color:#ae81ff">1</span>:N
+</span></span><span style="display:flex;"><span>         <span style="color:#66d9ef">for</span> k2 = <span style="color:#ae81ff">1</span>:N
+</span></span><span style="display:flex;"><span>             <span style="color:#75715e">%以下是射束计算，射束编号n取值范围为1~N-1</span>
+</span></span><span style="display:flex;"><span>             Xrm = Cm <span style="color:#f92672">+</span> (k2<span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>)<span style="color:#f92672">*</span>cos((m<span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>)<span style="color:#f92672">*</span>delta) <span style="color:#f92672">+</span> (k1<span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>)<span style="color:#f92672">*</span>sin((m<span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>)<span style="color:#f92672">*</span>delta);
+</span></span><span style="display:flex;"><span>             n = floor(Xrm);<span style="color:#75715e">%射束编号的整数部分</span>
+</span></span><span style="display:flex;"><span>             t = Xrm<span style="color:#f92672">-</span>floor(Xrm);<span style="color:#75715e">%射束编号的小数部分</span>
+</span></span><span style="display:flex;"><span>             n = max(<span style="color:#ae81ff">1</span>,n);n = min(n,N<span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>);<span style="color:#75715e">%限定n范围为1~N-1</span>
+</span></span><span style="display:flex;"><span>             p_RL = (<span style="color:#ae81ff">1</span><span style="color:#f92672">-</span>t)<span style="color:#f92672">*</span>pm_Ft(n) <span style="color:#f92672">+</span> t<span style="color:#f92672">*</span>pm_Ft(n<span style="color:#f92672">+</span><span style="color:#ae81ff">1</span>);<span style="color:#75715e">%线性内插</span>
+</span></span><span style="display:flex;"><span>             rec(N<span style="color:#f92672">+</span><span style="color:#ae81ff">1</span><span style="color:#f92672">-</span>k1,k2) = rec(N<span style="color:#f92672">+</span><span style="color:#ae81ff">1</span><span style="color:#f92672">-</span>k1,k2)<span style="color:#f92672">+</span>p_RL;<span style="color:#75715e">%反投影</span>
+</span></span><span style="display:flex;"><span>         <span style="color:#66d9ef">end</span>
+</span></span><span style="display:flex;"><span>     <span style="color:#66d9ef">end</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">end</span>
+</span></span></code></pre></div>
+    </div>
+
+    <div class="post-copyright">
+            
+            <p class="copyright-item">
+                <span>Author:</span>
+                <span>Duder </span>
+                </p>
+            
+
+            
+            <p class="copyright-item">
+                    <span>Link:</span>
+                    <a href=https://duder-git.github.io/2022/4.-%E6%BB%A4%E6%B3%A2%E5%8F%8D%E6%8A%95%E5%BD%B1%E9%87%8D%E5%BB%BA/>https://duder-git.github.io/2022/4.-%E6%BB%A4%E6%B3%A2%E5%8F%8D%E6%8A%95%E5%BD%B1%E9%87%8D%E5%BB%BA/</span>
+            </p>
+            
+            
+            <p class="copyright-item lincese">
+                本文采用<a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/" target="_blank">知识共享署名-非商业性使用 4.0 国际许可协议</a>进行许可
+            </p>
+            
+    </div>
+
+
+    <div class="post-tags">
+        
+            <section>
+            <i class="iconfont icon-tag"></i>Tag(s):
+            
+            <span class="tag"><a href="https://duder-git.github.io/tags/matlab/">
+                    #MATLAB</a></span>
+            
+            </section>
+        
+        <section>
+                <a href="javascript:window.history.back();">back</a></span> ·
+                <span><a href="https://duder-git.github.io">home</a></span>
+        </section>
+    </div>
+
+    <div class="post-nav">
+        
+        <a href="https://duder-git.github.io/2022/5.-%E6%8A%95%E5%BD%B1%E6%95%B0%E6%8D%AE%E9%A2%84%E5%A4%84%E7%90%86%E4%B8%8E%E9%87%8D%E5%BB%BA/" class="prev" rel="prev" title="投影数据预处理与重建"><i class="iconfont icon-left"></i>&nbsp;投影数据预处理与重建</a>
+        
+        
+    </div>
+
+    <div class="post-comment">
+        
+            
+                <div id="gitalk-container"></div>
+<link rel="stylesheet" href="https://cdn.bootcss.com/gitalk/1.5.2/gitalk.css">
+<script src="https://cdn.bootcss.com/gitalk/1.5.2/gitalk.min.js"></script>
+<script>
+    const gitalk = new Gitalk({
+
+        clientID: '',
+        clientSecret: '',
+        repo: '',
+        owner: '',
+        admin: [''],
+        id: location.pathname, 
+        distractionFreeMode: false 
+    });
+    (function () {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('gitalk-container').innerHTML = 'Gitalk comments not available by default when the website is previewed locally.';
+            return;
+        }
+        gitalk.render('gitalk-container');
+    })();
+</script>
+
+            
+        
+    </div>
+</article>
+                </div>
+            </main>
+            <footer class="footer">
+    <div class="copyright">
+        &copy;
+        
+        <span class="with-love">
+    	 <i class="iconfont icon-love"></i>
+         </span>
+         
+            <span class="author" itemprop="copyrightHolder"><a href="https://duder-git.github.io">Duder</a> | </span>
+         
+
+         
+		  <span>Powered by <a href="https://gohugo.io/" target="_blank" rel="external nofollow">Hugo</a> & <a href="https://github.com/Mogeko/Mogege" target="_blank" rel="external nofollow">Mogege</a></span>
+    </div>
+</footer>
+
+
+
+
+
+
+<script defer src="/js/vendor_main.min.js"></script>
+
+
+
+
+
+
+
+<script src="https://cdn.jsdelivr.net/npm/pangu@4.0.7/dist/browser/pangu.min.js" integrity="sha256-j+yj56cdEY2CwkVtGyz18fNybFGpMGJ8JxG3GSyO2+I=" crossorigin="anonymous"></script>
+<script> pangu.spacingPage();</script>
+
+
+
+
+
+        </div>
+    </body>
+</html>

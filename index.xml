@@ -5,288 +5,31 @@
     <description>Recent content on Duder`s Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
-    <lastBuildDate>Mon, 25 Apr 2022 21:23:18 +0800</lastBuildDate>
+    <lastBuildDate>Mon, 09 May 2022 16:24:18 +0800</lastBuildDate>
     <atom:link href="https://duder-git.github.io/" rel="self" type="application/rss+xml" />
-    
-    <item>
-      <title>前向投影的解析计算</title>
-      <link>https://duder-git.github.io/%E5%89%8D%E5%90%91%E6%8A%95%E5%BD%B1%E7%9A%84%E8%A7%A3%E6%9E%90%E8%AE%A1%E7%AE%97/</link>
-      <pubDate>Mon, 25 Apr 2022 21:23:18 +0800</pubDate>
-      
-      <guid>https://duder-git.github.io/%E5%89%8D%E5%90%91%E6%8A%95%E5%BD%B1%E7%9A%84%E8%A7%A3%E6%9E%90%E8%AE%A1%E7%AE%97/</guid>
-      <description>&lt;h1 id=&#34;前向投影的解析计算&#34;&gt;前向投影的解析计算&lt;/h1&gt;
-&lt;h2 id=&#34;要求&#34;&gt;要求&lt;/h2&gt;
-&lt;p&gt;编写实现扇形束或平行束CT前向投影解析计算的代码，获取&lt;code&gt;Shepp Logan&lt;/code&gt;仿体的前向投影, 并显示对应的&lt;code&gt;sinogram&lt;/code&gt;图；将&lt;code&gt;Shepp Logan&lt;/code&gt;修改为一个非常小的&lt;code&gt;点源&lt;/code&gt;，采用前向投影解析计算的代码，计算该点源的&lt;code&gt;Sinogram&lt;/code&gt;图并显示。&lt;/p&gt;
-&lt;p&gt;注意：Shepp Logan仿体定义有很多变体，实现是选取其中一个即可。&lt;/p&gt;
-&lt;h2 id=&#34;思路&#34;&gt;思路&lt;/h2&gt;
-&lt;p&gt;前向投影的解析计算方法，计算对应图像的每一个点投影到探测器对应位置，统计每个角度每个探测器上的数值。&lt;/p&gt;
-&lt;p&gt;可以通过两步进行计算：&lt;/p&gt;
-&lt;p&gt;（1）根据探测器角度与探测器编号计算对应探测器的直线方程，该直线从探测器上一点到图像；&lt;/p&gt;
-&lt;p&gt;（2）计算该直线方程穿过的图像像素点，根据图像数值求和作为该探测器的接收值；&lt;/p&gt;
-&lt;p&gt;通过两个函数分别实现:&lt;/p&gt;
-&lt;pre&gt;&lt;code&gt; 1. `CalSlope()`：对直线方程的计算；
- 2. `CalDis()`：统计探测器接收的信号；
-&lt;/code&gt;&lt;/pre&gt;
-&lt;h2 id=&#34;sheep-logan仿体&#34;&gt;Sheep Logan仿体&lt;/h2&gt;
-&lt;!-- raw HTML omitted --&gt;
-&lt;!-- raw HTML omitted --&gt;
-&lt;p&gt;图像尺寸为128*128，导致解析法计算过程精度降低，在投影角度为90%有明显计算误差。&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-matlab&#34; data-lang=&#34;matlab&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;%% 解析法投影 Shepp-Logan&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;clc,clear
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;% 生成 Shepp Logan仿体图像&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;P = phantom(&lt;span style=&#34;color:#ae81ff&#34;&gt;128&lt;/span&gt;); 
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;figure
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;imshow(P)
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;title(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;Shepp-Logan&amp;#39;&lt;/span&gt;)
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;% 参数设定&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;NumDetector = &lt;span style=&#34;color:#ae81ff&#34;&gt;150&lt;/span&gt;;      &lt;span style=&#34;color:#75715e&#34;&gt;% 探测器数量&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;NumAngle = &lt;span style=&#34;color:#ae81ff&#34;&gt;360&lt;/span&gt;;         &lt;span style=&#34;color:#75715e&#34;&gt;% 旋转角度&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;Rdata = zeros(NumDetector,NumAngle);    
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;for&lt;/span&gt; i=&lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;:NumAngle
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#66d9ef&#34;&gt;for&lt;/span&gt; j =&lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;:NumDetector
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        [k,b] = CalSlope(P,i,j,NumDetector);
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        Rdata(j,i) = CalDis(k,b,P);
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#66d9ef&#34;&gt;end&lt;/span&gt; 
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;end&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;figure
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;imshow(Rdata,[])
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;colorbar()
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;colormap(gray)
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;title(&amp;#34;Shepp&lt;span style=&#34;color:#f92672&#34;&gt;-&lt;/span&gt;Logan解析法投影图&amp;#34;)
-&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;点源仿体&#34;&gt;点源仿体&lt;/h2&gt;
-&lt;!-- raw HTML omitted --&gt;
-&lt;!-- raw HTML omitted --&gt;
-&lt;p&gt;由投影结果可以看到，对于单个点源图像的计算由比较大的误差，其中部分角度缺失，投影质量较差。&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-matlab&#34; data-lang=&#34;matlab&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;%% 解析法投影 点模型&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;P = zeros(&lt;span style=&#34;color:#ae81ff&#34;&gt;128&lt;/span&gt;);
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;P(&lt;span style=&#34;color:#ae81ff&#34;&gt;32&lt;/span&gt;,&lt;span style=&#34;color:#ae81ff&#34;&gt;32&lt;/span&gt;) = &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;;
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;figure
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;imshow(P)
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;title(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;Point&amp;#39;&lt;/span&gt;)
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;% 参数设定&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;NumDetector = &lt;span style=&#34;color:#ae81ff&#34;&gt;150&lt;/span&gt;;      &lt;span style=&#34;color:#75715e&#34;&gt;% 探测器数量&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;NumAngle = &lt;span style=&#34;color:#ae81ff&#34;&gt;360&lt;/span&gt;;         &lt;span style=&#34;color:#75715e&#34;&gt;% 旋转角度&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;Rdata = zeros(NumDetector,NumAngle);    
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;for&lt;/span&gt; i=&lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;:NumAngle
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#66d9ef&#34;&gt;for&lt;/span&gt; j =&lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;:NumDetector
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        [k,b] = CalSlope(P,i,j,NumDetector);
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        Rdata(j,i) = CalDis(k,b,P);
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#66d9ef&#34;&gt;end&lt;/span&gt; 
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;end&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;figure
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;imshow(Rdata,[])
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;colorbar()
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;colormap(gray)
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;title(&amp;#34;点源解析法投影图&amp;#34;)
-&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;函数&#34;&gt;函数&lt;/h2&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-matlab&#34; data-lang=&#34;matlab&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;%% function&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;function&lt;/span&gt; [k,b] = &lt;span style=&#34;color:#a6e22e&#34;&gt;CalSlope&lt;/span&gt;(Img, angle, num, NumDetector)
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;DisAbord = &lt;span style=&#34;color:#ae81ff&#34;&gt;100&lt;/span&gt;;
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;%角度弧度制转换&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;anglePi = pi&lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt;angle &lt;span style=&#34;color:#f92672&#34;&gt;/&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;180&lt;/span&gt;;
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;%计算k&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;%k1 = tan(anglePi);&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; angle &lt;span style=&#34;color:#f92672&#34;&gt;==&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    k = &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;;
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;elseif&lt;/span&gt; angle &lt;span style=&#34;color:#f92672&#34;&gt;==&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;90&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    k = &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;;
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;else&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    k = &lt;span style=&#34;color:#f92672&#34;&gt;-&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;/&lt;/span&gt;tan(anglePi);
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;end&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;%计算最中心的传感器的坐标&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;center_x = size(Img,&lt;span style=&#34;color:#ae81ff&#34;&gt;2&lt;/span&gt;)&lt;span style=&#34;color:#f92672&#34;&gt;/&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;2&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;+&lt;/span&gt;sin(anglePi)&lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt;DisAbord;
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;center_y = size(Img,&lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;)&lt;span style=&#34;color:#f92672&#34;&gt;/&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;2&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;-&lt;/span&gt;cos(anglePi)&lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt;DisAbord;
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;%算出第num个传感器距离中心的距离&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;DisCenter = (num&lt;span style=&#34;color:#f92672&#34;&gt;-&lt;/span&gt;(NumDetector&lt;span style=&#34;color:#f92672&#34;&gt;+&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;)&lt;span style=&#34;color:#f92672&#34;&gt;/&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;2&lt;/span&gt;);
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;%计算第num个传感器的坐标&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;x = center_x &lt;span style=&#34;color:#f92672&#34;&gt;+&lt;/span&gt; DisCenter&lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt;cos(anglePi);
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;y = center_y &lt;span style=&#34;color:#f92672&#34;&gt;+&lt;/span&gt; DisCenter&lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt;sin(anglePi);
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;%根据y=kx+b计算b&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;b = y &lt;span style=&#34;color:#f92672&#34;&gt;-&lt;/span&gt; k&lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt;x;
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;end&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-matlab&#34; data-lang=&#34;matlab&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;%% function&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;function&lt;/span&gt; value = &lt;span style=&#34;color:#a6e22e&#34;&gt;CalDis&lt;/span&gt;(k,b,Img)
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;value = &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;;
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;for&lt;/span&gt; i = &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;:size(Img,&lt;span style=&#34;color:#ae81ff&#34;&gt;2&lt;/span&gt;)
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#66d9ef&#34;&gt;for&lt;/span&gt; j = &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;:size(Img,&lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;)
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        dis = abs(k&lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt;(i&lt;span style=&#34;color:#f92672&#34;&gt;-&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;0.5&lt;/span&gt;)&lt;span style=&#34;color:#f92672&#34;&gt;-&lt;/span&gt;(j&lt;span style=&#34;color:#f92672&#34;&gt;-&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;0.5&lt;/span&gt;)&lt;span style=&#34;color:#f92672&#34;&gt;+&lt;/span&gt;b)&lt;span style=&#34;color:#f92672&#34;&gt;/&lt;/span&gt;sqrt(k^&lt;span style=&#34;color:#ae81ff&#34;&gt;2&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;+&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;);
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; k &lt;span style=&#34;color:#f92672&#34;&gt;==&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;||&lt;/span&gt;k &lt;span style=&#34;color:#f92672&#34;&gt;==&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;            judge = &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;/&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;2&lt;/span&gt;;
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        &lt;span style=&#34;color:#66d9ef&#34;&gt;else&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;            judge = &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;/&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;2&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt;abs(k&lt;span style=&#34;color:#f92672&#34;&gt;/&lt;/span&gt;sqrt(k^&lt;span style=&#34;color:#ae81ff&#34;&gt;2&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;+&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;));
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        &lt;span style=&#34;color:#66d9ef&#34;&gt;end&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; dis &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt; judge
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;            value = value &lt;span style=&#34;color:#f92672&#34;&gt;+&lt;/span&gt; Img(j,i);
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        &lt;span style=&#34;color:#66d9ef&#34;&gt;end&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#66d9ef&#34;&gt;end&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;end&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;end&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;</description>
-    </item>
-    
-    <item>
-      <title>图像读取于显示</title>
-      <link>https://duder-git.github.io/%E5%9B%BE%E5%83%8F%E8%AF%BB%E5%8F%96%E4%B8%8E%E6%98%BE%E7%A4%BA/</link>
-      <pubDate>Mon, 25 Apr 2022 21:23:18 +0800</pubDate>
-      
-      <guid>https://duder-git.github.io/%E5%9B%BE%E5%83%8F%E8%AF%BB%E5%8F%96%E4%B8%8E%E6%98%BE%E7%A4%BA/</guid>
-      <description>&lt;h1 id=&#34;图像读取与显示&#34;&gt;图像读取与显示&lt;/h1&gt;
-&lt;h2 id=&#34;读取并显示raw格式文件&#34;&gt;读取并显示raw格式文件&lt;/h2&gt;
-&lt;p&gt;已知文件&lt;code&gt;data1.raw&lt;/code&gt;是按照裸数据的形式保存的一张图片，图像大小512×512，像素存储的数据类型为float型，请编写代码将该图像读出，并以两种不同窗口窗位显示该图像。&lt;/p&gt;
-&lt;p&gt;使用&lt;code&gt;fopen()&lt;/code&gt;打开文件&lt;/p&gt;
-&lt;p&gt;使用&lt;code&gt;fread()&lt;/code&gt;以&lt;code&gt;float&lt;/code&gt;格式读取文件具体内容&lt;/p&gt;
-&lt;p&gt;使用&lt;code&gt;fclose()&lt;/code&gt;关闭文件&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-matlab&#34; data-lang=&#34;matlab&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;% 本程序用于读取raw格式数据&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;clc,clear
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;% 读取raw数据&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;f1 = fopen(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;data1.raw&amp;#39;&lt;/span&gt;,&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;rb&amp;#39;&lt;/span&gt;);
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;data = fread(f1,[&lt;span style=&#34;color:#ae81ff&#34;&gt;512&lt;/span&gt;,&lt;span style=&#34;color:#ae81ff&#34;&gt;512&lt;/span&gt;],&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;float&amp;#39;&lt;/span&gt;);
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;fclose(f1);
-&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;使用&lt;code&gt;subplot()&lt;/code&gt;构建二分隔&lt;/p&gt;
-&lt;p&gt;使用&lt;code&gt;imshow()&lt;/code&gt;控制图像颜色范围&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-matlab&#34; data-lang=&#34;matlab&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;%% 绘制图窗&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;figure
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;subplot(&lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;,&lt;span style=&#34;color:#ae81ff&#34;&gt;2&lt;/span&gt;,&lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;)
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;imshow(data,[])
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;title(&amp;#34;data1.raw []&amp;#34;)
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;subplot(&lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;,&lt;span style=&#34;color:#ae81ff&#34;&gt;2&lt;/span&gt;,&lt;span style=&#34;color:#ae81ff&#34;&gt;2&lt;/span&gt;)
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;imshow(data,[&lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;,&lt;span style=&#34;color:#ae81ff&#34;&gt;0.5&lt;/span&gt;])
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;title(&amp;#34;data1.raw [&lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;,&lt;span style=&#34;color:#ae81ff&#34;&gt;0.5&lt;/span&gt;]&amp;#34;)
-&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;!-- raw HTML omitted --&gt;
-&lt;h2 id=&#34;读取并显示自定义格式文件&#34;&gt;读取并显示自定义格式文件&lt;/h2&gt;
-&lt;p&gt;已知文件&lt;code&gt;data2.abc&lt;/code&gt;以一种自定义格式的存储的一张图片。&lt;/p&gt;
-&lt;p&gt;文件分为两部分，第一部分是128个字节的文件头，第二部分是逐行存储的该图片的各个像素值。&lt;/p&gt;
-&lt;p&gt;在128个字节的文件头中，1-4字节按照int类型存储图像的宽，5-8字节按照int类型存储图像的高，第9个字节按照char类型存储数据类型的标识字。&lt;/p&gt;
-&lt;p&gt;关于数量类型标识字的定义如下：&lt;/p&gt;
-&lt;table&gt;
-&lt;thead&gt;
-&lt;tr&gt;
-&lt;th style=&#34;text-align:center&#34;&gt;void&lt;/th&gt;
-&lt;th style=&#34;text-align:center&#34;&gt;bit&lt;/th&gt;
-&lt;th style=&#34;text-align:center&#34;&gt;char&lt;/th&gt;
-&lt;th style=&#34;text-align:center&#34;&gt;unsigned char&lt;/th&gt;
-&lt;th style=&#34;text-align:center&#34;&gt;short&lt;/th&gt;
-&lt;th style=&#34;text-align:center&#34;&gt;unsigned short&lt;/th&gt;
-&lt;/tr&gt;
-&lt;/thead&gt;
-&lt;tbody&gt;
-&lt;tr&gt;
-&lt;td style=&#34;text-align:center&#34;&gt;0&lt;/td&gt;
-&lt;td style=&#34;text-align:center&#34;&gt;1&lt;/td&gt;
-&lt;td style=&#34;text-align:center&#34;&gt;2&lt;/td&gt;
-&lt;td style=&#34;text-align:center&#34;&gt;3&lt;/td&gt;
-&lt;td style=&#34;text-align:center&#34;&gt;4&lt;/td&gt;
-&lt;td style=&#34;text-align:center&#34;&gt;5&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td style=&#34;text-align:center&#34;&gt;int&lt;/td&gt;
-&lt;td style=&#34;text-align:center&#34;&gt;unsigned int&lt;/td&gt;
-&lt;td style=&#34;text-align:center&#34;&gt;long&lt;/td&gt;
-&lt;td style=&#34;text-align:center&#34;&gt;unsigned long&lt;/td&gt;
-&lt;td style=&#34;text-align:center&#34;&gt;float&lt;/td&gt;
-&lt;td style=&#34;text-align:center&#34;&gt;double&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td style=&#34;text-align:center&#34;&gt;6&lt;/td&gt;
-&lt;td style=&#34;text-align:center&#34;&gt;7&lt;/td&gt;
-&lt;td style=&#34;text-align:center&#34;&gt;8&lt;/td&gt;
-&lt;td style=&#34;text-align:center&#34;&gt;9&lt;/td&gt;
-&lt;td style=&#34;text-align:center&#34;&gt;10&lt;/td&gt;
-&lt;td style=&#34;text-align:center&#34;&gt;11&lt;/td&gt;
-&lt;/tr&gt;
-&lt;/tbody&gt;
-&lt;/table&gt;
-&lt;p&gt;请编写代码将该图像读出，并以合适的窗口窗位显示该图像，另以伪彩色的形式显示该图像。&lt;/p&gt;
-&lt;p&gt;使用&lt;code&gt;fopen()&lt;/code&gt;打开文件&lt;/p&gt;
-&lt;p&gt;使用&lt;code&gt;fread()&lt;/code&gt;以&lt;code&gt;int&lt;/code&gt;格式读取文件具体内容，前八个字节用于存放尺寸信息，正好为两个&lt;code&gt;int&lt;/code&gt;大小。指针指在第九个字节上，以&lt;code&gt;char&lt;/code&gt;类型读取，为文件储存格式&lt;/p&gt;
-&lt;p&gt;使用&lt;code&gt;fseek()&lt;/code&gt;跳转到129字节位置，以指定尺寸&lt;code&gt;fsize &lt;/code&gt;读取图像信息&lt;/p&gt;
-&lt;p&gt;使用&lt;code&gt;fclose()&lt;/code&gt;关闭文件&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-matlab&#34; data-lang=&#34;matlab&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;%% 读取自定义数据&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;f2 = fopen(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;data2.abc&amp;#39;&lt;/span&gt;,&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;rb&amp;#39;&lt;/span&gt;);
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;fsize = fread(f2,[&lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;,&lt;span style=&#34;color:#ae81ff&#34;&gt;2&lt;/span&gt;],&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;int&amp;#39;&lt;/span&gt;);
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;fsize = [fsize(&lt;span style=&#34;color:#ae81ff&#34;&gt;2&lt;/span&gt;),fsize(&lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;)];
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;ftell(f2)
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;format = fread(f2,[&lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;,&lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;],&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;char&amp;#39;&lt;/span&gt;);
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;ftell(f2)
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;switch&lt;/span&gt; format
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;case&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt; str = &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;void&amp;#39;&lt;/span&gt;;
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;case&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt; str = &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;bit&amp;#39;&lt;/span&gt;;
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;case&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;2&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt; str = &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;char&amp;#39;&lt;/span&gt;;
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;case&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;3&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt; str = &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;unsigned char&amp;#39;&lt;/span&gt;;
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;case&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;4&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt; str = &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;short&amp;#39;&lt;/span&gt;;
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;case&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;5&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt; str = &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;unsigned short&amp;#39;&lt;/span&gt;;
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;case&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;6&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt; str = &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;int&amp;#39;&lt;/span&gt;;
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;case&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;7&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt; str = &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;unsigned int&amp;#39;&lt;/span&gt;;
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;case&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;8&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt; str = &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;long&amp;#39;&lt;/span&gt;;
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;case&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;9&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt; str = &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;unsigned long&amp;#39;&lt;/span&gt;;
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;case&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;10&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt; str = &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;float&amp;#39;&lt;/span&gt;;
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;case&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;11&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt; str = &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;double&amp;#39;&lt;/span&gt;;
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;end&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;% 跳转到图像存储空间&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;fseek(f2,&lt;span style=&#34;color:#ae81ff&#34;&gt;129&lt;/span&gt;,&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;bof&amp;#39;&lt;/span&gt;);
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;ftell(f2)
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;data2= fread(f2,fsize,str);
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;fclose(f2);
-&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;使用&lt;code&gt;imshow()&lt;/code&gt;显示图像&lt;/p&gt;
-&lt;p&gt;使用&lt;code&gt;colormap&lt;/code&gt;为图像赋伪彩&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-matlab&#34; data-lang=&#34;matlab&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;%%&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;figure
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;imshow(data2,[]);
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;title(&amp;#34;data2.abc&amp;#34;)
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;figure
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;imshow(data2,[]);
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;colormap default;
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;title(&amp;#34;data2.abc, colormap default&amp;#34;)
-&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&lt;!-- raw HTML omitted --&gt;&lt;!-- raw HTML omitted --&gt;&lt;/p&gt;
-</description>
-    </item>
-    
-    <item>
-      <title>Abouts</title>
-      <link>https://duder-git.github.io/about/</link>
-      <pubDate>Tue, 15 Mar 2022 10:38:44 +0800</pubDate>
-      
-      <guid>https://duder-git.github.io/about/</guid>
-      <description></description>
-    </item>
     
     <item>
       <title>Posts</title>
       <link>https://duder-git.github.io/posts/</link>
-      <pubDate>Mon, 14 Mar 2022 21:14:35 +0800</pubDate>
+      <pubDate>Mon, 09 May 2022 16:24:18 +0800</pubDate>
       
       <guid>https://duder-git.github.io/posts/</guid>
       <description></description>
     </item>
     
     <item>
-      <title>About</title>
+      <title>readme</title>
       <link>https://duder-git.github.io/about/</link>
-      <pubDate>Mon, 14 Mar 2022 16:35:16 +0800</pubDate>
+      <pubDate>Mon, 09 May 2022 16:24:18 +0800</pubDate>
+      
+      <guid>https://duder-git.github.io/about/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Abouts</title>
+      <link>https://duder-git.github.io/about/</link>
+      <pubDate>Tue, 15 Mar 2022 10:38:44 +0800</pubDate>
       
       <guid>https://duder-git.github.io/about/</guid>
       <description></description>

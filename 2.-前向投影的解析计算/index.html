@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+    <head>
+    <meta http-equiv="content-type" content="text/html;charset=utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noodp"/>
+    <meta name="author" content="Duder">
+    <meta name="description" content="About my study and work">
+    <meta name="keywords" content="Blog">
+    
+    <link rel="prev" href="https://duder-git.github.io/1.-%E5%9B%BE%E5%83%8F%E8%AF%BB%E5%8F%96%E4%B8%8E%E6%98%BE%E7%A4%BA/" />
+    <link rel="next" href="https://duder-git.github.io/3.-%E5%89%8D%E5%90%91%E6%8A%95%E5%BD%B1%E7%9A%84%E6%95%B0%E5%80%BC%E8%AE%A1%E7%AE%97/" />
+    <link rel="canonical" href="https://duder-git.github.io/2.-%E5%89%8D%E5%90%91%E6%8A%95%E5%BD%B1%E7%9A%84%E8%A7%A3%E6%9E%90%E8%AE%A1%E7%AE%97/" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    <link rel="manifest" href="/site.webmanifest">
+    <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+    <meta name="msapplication-TileColor" content="#da532c">
+    <meta name="theme-color" content="#ffffff">
+    <title>
+        
+        
+            前向投影的解析计算 | Duder`s Blog
+        
+    </title>
+    <meta name="title" content="前向投影的解析计算 | Duder`s Blog">
+    
+<link rel="stylesheet" href="/css/main.min.css">
+
+
+    
+    
+ 
+
+<script type="application/ld+json">
+{
+    "@context" : "http://schema.org",
+    "@type" : "BlogPosting",
+    "mainEntityOfPage": {
+         "@type": "WebPage",
+         "@id": "https:\/\/duder-git.github.io"
+    },
+    "articleSection" : "",
+    "name" : "前向投影的解析计算",
+    "headline" : "前向投影的解析计算",
+    "description" : "前向投影的解析计算 要求 编写实现扇形束或平行束CT前向投影解析计算的代码，获取Shepp Logan仿体的前向投影, 并显示对应的sinogram",
+    "inLanguage" : "zh-cn",
+    "author" : "Duder",
+    "creator" : "Duder",
+    "publisher": "Duder",
+    "accountablePerson" : "Duder",
+    "copyrightHolder" : "Duder",
+    "copyrightYear" : "2022",
+    "datePublished": "2022-04-25 21:23:18 \u002b0800 CST",
+    "dateModified" : "2022-04-25 21:23:18 \u002b0800 CST",
+    "url" : "https:\/\/duder-git.github.io\/2.-%E5%89%8D%E5%90%91%E6%8A%95%E5%BD%B1%E7%9A%84%E8%A7%A3%E6%9E%90%E8%AE%A1%E7%AE%97\/",
+    "wordCount" : "1295",
+    "keywords" : [ "MATLAB", "Duder`s Blog"]
+}
+</script>
+
+  </head>
+    <body class="">
+        <div class="wrapper">
+            <nav class="navbar">
+    
+        <progress class="content_progress" max="0" value="0"></progress>
+    
+    <div class="container">
+        
+            <div class="navbar-header header-back2home-logo">
+                <span class="logo_mark" >>$</span>
+                <a href="https://duder-git.github.io">
+                    <span class="logo_text" >cd /home/</span>
+                    <span class="logo_cursor" ></span>
+                </a>
+            </div>
+        
+        <div class="navbar-right">
+                
+                <span class="menu">
+                
+                <a class="menu-item" href="/posts/" title="">Blog</a>
+                
+                <a class="menu-item" href="/categories/" title="">Categories</a>
+                
+                <a class="menu-item" href="/tags/" title="">Tags</a>
+                
+                <a class="menu-item" href="/about/" title="">About</a>
+                
+                <span class="divide"></span>
+                <a href="javascript:void(0);" class="theme-switch"><i class="iconfont icon-dark-mode"></i></a>
+                </span>
+        </div>
+    </div>
+</nav>
+<nav class="navbar-mobile" id="nav-mobile" style="display: none">
+    
+        <progress class="content_progress" max="0" value="0"></progress>
+    
+     <div class="container">
+        <div class="navbar">
+            <div class="navbar-header header-logo">
+                    <a href="https://duder-git.github.io">Duder`s Blog</a>
+            </div>
+            <div class="navbar-right">
+                <div><a href="javascript:void(0);" class="theme-switch"><i class="iconfont icon-dark-mode"></i></a></div>
+                <div class="menu-toggle">
+                    <span></span><span></span><span></span>
+                </div>
+            </div>
+        </div>
+     
+          <div class="menu" id="mobile-menu">
+                <nav class="mb-md">
+                    
+                    
+                        <a class="menu-item" href="/posts/" title="">
+                            <h3>Blog</h3>
+                            <div class="menu-active"></div>
+                        </a>
+                    
+                        <a class="menu-item" href="/categories/" title="">
+                            <h3>Categories</h3>
+                            <div class="menu-active"></div>
+                        </a>
+                    
+                        <a class="menu-item" href="/tags/" title="">
+                            <h3>Tags</h3>
+                            <div class="menu-active"></div>
+                        </a>
+                    
+                        <a class="menu-item" href="/about/" title="">
+                            <h3>About</h3>
+                            <div class="menu-active"></div>
+                        </a>
+                    
+                </nav>
+        </div>
+    </div>
+</nav>
+            <main class="main">
+                <div class="container">
+                    
+<div class="post-warp archive">
+    <h2 class="post-title" style="text-align:right;padding-bottom:2em">前向投影的解析计算</h2>
+    <div class="post-content">
+        <h1 id="前向投影的解析计算">前向投影的解析计算</h1>
+<h2 id="要求">要求</h2>
+<p>编写实现扇形束或平行束CT前向投影解析计算的代码，获取<code>Shepp Logan</code>仿体的前向投影, 并显示对应的<code>sinogram</code>图；将<code>Shepp Logan</code>修改为一个非常小的<code>点源</code>，采用前向投影解析计算的代码，计算该点源的<code>Sinogram</code>图并显示。</p>
+<p>注意：Shepp Logan仿体定义有很多变体，实现是选取其中一个即可。</p>
+<h2 id="思路">思路</h2>
+<p>前向投影的解析计算方法，计算对应图像的每一个点投影到探测器对应位置，统计每个角度每个探测器上的数值。</p>
+<p>可以通过两步进行计算：</p>
+<p>（1）根据探测器角度与探测器编号计算对应探测器的直线方程，该直线从探测器上一点到图像；</p>
+<p>（2）计算该直线方程穿过的椭圆长度，并结合椭圆强度值，计算穿过的所有椭圆长度乘强度之和作为该探测器的接收值；</p>
+<p>通过两个函数分别实现:</p>
+<blockquote>
+<p><code>CalSlope()</code>：对直线方程的计算；</p>
+<p><code>CalDis3()</code>：统计探测器接收的信号；</p>
+</blockquote>
+<h2 id="sheep-logan仿体">Sheep Logan仿体</h2>
+<p>使用椭圆函数定义的方法构建Sheep-Logan图像</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-matlab" data-lang="matlab"><span style="display:flex;"><span><span style="color:#75715e">%           强度 半长轴 半短轴  位置x 位置y 倾斜度</span>
+</span></span><span style="display:flex;"><span>ellipse = [   <span style="color:#ae81ff">1</span>  .<span style="color:#ae81ff">69</span>    .<span style="color:#ae81ff">92</span>     <span style="color:#ae81ff">0</span>     <span style="color:#ae81ff">0</span>     <span style="color:#ae81ff">0</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#f92672">-</span>.<span style="color:#ae81ff">8</span>  .<span style="color:#ae81ff">6624</span>  .<span style="color:#ae81ff">8740</span>   <span style="color:#ae81ff">0</span>   <span style="color:#f92672">-</span>.<span style="color:#ae81ff">0184</span>  <span style="color:#ae81ff">0</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#f92672">-</span>.<span style="color:#ae81ff">2</span>  .<span style="color:#ae81ff">1100</span>  .<span style="color:#ae81ff">3100</span>  .<span style="color:#ae81ff">22</span>    <span style="color:#ae81ff">0</span>    <span style="color:#f92672">-</span><span style="color:#ae81ff">18</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#f92672">-</span>.<span style="color:#ae81ff">2</span>  .<span style="color:#ae81ff">1600</span>  .<span style="color:#ae81ff">4100</span> <span style="color:#f92672">-</span>.<span style="color:#ae81ff">22</span>    <span style="color:#ae81ff">0</span>     <span style="color:#ae81ff">18</span>
+</span></span><span style="display:flex;"><span>             .<span style="color:#ae81ff">1</span>  .<span style="color:#ae81ff">2100</span>  .<span style="color:#ae81ff">2500</span>   <span style="color:#ae81ff">0</span>    .<span style="color:#ae81ff">35</span>    <span style="color:#ae81ff">0</span>
+</span></span><span style="display:flex;"><span>             .<span style="color:#ae81ff">1</span>  .<span style="color:#ae81ff">0460</span>  .<span style="color:#ae81ff">0460</span>   <span style="color:#ae81ff">0</span>    .<span style="color:#ae81ff">1</span>     <span style="color:#ae81ff">0</span>
+</span></span><span style="display:flex;"><span>             .<span style="color:#ae81ff">1</span>  .<span style="color:#ae81ff">0460</span>  .<span style="color:#ae81ff">0460</span>   <span style="color:#ae81ff">0</span>   <span style="color:#f92672">-</span>.<span style="color:#ae81ff">1</span>     <span style="color:#ae81ff">0</span>
+</span></span><span style="display:flex;"><span>             .<span style="color:#ae81ff">1</span>  .<span style="color:#ae81ff">0460</span>  .<span style="color:#ae81ff">0230</span> <span style="color:#f92672">-</span>.<span style="color:#ae81ff">08</span>  <span style="color:#f92672">-</span>.<span style="color:#ae81ff">605</span>   <span style="color:#ae81ff">0</span> 
+</span></span><span style="display:flex;"><span>             .<span style="color:#ae81ff">1</span>  .<span style="color:#ae81ff">0230</span>  .<span style="color:#ae81ff">0230</span>   <span style="color:#ae81ff">0</span>   <span style="color:#f92672">-</span>.<span style="color:#ae81ff">606</span>   <span style="color:#ae81ff">0</span>
+</span></span><span style="display:flex;"><span>             .<span style="color:#ae81ff">1</span>  .<span style="color:#ae81ff">0230</span>  .<span style="color:#ae81ff">0460</span>  .<span style="color:#ae81ff">06</span>  <span style="color:#f92672">-</span>.<span style="color:#ae81ff">605</span>   <span style="color:#ae81ff">0</span>   ];
+</span></span><span style="display:flex;"><span>I = phantom(ellipse,<span style="color:#ae81ff">256</span>);
+</span></span><span style="display:flex;"><span>figure
+</span></span><span style="display:flex;"><span>imshow(I,[])
+</span></span></code></pre></div><!-- raw HTML omitted -->
+<p><img src="https://s2.loli.net/2022/05/04/FxSkM2Oudbp6Ufc.png" alt="Sheep-Logan解析法360"></p>
+<p>由投影结果可以看出，解析法在<code>θ</code>为0度和180度时出现比较明显的错误，原因是函数定义直线<code>y = k*x + b</code>。在探测器旋转过程中，当<code>k = ∞</code>时，直线函数变为<code>x = a</code>。</p>
+<h2 id="点源仿体">点源仿体</h2>
+<p>使用较小的圆</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-matlab" data-lang="matlab"><span style="display:flex;"><span><span style="color:#75715e">%点源参数（一个较小的圆）</span>
+</span></span><span style="display:flex;"><span>point   = [   <span style="color:#ae81ff">1</span>   .<span style="color:#ae81ff">01</span>   .<span style="color:#ae81ff">01</span>    <span style="color:#ae81ff">0</span>    <span style="color:#ae81ff">0.3</span>     <span style="color:#ae81ff">0</span>   ];
+</span></span><span style="display:flex;"><span>I = phantom(point,<span style="color:#ae81ff">256</span>);
+</span></span><span style="display:flex;"><span>figure
+</span></span><span style="display:flex;"><span>imshow(I,[])
+</span></span></code></pre></div><!-- raw HTML omitted -->
+<p><img src="Point%E8%A7%A3%E6%9E%90%E6%B3%95360.png" alt="Point解析法360"></p>
+<p>由投影结果可以看到，对于单个点源图像的计算由比较大的误差，其中部分角度缺失，投影质量较差。</p>
+<h2 id="代码">代码</h2>
+<p><strong>主程序</strong></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-matlab" data-lang="matlab"><span style="display:flex;"><span>clc,clear
+</span></span><span style="display:flex;"><span><span style="color:#75715e">%shepp-logan模型的参数</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">%           强度 半长轴 半短轴  位置x 位置y 倾斜度</span>
+</span></span><span style="display:flex;"><span>ellipse = [   <span style="color:#ae81ff">1</span>  .<span style="color:#ae81ff">69</span>    .<span style="color:#ae81ff">92</span>     <span style="color:#ae81ff">0</span>     <span style="color:#ae81ff">0</span>     <span style="color:#ae81ff">0</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#f92672">-</span>.<span style="color:#ae81ff">8</span>  .<span style="color:#ae81ff">6624</span>  .<span style="color:#ae81ff">8740</span>   <span style="color:#ae81ff">0</span>   <span style="color:#f92672">-</span>.<span style="color:#ae81ff">0184</span>  <span style="color:#ae81ff">0</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#f92672">-</span>.<span style="color:#ae81ff">2</span>  .<span style="color:#ae81ff">1100</span>  .<span style="color:#ae81ff">3100</span>  .<span style="color:#ae81ff">22</span>    <span style="color:#ae81ff">0</span>    <span style="color:#f92672">-</span><span style="color:#ae81ff">18</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#f92672">-</span>.<span style="color:#ae81ff">2</span>  .<span style="color:#ae81ff">1600</span>  .<span style="color:#ae81ff">4100</span> <span style="color:#f92672">-</span>.<span style="color:#ae81ff">22</span>    <span style="color:#ae81ff">0</span>     <span style="color:#ae81ff">18</span>
+</span></span><span style="display:flex;"><span>             .<span style="color:#ae81ff">1</span>  .<span style="color:#ae81ff">2100</span>  .<span style="color:#ae81ff">2500</span>   <span style="color:#ae81ff">0</span>    .<span style="color:#ae81ff">35</span>    <span style="color:#ae81ff">0</span>
+</span></span><span style="display:flex;"><span>             .<span style="color:#ae81ff">1</span>  .<span style="color:#ae81ff">0460</span>  .<span style="color:#ae81ff">0460</span>   <span style="color:#ae81ff">0</span>    .<span style="color:#ae81ff">1</span>     <span style="color:#ae81ff">0</span>
+</span></span><span style="display:flex;"><span>             .<span style="color:#ae81ff">1</span>  .<span style="color:#ae81ff">0460</span>  .<span style="color:#ae81ff">0460</span>   <span style="color:#ae81ff">0</span>   <span style="color:#f92672">-</span>.<span style="color:#ae81ff">1</span>     <span style="color:#ae81ff">0</span>
+</span></span><span style="display:flex;"><span>             .<span style="color:#ae81ff">1</span>  .<span style="color:#ae81ff">0460</span>  .<span style="color:#ae81ff">0230</span> <span style="color:#f92672">-</span>.<span style="color:#ae81ff">08</span>  <span style="color:#f92672">-</span>.<span style="color:#ae81ff">605</span>   <span style="color:#ae81ff">0</span> 
+</span></span><span style="display:flex;"><span>             .<span style="color:#ae81ff">1</span>  .<span style="color:#ae81ff">0230</span>  .<span style="color:#ae81ff">0230</span>   <span style="color:#ae81ff">0</span>   <span style="color:#f92672">-</span>.<span style="color:#ae81ff">606</span>   <span style="color:#ae81ff">0</span>
+</span></span><span style="display:flex;"><span>             .<span style="color:#ae81ff">1</span>  .<span style="color:#ae81ff">0230</span>  .<span style="color:#ae81ff">0460</span>  .<span style="color:#ae81ff">06</span>  <span style="color:#f92672">-</span>.<span style="color:#ae81ff">605</span>   <span style="color:#ae81ff">0</span>   ];
+</span></span><span style="display:flex;"><span><span style="color:#75715e">%点源参数（一个较小的圆）</span>
+</span></span><span style="display:flex;"><span>point   = [   <span style="color:#ae81ff">1</span>   .<span style="color:#ae81ff">05</span>   .<span style="color:#ae81ff">05</span>    <span style="color:#ae81ff">0</span>    <span style="color:#ae81ff">0.3</span>     <span style="color:#ae81ff">0</span>   ];
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">% 参数设定</span>
+</span></span><span style="display:flex;"><span>NumDetector = <span style="color:#ae81ff">128</span>;      <span style="color:#75715e">% 探测器数量</span>
+</span></span><span style="display:flex;"><span>NumAngle = <span style="color:#ae81ff">360</span>;         <span style="color:#75715e">% 旋转角度</span>
+</span></span><span style="display:flex;"><span>ImgSize = [<span style="color:#ae81ff">128</span>,<span style="color:#ae81ff">128</span>];    <span style="color:#75715e">% 设定图像大小</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>P = point;
+</span></span><span style="display:flex;"><span>I = phantom(P,<span style="color:#ae81ff">256</span>);
+</span></span><span style="display:flex;"><span>figure
+</span></span><span style="display:flex;"><span>imshow(I,[])
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>Rdata = zeros(NumDetector,NumAngle); 
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">for</span> i = <span style="color:#ae81ff">1</span>:NumAngle
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> j = <span style="color:#ae81ff">1</span>:NumDetector
+</span></span><span style="display:flex;"><span>        [k,b] = CalSlope(ImgSize,i,j,NumDetector);
+</span></span><span style="display:flex;"><span>        tmp = <span style="color:#ae81ff">0</span>;
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">for</span> z = <span style="color:#ae81ff">1</span>:size(P,<span style="color:#ae81ff">1</span>)
+</span></span><span style="display:flex;"><span>            tmp = tmp <span style="color:#f92672">+</span> CalDis3(k,b,P(z,:),ImgSize(<span style="color:#ae81ff">1</span>));
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">end</span>
+</span></span><span style="display:flex;"><span>        Rdata(j,i) = tmp;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">end</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">end</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>figure
+</span></span><span style="display:flex;"><span>imshow(Rdata,[<span style="color:#ae81ff">0</span>,<span style="color:#ae81ff">40</span>])
+</span></span><span style="display:flex;"><span>colorbar()
+</span></span><span style="display:flex;"><span>colormap(gray)
+</span></span><span style="display:flex;"><span>title(&#34;Shepp<span style="color:#f92672">-</span>Logan解析法投影图&#34;)
+</span></span><span style="display:flex;"><span><span style="color:#75715e">%title(&#34;Point解析法投影图&#34;)</span>
+</span></span></code></pre></div><p><strong>函数</strong></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-matlab" data-lang="matlab"><span style="display:flex;"><span><span style="color:#66d9ef">function</span> [k,b] = <span style="color:#a6e22e">CalSlope</span>(ImgSize, angle, num, NumDetector)
+</span></span><span style="display:flex;"><span><span style="color:#75715e">% 本函数用于计算探测器在特定偏转角度，穿过特定探测晶体中心的直线方程</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">% Imgsize 图像大小</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">% angle 偏转角度</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">% num 晶体排序</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">% NumberDetector 晶体总数</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>DisAbord = <span style="color:#ae81ff">100</span>;
+</span></span><span style="display:flex;"><span><span style="color:#75715e">%角度弧度制转换</span>
+</span></span><span style="display:flex;"><span>anglePi = pi<span style="color:#f92672">*</span>angle <span style="color:#f92672">/</span> <span style="color:#ae81ff">180</span>;
+</span></span><span style="display:flex;"><span><span style="color:#75715e">%计算k</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">%k1 = tan(anglePi);</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">if</span> angle <span style="color:#f92672">==</span> <span style="color:#ae81ff">0</span>
+</span></span><span style="display:flex;"><span>    k = <span style="color:#ae81ff">1</span>;
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">elseif</span> angle <span style="color:#f92672">==</span> <span style="color:#ae81ff">90</span>
+</span></span><span style="display:flex;"><span>    k = <span style="color:#ae81ff">0</span>;
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">else</span>
+</span></span><span style="display:flex;"><span>    k = <span style="color:#f92672">-</span><span style="color:#ae81ff">1</span><span style="color:#f92672">/</span>tan(anglePi);
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">end</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">%计算最中心的传感器的坐标</span>
+</span></span><span style="display:flex;"><span>center_x = ImgSize(<span style="color:#ae81ff">2</span>)<span style="color:#f92672">/</span><span style="color:#ae81ff">2</span><span style="color:#f92672">+</span>sin(anglePi)<span style="color:#f92672">*</span>DisAbord;
+</span></span><span style="display:flex;"><span>center_y = ImgSize(<span style="color:#ae81ff">1</span>)<span style="color:#f92672">/</span><span style="color:#ae81ff">2</span><span style="color:#f92672">-</span>cos(anglePi)<span style="color:#f92672">*</span>DisAbord;
+</span></span><span style="display:flex;"><span><span style="color:#75715e">%算出第num个传感器距离中心的距离</span>
+</span></span><span style="display:flex;"><span>DisCenter = (num<span style="color:#f92672">-</span>(NumDetector<span style="color:#f92672">+</span><span style="color:#ae81ff">1</span>)<span style="color:#f92672">/</span><span style="color:#ae81ff">2</span>);
+</span></span><span style="display:flex;"><span><span style="color:#75715e">%计算第num个传感器的坐标</span>
+</span></span><span style="display:flex;"><span>x = center_x <span style="color:#f92672">+</span> DisCenter<span style="color:#f92672">*</span>cos(anglePi);
+</span></span><span style="display:flex;"><span>y = center_y <span style="color:#f92672">+</span> DisCenter<span style="color:#f92672">*</span>sin(anglePi);
+</span></span><span style="display:flex;"><span><span style="color:#75715e">%根据y=kx+b计算b</span>
+</span></span><span style="display:flex;"><span>b = y <span style="color:#f92672">-</span> k<span style="color:#f92672">*</span>x;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">end</span>
+</span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-matlab" data-lang="matlab"><span style="display:flex;"><span><span style="color:#66d9ef">function</span> value = <span style="color:#a6e22e">CalDis3</span>(k_,b_,ellipse,width)
+</span></span><span style="display:flex;"><span><span style="color:#75715e">% 本函数用于计算直线穿过椭圆的长度</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">% k_ 直线斜率</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">% b_ 直线常量</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">% ellipse 以函数形式定义的椭圆</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">% width 图像宽度</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">% 椭圆参数</span>
+</span></span><span style="display:flex;"><span>A = ellipse(<span style="color:#ae81ff">1</span>);
+</span></span><span style="display:flex;"><span>a = ellipse(<span style="color:#ae81ff">2</span>);
+</span></span><span style="display:flex;"><span>b = ellipse(<span style="color:#ae81ff">3</span>);
+</span></span><span style="display:flex;"><span>x0 = ellipse(<span style="color:#ae81ff">4</span>);
+</span></span><span style="display:flex;"><span>y0 = ellipse(<span style="color:#ae81ff">5</span>);
+</span></span><span style="display:flex;"><span>anglePi = pi<span style="color:#f92672">*</span>ellipse(<span style="color:#ae81ff">6</span>) <span style="color:#f92672">/</span> <span style="color:#ae81ff">180</span>;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">% 坐标系转换 (0,0)-&gt;(width/2,width/2)</span>
+</span></span><span style="display:flex;"><span>b_= k_<span style="color:#f92672">-</span><span style="color:#ae81ff">1</span> <span style="color:#f92672">+</span> b_<span style="color:#f92672">*</span><span style="color:#ae81ff">2</span><span style="color:#f92672">/</span>width;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">%将直线方程带入到旋转的椭圆方程中</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">% t2、t1、t0分别代表带入后的x的二次、一次以及常数项</span>
+</span></span><span style="display:flex;"><span>k1 = cos(anglePi)<span style="color:#f92672">+</span>k_<span style="color:#f92672">*</span>sin(anglePi);
+</span></span><span style="display:flex;"><span>b1 = (b_<span style="color:#f92672">-</span>y0)<span style="color:#f92672">*</span>sin(anglePi)<span style="color:#f92672">-</span>x0<span style="color:#f92672">*</span>cos(anglePi);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>k2 = k_<span style="color:#f92672">*</span>cos(anglePi)<span style="color:#f92672">-</span>sin(anglePi);
+</span></span><span style="display:flex;"><span>b2 = x0<span style="color:#f92672">*</span>sin(anglePi)<span style="color:#f92672">+</span>(b_<span style="color:#f92672">-</span>y0)<span style="color:#f92672">*</span>cos(anglePi);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>t2 = b^<span style="color:#ae81ff">2</span><span style="color:#f92672">*</span>k1^<span style="color:#ae81ff">2</span><span style="color:#f92672">+</span>a^<span style="color:#ae81ff">2</span><span style="color:#f92672">*</span>k2^<span style="color:#ae81ff">2</span>;
+</span></span><span style="display:flex;"><span>t1 = <span style="color:#ae81ff">2</span><span style="color:#f92672">*</span>b^<span style="color:#ae81ff">2</span><span style="color:#f92672">*</span>k1<span style="color:#f92672">*</span>b1<span style="color:#f92672">+</span><span style="color:#ae81ff">2</span><span style="color:#f92672">*</span>a^<span style="color:#ae81ff">2</span><span style="color:#f92672">*</span>k2<span style="color:#f92672">*</span>b2;
+</span></span><span style="display:flex;"><span>t0 = b^<span style="color:#ae81ff">2</span><span style="color:#f92672">*</span>b1^<span style="color:#ae81ff">2</span><span style="color:#f92672">+</span>a^<span style="color:#ae81ff">2</span><span style="color:#f92672">*</span>b2^<span style="color:#ae81ff">2</span><span style="color:#f92672">-</span>a^<span style="color:#ae81ff">2</span><span style="color:#f92672">*</span>b^<span style="color:#ae81ff">2</span>;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>delta = t1^<span style="color:#ae81ff">2</span><span style="color:#f92672">-</span><span style="color:#ae81ff">4</span><span style="color:#f92672">*</span>t2<span style="color:#f92672">*</span>t0;
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">if</span> delta<span style="color:#f92672">&lt;</span>=<span style="color:#ae81ff">0</span>
+</span></span><span style="display:flex;"><span>    value = <span style="color:#ae81ff">0</span>;
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">else</span>
+</span></span><span style="display:flex;"><span>    x1 = (<span style="color:#f92672">-</span>t1<span style="color:#f92672">-</span>delta^<span style="color:#ae81ff">0.5</span>)<span style="color:#f92672">/</span>(<span style="color:#ae81ff">2</span><span style="color:#f92672">*</span>t2);
+</span></span><span style="display:flex;"><span>    x2 = (<span style="color:#f92672">-</span>t1<span style="color:#f92672">+</span>delta^<span style="color:#ae81ff">0.5</span>)<span style="color:#f92672">/</span>(<span style="color:#ae81ff">2</span><span style="color:#f92672">*</span>t2);
+</span></span><span style="display:flex;"><span>    y1 = k_<span style="color:#f92672">*</span>x1<span style="color:#f92672">+</span>b_;
+</span></span><span style="display:flex;"><span>    y2 = k_<span style="color:#f92672">*</span>x2<span style="color:#f92672">+</span>b_;
+</span></span><span style="display:flex;"><span>    value = ((x1<span style="color:#f92672">-</span>x2)^<span style="color:#ae81ff">2</span><span style="color:#f92672">+</span>(y1<span style="color:#f92672">-</span>y2)^<span style="color:#ae81ff">2</span>)^<span style="color:#ae81ff">0.5</span>;
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">end</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>value = value<span style="color:#f92672">*</span>width<span style="color:#f92672">/</span><span style="color:#ae81ff">2</span><span style="color:#f92672">*</span>A;
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">end</span>
+</span></span></code></pre></div>
+    </div>
+</div>
+
+                </div>
+            </main>
+            <footer class="footer">
+    <div class="copyright">
+        &copy;
+        
+        <span class="with-love">
+    	 <i class="iconfont icon-love"></i>
+         </span>
+         
+            <span class="author" itemprop="copyrightHolder"><a href="https://duder-git.github.io">Duder</a> | </span>
+         
+
+         
+		  <span>Powered by <a href="https://gohugo.io/" target="_blank" rel="external nofollow">Hugo</a> & <a href="https://github.com/Mogeko/Mogege" target="_blank" rel="external nofollow">Mogege</a></span>
+    </div>
+</footer>
+
+
+
+
+
+
+<script defer src="/js/vendor_main.min.js"></script>
+
+
+
+
+
+
+
+<script src="https://cdn.jsdelivr.net/npm/pangu@4.0.7/dist/browser/pangu.min.js" integrity="sha256-j+yj56cdEY2CwkVtGyz18fNybFGpMGJ8JxG3GSyO2+I=" crossorigin="anonymous"></script>
+<script> pangu.spacingPage();</script>
+
+
+
+
+
+        </div>
+    </body>
+</html>
