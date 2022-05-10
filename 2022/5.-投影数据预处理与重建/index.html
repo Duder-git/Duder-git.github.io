@@ -9,8 +9,8 @@
     <meta name="description" content="About my study and work">
     <meta name="keywords" content="Blog">
     
-    <link rel="prev" href="https://duder-git.github.io/2022/3.-%E5%89%8D%E5%90%91%E6%8A%95%E5%BD%B1%E7%9A%84%E6%95%B0%E5%80%BC%E8%AE%A1%E7%AE%97/" />
-    <link rel="next" href="https://duder-git.github.io/2022/4.-%E6%BB%A4%E6%B3%A2%E5%8F%8D%E6%8A%95%E5%BD%B1%E9%87%8D%E5%BB%BA/" />
+    <link rel="prev" href="https://duder-git.github.io/2022/4.-%E6%BB%A4%E6%B3%A2%E5%8F%8D%E6%8A%95%E5%BD%B1%E9%87%8D%E5%BB%BA/" />
+    
     <link rel="canonical" href="https://duder-git.github.io/2022/5.-%E6%8A%95%E5%BD%B1%E6%95%B0%E6%8D%AE%E9%A2%84%E5%A4%84%E7%90%86%E4%B8%8E%E9%87%8D%E5%BB%BA/" />
     <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
     <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
@@ -53,8 +53,8 @@
     "accountablePerson" : "Duder",
     "copyrightHolder" : "Duder",
     "copyrightYear" : "2022",
-    "datePublished": "2022-05-09 16:23:18 \u002b0800 CST",
-    "dateModified" : "2022-05-09 16:23:18 \u002b0800 CST",
+    "datePublished": "2022-05-09 17:23:18 \u002b0800 CST",
+    "dateModified" : "2022-05-09 17:23:18 \u002b0800 CST",
     "url" : "https:\/\/duder-git.github.io\/2022\/5.-%E6%8A%95%E5%BD%B1%E6%95%B0%E6%8D%AE%E9%A2%84%E5%A4%84%E7%90%86%E4%B8%8E%E9%87%8D%E5%BB%BA\/",
     "wordCount" : "1174",
     "keywords" : [ "MATLAB", "Duder`s Blog"]
@@ -266,24 +266,24 @@ $$
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-matlab" data-lang="matlab"><span style="display:flex;"><span>Img = iradon(I_sample_dark_bright_deBL_deSA,<span style="color:#ae81ff">1</span>:<span style="color:#ae81ff">360</span>,<span style="color:#e6db74">&#39;linear&#39;</span>,<span style="color:#e6db74">&#39;Ram-Lak&#39;</span>,<span style="color:#ae81ff">1</span>,<span style="color:#ae81ff">512</span>);
 </span></span></code></pre></div><h2 id="结果分析">结果分析</h2>
 <p><img src="https://s2.loli.net/2022/05/09/c5AmG1TgUVNlnjD.png" alt="步骤比较" loading="lazy" ></p>
-<p><img src="%E9%87%8D%E5%BB%BA%E7%BB%93%E6%9E%9C%E6%AF%94%E8%BE%83.png" alt="重建结果比较" loading="lazy" ></p>
+<p><img src="https://s2.loli.net/2022/05/10/xcGDEIZ32YXU58J.png" alt="重建结果比较" loading="lazy" ></p>
 <p>通过比较以上四幅不同步骤下的图像，可以看到：</p>
 <ol>
 <li>
 <p>平场矫正使得投影数据更加均匀，消除探测器噪声重建图像较好。</p>
-<p><img src="%E5%B9%B3%E5%9C%BA%E7%9F%AB%E6%AD%A3%E5%88%87%E7%BA%BF.png" alt="平场矫正切线" loading="lazy" ></p>
+<p><img src="https://s2.loli.net/2022/05/10/MP7m1Zcg68qJRCB.png" alt="平场矫正切线" loading="lazy" ></p>
 <p>取投影图180度的位置绘制切线图，第一张为原始数据，第二张为做了平场矫正数据。可以看到平场数据信号较为平缓，消除了原始信号存在的高频小幅噪声。在坏点方面，将原始图像的杂乱信号标准化为探测器的基础信号，方便下一步处理。</p>
 </li>
 <li>
 <p>坏点补偿使得信号更为连续，重建图像对比度高较为清晰。</p>
-<p><img src="%E5%9D%8F%E7%82%B9%E8%A1%A5%E5%81%BF%E5%88%87%E7%BA%BF.png" alt="坏点补偿切线" loading="lazy" ></p>
+<p><img src="https://s2.loli.net/2022/05/10/wnMGosk4SERBfvZ.png" alt="坏点补偿切线" loading="lazy" ></p>
 <p>可以看到之前缺失的坏点信息已经补上了。</p>
 </li>
 <li>
 <p>对数运算主要操作，用于将接收到的信号转化为图像重建当中具有物理含义的信号，表示为穿过体素的密度。对应关系变化，背景信号处理为零。</p>
 </li>
 </ol>
-<p><img src="https://s2.loli.net/2022/05/09/ec1RXH5qEWVyhP4.png" alt="对数运算切线" loading="lazy" ></p>
+<p><img src="https://s2.loli.net/2022/05/10/fhBtQgdXyenzPL5.png" alt="对数运算切线" loading="lazy" ></p>
 
     </div>
 
@@ -327,10 +327,8 @@ $$
 
     <div class="post-nav">
         
-        <a href="https://duder-git.github.io/2022/3.-%E5%89%8D%E5%90%91%E6%8A%95%E5%BD%B1%E7%9A%84%E6%95%B0%E5%80%BC%E8%AE%A1%E7%AE%97/" class="prev" rel="prev" title="前向投影的数值计算"><i class="iconfont icon-left"></i>&nbsp;前向投影的数值计算</a>
+        <a href="https://duder-git.github.io/2022/4.-%E6%BB%A4%E6%B3%A2%E5%8F%8D%E6%8A%95%E5%BD%B1%E9%87%8D%E5%BB%BA/" class="prev" rel="prev" title="滤波反投影重建"><i class="iconfont icon-left"></i>&nbsp;滤波反投影重建</a>
         
-        
-        <a href="https://duder-git.github.io/2022/4.-%E6%BB%A4%E6%B3%A2%E5%8F%8D%E6%8A%95%E5%BD%B1%E9%87%8D%E5%BB%BA/" class="next" rel="next" title="滤波反投影重建">滤波反投影重建&nbsp;<i class="iconfont icon-right"></i></a>
         
     </div>
 

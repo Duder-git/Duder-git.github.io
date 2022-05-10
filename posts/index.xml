@@ -6,7 +6,16 @@
     <description>Recent content in Posts on Duder`s Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
-    <lastBuildDate>Mon, 09 May 2022 16:24:18 +0800</lastBuildDate><atom:link href="https://duder-git.github.io/posts/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Mon, 09 May 2022 17:23:18 +0800</lastBuildDate><atom:link href="https://duder-git.github.io/posts/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>投影数据预处理与重建</title>
+      <link>https://duder-git.github.io/2022/5.-%E6%8A%95%E5%BD%B1%E6%95%B0%E6%8D%AE%E9%A2%84%E5%A4%84%E7%90%86%E4%B8%8E%E9%87%8D%E5%BB%BA/</link>
+      <pubDate>Mon, 09 May 2022 17:23:18 +0800</pubDate>
+      
+      <guid>https://duder-git.github.io/2022/5.-%E6%8A%95%E5%BD%B1%E6%95%B0%E6%8D%AE%E9%A2%84%E5%A4%84%E7%90%86%E4%B8%8E%E9%87%8D%E5%BB%BA/</guid>
+      <description>投影数据预处理与重建 说明 数据 ​ ParallelBeam_ProjectionDara.raw ：样品投影数据。采用平行束CT系统对样品进行CT扫描，探测器的通道数为512，在360度范围内等间隔扫描，扫</description>
+    </item>
+    
     <item>
       <title>滤波反投影重建</title>
       <link>https://duder-git.github.io/2022/4.-%E6%BB%A4%E6%B3%A2%E5%8F%8D%E6%8A%95%E5%BD%B1%E9%87%8D%E5%BB%BA/</link>
@@ -14,15 +23,6 @@
       
       <guid>https://duder-git.github.io/2022/4.-%E6%BB%A4%E6%B3%A2%E5%8F%8D%E6%8A%95%E5%BD%B1%E9%87%8D%E5%BB%BA/</guid>
       <description>滤波反投影重建 要求 编程实现扇形束或平行束CT的滤波反投影重建算法，对前期通过解析计算或数值计算得到的Shepp Logan仿体投影数据进行重建</description>
-    </item>
-    
-    <item>
-      <title>投影数据预处理与重建</title>
-      <link>https://duder-git.github.io/2022/5.-%E6%8A%95%E5%BD%B1%E6%95%B0%E6%8D%AE%E9%A2%84%E5%A4%84%E7%90%86%E4%B8%8E%E9%87%8D%E5%BB%BA/</link>
-      <pubDate>Mon, 09 May 2022 16:23:18 +0800</pubDate>
-      
-      <guid>https://duder-git.github.io/2022/5.-%E6%8A%95%E5%BD%B1%E6%95%B0%E6%8D%AE%E9%A2%84%E5%A4%84%E7%90%86%E4%B8%8E%E9%87%8D%E5%BB%BA/</guid>
-      <description>投影数据预处理与重建 说明 数据 ​ ParallelBeam_ProjectionDara.raw ：样品投影数据。采用平行束CT系统对样品进行CT扫描，探测器的通道数为512，在360度范围内等间隔扫描，扫</description>
     </item>
     
     <item>
@@ -44,9 +44,9 @@
     </item>
     
     <item>
-      <title>图像读取于显示</title>
+      <title>图像读取与显示</title>
       <link>https://duder-git.github.io/2022/1.-%E5%9B%BE%E5%83%8F%E8%AF%BB%E5%8F%96%E4%B8%8E%E6%98%BE%E7%A4%BA/</link>
-      <pubDate>Mon, 25 Apr 2022 21:23:18 +0800</pubDate>
+      <pubDate>Mon, 25 Apr 2022 20:23:18 +0800</pubDate>
       
       <guid>https://duder-git.github.io/2022/1.-%E5%9B%BE%E5%83%8F%E8%AF%BB%E5%8F%96%E4%B8%8E%E6%98%BE%E7%A4%BA/</guid>
       <description>图像读取与显示 读取并显示raw格式文件 已知文件data1.raw是按照裸数据的形式保存的一张图片，图像大小512×512，像素存储的数据类型</description>
