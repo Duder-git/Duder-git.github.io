@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" >
+
+<title>滤波反投影重建 | Duder&#39;s Blog</title>
+
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+<link rel="shortcut icon" href="https://duder-git.github.io//favicon.ico?v=1717654629635">
+<link rel="stylesheet" href="https://duder-git.github.io//styles/main.css">
+
+
+  
+    <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css" />
+  
+
+  
+
+
+<link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+
+
+
+    <meta name="description" content="滤波反投影重建
+要求
+
+
+编程实现扇形束或平行束CT的滤波反投影重建算法，对前期通过解析计算或数值计算得到的Shepp Logan仿体投影数据进行重建；
+
+
+将重建结果与原图进行比较，分析重建质量；
+
+
+提交作业时，请简要描述思路，附上代码..." />
+    <meta name="keywords" content="医学图像处理,MATLAB" />
+  </head>
+  <body>
+    <div id="app" class="main">
+
+      <div class="sidebar" :class="{ 'full-height': menuVisible }">
+  <div class="top-container" data-aos="fade-right">
+    <div class="top-header-container">
+      <a class="site-title-container" href="https://duder-git.github.io/">
+        <img src="https://duder-git.github.io//images/avatar.png?v=1717654629635" class="site-logo">
+        <h1 class="site-title">Duder&#39;s Blog</h1>
+      </a>
+      <div class="menu-btn" @click="menuVisible = !menuVisible">
+        <div class="line"></div>
+      </div>
+    </div>
+    <div>
+      
+        
+          <a href="/" class="site-nav">
+            首页
+          </a>
+        
+      
+        
+          <a href="/archives" class="site-nav">
+            归档
+          </a>
+        
+      
+        
+          <a href="/tags" class="site-nav">
+            标签
+          </a>
+        
+      
+        
+          <a href="/post/about" class="site-nav">
+            关于
+          </a>
+        
+      
+    </div>
+  </div>
+  <div class="bottom-container" data-aos="flip-up" data-aos-offset="0">
+    <div class="social-container">
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    </div>
+    <div class="site-description">
+      苟日新 日日新 又日新
+    </div>
+    <div class="site-footer">
+      Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a> | <a class="rss" href="https://duder-git.github.io//atom.xml" target="_blank">RSS</a>
+    </div>
+  </div>
+</div>
+
+
+      <div class="main-container">
+        <div class="content-container" data-aos="fade-up">
+          <div class="post-detail">
+            <h2 class="post-title">滤波反投影重建</h2>
+            <div class="post-date">2022-05-09</div>
+            
+            <div class="post-content" v-pre>
+              <h1 id="滤波反投影重建">滤波反投影重建</h1>
+<h2 id="要求">要求</h2>
+<ol>
+<li>
+<p>编程实现扇形束或平行束CT的滤波反投影重建算法，对前期通过解析计算或数值计算得到的Shepp Logan仿体投影数据进行重建；</p>
+</li>
+<li>
+<p>将重建结果与原图进行比较，分析重建质量；</p>
+</li>
+<li>
+<p>提交作业时，请简要描述思路，附上代码与结果（图像），以word或pdf形式提交。文件命名“4_FBP_学号_姓名.doc”</p>
+</li>
+</ol>
+<h2 id="思路">思路</h2>
+<p>​	使用图像旋转+像素累加得到的投影数据进行FBP重建。</p>
+<pre><code>1. 读取投影数据；
+2. 构建R-L和S-L滤波器；
+3. 编写重建算法函数，使用线性插值的方法计算图像每个像素点，遍历所有角度叠加的得到重建图像；
+4. 分析重建图像质量；
+</code></pre>
+<h2 id="结果">结果</h2>
+<h3 id="r-l和s-l滤波器">R-L和S-L滤波器</h3>
+<figure data-type="image" tabindex="1"><img src="https://s2.loli.net/2022/05/05/zQtseUdjchbCvgT.png" alt="RL-SL" loading="lazy"></figure>
+<h3 id="重建数值计算投影数据">重建数值计算投影数据</h3>
+<figure data-type="image" tabindex="2"><img src="https://s2.loli.net/2022/05/05/Nxsq7F15wRZz9hS.png" alt="对比图" loading="lazy"></figure>
+<p>从图像可以看出，使用不经过滤波器的投影数据直接重建，重建图像与原图有较大差异，出现明显信号失真。经过滤波器的两个重建图像与原始图像较为相似</p>
+<h3 id="比较重建结果">比较重建结果</h3>
+<table>
+<thead>
+<tr>
+<th style="text-align:center"><strong>PSNR</strong></th>
+<th style="text-align:center"><strong>直接反投影</strong></th>
+<th style="text-align:center"><strong>R-L滤波反投影</strong></th>
+<th style="text-align:center"><strong>S-L滤波反投影</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center"><strong>原始图像</strong></td>
+<td style="text-align:center">6.6571</td>
+<td style="text-align:center">17.2412</td>
+<td style="text-align:center">17.7826</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">SSIM</th>
+<th style="text-align:center"><strong>直接反投影</strong></th>
+<th style="text-align:center"><strong>R-L滤波反投影</strong></th>
+<th style="text-align:center"><strong>S-L滤波反投影</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center"><strong>原始图像</strong></td>
+<td style="text-align:center">0.1687</td>
+<td style="text-align:center">0.3487</td>
+<td style="text-align:center">0.3610</td>
+</tr>
+</tbody>
+</table>
+<p>由结果可知，S-L滤波反投影的信噪比值最好，R-L滤波反投影的图像相似性较高。总而言之，经过滤波处理的重建图像较直接重建图像质量都有明显的提高。</p>
+<h2 id="代码">代码</h2>
+<p><strong>主程序</strong></p>
+<pre><code class="language-MATLAB">%% 初始化
+clc,clear;
+
+N = 256;            % 图像大小
+I = phantom(N);     % Shepp-Logan头模型
+theta = 0:1:179;    % 投影角度
+theta_num = length(theta);
+d = 1;              % 平移步长
+delta = pi/180;     % 角度增量
+
+%% 读取投影数据
+% P = radon(I,theta);         % 生成投影数据
+% [mm,nn] = size(P);          % 计算投影数据矩阵的行、列长度
+% e = floor((mm+1)/2);
+% P1 = P(e-N/2:e+N/2-1,:);    % 截取中心N点数据
+
+a = load('Rdata.mat');
+P1 = a.Rdata;
+
+%% 构建滤波器
+% 产生滤波函数
+fh_RL = medfuncRlfilterfunction(N,d);   % R-L滤波函数
+fh_SL = medfuncSlfilterfunction(N,d);   % S-L滤波函数
+
+figure
+subplot(2,1,1)
+plot(fh_RL)
+xlim([N/2-20,N/2+20])
+title('R-L滤波器')
+subplot(2,1,2)
+plot(fh_SL)
+xlim([N/2-20,N/2+20])
+title('S-L滤波器')
+
+% 直接反投影重建
+rec = medfuncBackprojection(theta_num,N,P1,delta);
+
+% R-L函数滤波反投影重建
+rec_RL = medfuncfilteredbackprojection(theta_num,N,P1,delta,fh_RL);
+
+%S-L函数滤波反投影重建
+rec_SL = medfuncfilteredbackprojection(theta_num,N,P1,delta,fh_SL);
+
+%% 图像展示
+figure;
+subplot(2,2,1),imshow(I),title('原始图像');
+subplot(2,2,2),imshow(rec,[]),title('直接反投影重建图像');
+subplot(2,2,3),imshow(rec_RL,[]),title('R-L函数滤波反投影重建图像');
+subplot(2,2,4),imshow(rec_SL,[]),title('S-L函数滤波反投影重建图像');
+
+
+a1 = psnr(funnormalization(I),funnormalization(rec));
+a2 = ssim(funnormalization(I),funnormalization(rec));
+b1 = psnr(funnormalization(I),funnormalization(rec_RL));
+b2 = ssim(funnormalization(I),funnormalization(rec_RL));
+</code></pre>
+<p><strong>函数</strong></p>
+<pre><code class="language-matlab">function fh_RL = medfuncRlfilterfunction(N,d)
+% 生成RL滤波器
+% 输入参数:
+%	N：图像大小，探测器通道个数
+%	d:平移步长
+% 输出参数:
+%	fh_RL:R-L滤波函数
+fh_RL = zeros(1,N);
+for k1 = 1:N
+    fh_RL(k1) = -1/(pi*pi*((k1-N/2-1)*d)^2);
+    if mod(k1-N/2-1,2)==0
+        fh_RL(k1) = 0;
+    end
+end
+fh_RL(N/2+1) = 1/(4*d^2);
+</code></pre>
+<pre><code class="language-matlab">function fh_SL = medfuncSlfilterfunction(N,d)
+% 生成SL滤波器
+% 输入参数:
+%	N：图像大小，探测器通道个数
+% 	d:平移步长
+% 输出参数:
+%	fh_SL:S-L滤波函数
+fh_SL = zeros(1,N);
+for k1 = 1:N
+    fh_SL(k1) = -2/(pi^2*d^2*(4*(k1-N/2-1)^2-1));
+end
+</code></pre>
+<pre><code class="language-matlab">function rec = medfuncBackprojection(theta_num,N,R1,delta)
+% 不使用滤波器的重建算法
+% 输入参数
+%   theta_num:投影角度个数
+%   N:图像大小
+%   R1:投影数据矩阵
+%   delta:角度增量(弧度)
+% 输出参数:
+%   rec:反投影重建图像矩阵
+
+rec = zeros(N);     % 存储重建后的像素值
+for m = 1:theta_num
+    pm = R1(:,m);   % 取某一角度的投影数据
+    Cm = (N/2)*(1-cos((m-1)*delta)-sin((m-1)*delta));
+    for k1 = 1:N
+        for k2 = 1:N
+            % 以下为射束计算，射束编号n取值范围为1~N-1
+            Xrm = Cm+(k2-1)*cos((m-1)*delta)+(k1-1)*sin((m-1)*delta);
+            n = floor(Xrm);                     % 射束编号的整数部分
+            t = Xrm-floor(Xrm);                 % 射束编号的小数部分
+            n = max(1,n);n = min(n,N-1);        % 限定n在1~N-1内
+            p = (1-t)*pm(n)+t*pm(n+1);          % 线性内插
+            rec(N+1-k1,k2) = rec(N+1-k1,k2)+p;  % 反投影，图像需旋转90°
+        end
+    end
+end
+
+</code></pre>
+<pre><code class="language-matlab">function rec = medfuncfilteredbackprojection(theta_num,N,R1,delta,fh)
+% 使用滤波器的重建算法
+% 输入参数:
+%   theta_num:投影角度个数
+%   N:图像大小、探测器通道个数
+%   R1:投影数据矩阵
+%   delta:角度增量(弧度)
+%   fh:R-L滤波函数 S-L滤波器
+% 输出参数：
+%   rec:反投影重建矩阵
+rec = zeros(N);
+for m = 1:theta_num
+    pm = R1(:,m);%某一角度的投影数据
+    pm_Ft = conv(fh,pm,'same');%做卷积
+    Cm = (N/2)*(1-cos((m-1)*delta)-sin((m-1)*delta));
+     for k1 = 1:N
+         for k2 = 1:N
+             %以下是射束计算，射束编号n取值范围为1~N-1
+             Xrm = Cm + (k2-1)*cos((m-1)*delta) + (k1-1)*sin((m-1)*delta);
+             n = floor(Xrm);%射束编号的整数部分
+             t = Xrm-floor(Xrm);%射束编号的小数部分
+             n = max(1,n);n = min(n,N-1);%限定n范围为1~N-1
+             p_RL = (1-t)*pm_Ft(n) + t*pm_Ft(n+1);%线性内插
+             rec(N+1-k1,k2) = rec(N+1-k1,k2)+p_RL;%反投影
+         end
+     end
+end
+
+</code></pre>
+
+            </div>
+            
+              <div class="tag-container">
+                
+                  <a href="https://duder-git.github.io/tag/LHeF8-EOa/" class="tag">
+                    医学图像处理
+                  </a>
+                
+                  <a href="https://duder-git.github.io/tag/7hazwf96d/" class="tag">
+                    MATLAB
+                  </a>
+                
+              </div>
+            
+            
+              <div class="next-post">
+                <div class="next">下一篇</div>
+                <a href="https://duder-git.github.io/post/2. 前向投影的解析计算/">
+                  <h3 class="post-title">
+                    前向投影的解析计算
+                  </h3>
+                </a>
+              </div>
+            
+
+            
+              
+                <div id="gitalk-container" data-aos="fade-in"></div>
+              
+
+              
+            
+
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+<script type="application/javascript">
+
+AOS.init();
+
+var app = new Vue({
+  el: '#app',
+  data: {
+    menuVisible: false,
+  },
+})
+
+</script>
+
+
+
+
+
+  
+    <script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+    <script>
+
+      var gitalk = new Gitalk({
+        clientID: '67e2d5e357b5ec7e7b54',
+        clientSecret: 'c407722209762f44616a0119d6e2cf53384fbc0c',
+        repo: 'Duder-git.github.io',
+        owner: 'Duder-git',
+        admin: ['Duder-git'],
+        id: (location.pathname).substring(0, 49),      // Ensure uniqueness and length less than 50
+        distractionFreeMode: false  // Facebook-like distraction free mode
+      })
+
+      gitalk.render('gitalk-container')
+
+    </script>
+  
+
+  
+
+
+
+
+  </body>
+</html>

@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" >
+
+<title>引用、指针、常数 | Duder&#39;s Blog</title>
+
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+<link rel="shortcut icon" href="https://duder-git.github.io//favicon.ico?v=1717654629635">
+<link rel="stylesheet" href="https://duder-git.github.io//styles/main.css">
+
+
+  
+    <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css" />
+  
+
+  
+
+
+<link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+
+
+
+    <meta name="description" content="###引用和指针
+引用
+在初始化变量时，初始值会被拷贝到新建对象中。在定义引用时，程序把引用和初始值绑定在一起，而不是将初始值拷贝给引用。
+
+引用并非对象，相反，他只是为一个已经存在的对象七点另一个名字
+
+int i, &amp;ri = ..." />
+    <meta name="keywords" content="C++" />
+  </head>
+  <body>
+    <div id="app" class="main">
+
+      <div class="sidebar" :class="{ 'full-height': menuVisible }">
+  <div class="top-container" data-aos="fade-right">
+    <div class="top-header-container">
+      <a class="site-title-container" href="https://duder-git.github.io/">
+        <img src="https://duder-git.github.io//images/avatar.png?v=1717654629635" class="site-logo">
+        <h1 class="site-title">Duder&#39;s Blog</h1>
+      </a>
+      <div class="menu-btn" @click="menuVisible = !menuVisible">
+        <div class="line"></div>
+      </div>
+    </div>
+    <div>
+      
+        
+          <a href="/" class="site-nav">
+            首页
+          </a>
+        
+      
+        
+          <a href="/archives" class="site-nav">
+            归档
+          </a>
+        
+      
+        
+          <a href="/tags" class="site-nav">
+            标签
+          </a>
+        
+      
+        
+          <a href="/post/about" class="site-nav">
+            关于
+          </a>
+        
+      
+    </div>
+  </div>
+  <div class="bottom-container" data-aos="flip-up" data-aos-offset="0">
+    <div class="social-container">
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    </div>
+    <div class="site-description">
+      苟日新 日日新 又日新
+    </div>
+    <div class="site-footer">
+      Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a> | <a class="rss" href="https://duder-git.github.io//atom.xml" target="_blank">RSS</a>
+    </div>
+  </div>
+</div>
+
+
+      <div class="main-container">
+        <div class="content-container" data-aos="fade-up">
+          <div class="post-detail">
+            <h2 class="post-title">引用、指针、常数</h2>
+            <div class="post-date">2023-03-31</div>
+            
+            <div class="post-content" v-pre>
+              <p>###引用和指针</p>
+<h4 id="引用">引用</h4>
+<p>在初始化变量时，初始值会被拷贝到新建对象中。在定义引用时，程序把引用和初始值绑定在一起，而不是将初始值拷贝给引用。</p>
+<blockquote>
+<p>引用并非对象，相反，他只是为一个已经存在的对象七点另一个名字</p>
+</blockquote>
+<pre><code class="language-c++">int i, &amp;ri = i;
+i = 5; ri = 10
+std::cout&lt;&lt;i&lt;&lt;&quot; &quot;&lt;&lt;ri&lt;&lt;std::endl;
+</code></pre>
+<blockquote>
+<p>10 10</p>
+</blockquote>
+<h4 id="指针">指针</h4>
+<p>指针本身是一个对象，允许对指针赋值和拷贝，而且在指针的声明周期内可以先后指向几个不同的对象。</p>
+<p>无需在定义时赋初值。</p>
+<pre><code class="language-c++">int ival = 42;
+int *p = &amp;ival;
+cout&lt;&lt;*p;    	// 由符号*得到指针p所指对象，，输出42
+double dval;
+double *pd = &amp;dval;
+int *pi = pd; 	//错误，指针类型不匹配
+pi = &amp;dval;		// 错误，试图把double地址赋给int
+</code></pre>
+<blockquote>
+<p>指针存放在某个对象地址，获取地址使用取地址符&amp;。</p>
+<p>指针类型要与指向对象严格匹配</p>
+</blockquote>
+<h4 id="符号多重含义">符号多重含义</h4>
+<pre><code class="language-c++">int i = 42;
+int &amp;r = i; 	// 引用，&amp;是声明的一部分
+int *p;     	// 指针，*是声明的一部分
+p = &amp;i;     	// 取地址符
+*p = i;     	// 解引用
+int &amp;r2 = *p; 	// &amp;引用，*解引用
+</code></pre>
+<h4 id="赋值和指针">赋值和指针</h4>
+<p>指针和引用都能提供对其他对象的间接访问，但引用本身并非为一个对象，指针可以存放一个新的地址，从而指向一个新的对象</p>
+<pre><code class="language-c++">int i = 42;
+int *pi = 0; 	// pi被初始化，但没有指向任何对象
+int *pi2 = &amp;i;	// pi2被初始化，存有i的地址
+int *pi3; 		// pi3定义于块内，则pi3的值无法确定
+
+pi3 = pi2; 		// pi3和pi2指向同一个对象i
+
+pi = &amp;ival; 	// pi值改变，指向ival
+*pi = 0;   		// ival值被改变，指针pi并没有改变
+</code></pre>
+<blockquote>
+<p>一条赋值语句到底改变了指针的值还是改变了指针所指对象的值，赋值永远改变的是等号左侧的对象</p>
+</blockquote>
+<pre><code class="language-c++">int *p
+if(p)  	// 判断p是否为nullptr
+if(*p)  // 判断p指向的值是否为0
+</code></pre>
+<blockquote>
+<p>任何非0指针对应的条件值都是true</p>
+</blockquote>
+<h4 id="void-指针">void* 指针</h4>
+<pre><code class="language-c++">double obj = 3.14,
+double *pd = &amp;obj;
+void *pv = &amp;obj;   // 成立，obj可以是任意类型的对象
+pv = pd; 		   // pv可以存放任意类型指针
+</code></pre>
+<h4 id="指针和引用的主要区别">指针和引用的主要区别</h4>
+<blockquote>
+<ol>
+<li>引用是已存在对象的另一个名字,指针本身就是一个对象</li>
+<li>初始化,引用仍然绑定到他的初始对象,无法重新绑定,指针可以分配和复制</li>
+<li>引用始终获取引用最初绑定的对象,单个指针在其生命周期内可以指向多个不同对象</li>
+<li>必须初始化引用,指针在定义时无需初始化</li>
+</ol>
+</blockquote>
+<h4 id="指向指针的指针">指向指针的指针</h4>
+<pre><code class="language-c++">int ival =1024;
+int *p = &amp;ival;
+int **p2 = &amp;p;
+cout&lt;&lt; ival&lt;&lt;endl;
+cout&lt;&lt; *p &lt;&lt;endl; // 解引用
+cout&lt;&lt; **P2 &lt;&lt;endl;  // 解两层引用
+</code></pre>
+<h4 id="指向指针的引用">指向指针的引用</h4>
+<pre><code class="language-c++">int i= 42;
+int *p;			// p是一个int指针
+int *&amp;r = p;    // r是一个对指针p的引用
+r = &amp;i;			// 给r幅值&amp;i,令p指向i
+*r = 0;     	// 解引用r得到i,p指向i,i值改为0
+</code></pre>
+<h3 id="const">const</h3>
+<blockquote>
+<p>常量引用是对const引用</p>
+</blockquote>
+<pre><code class="language-c++">int i = 42;
+const int &amp;r1 = i;		// 合法
+const int &amp;r2 = r1;		// 合法
+const int &amp;r3 = r1*2;   // 合法
+int &amp;r4 = r1 * 2;		// 错误，r4是一个普通非常量引用
+</code></pre>
+<h4 id="指针和const">指针和const</h4>
+<p>与引用一样，可以令指针指向常量或非常量。</p>
+<p>指向常量的指针不能用于改变其所指对象的值。</p>
+<pre><code class="language-c++">const double pi = 3.14;
+const double *cptr = &amp;pi;
+*cptr = 42; // 错误，不能给*cptr赋值
+</code></pre>
+<pre><code class="language-c++">int i = -1, &amp;r = 0;         // 不合法, r必须引用对象.
+int *const p2 = &amp;i2;        // 合法.
+const int i = -1, &amp;r = 0;   // 合法.
+const int *const p3 = &amp;i2;  // 合法.
+const int *p1 = &amp;i2;        // 合法.
+const int &amp;const r2;       // 不合法, r2引用不可以是常量
+const int i2 = i, &amp;r = i;   // 合法.
+</code></pre>
+<h4 id="顶层const">顶层const</h4>
+<p><strong>顶层const</strong>指针本身是常量，不能改变本身的值；</p>
+<p><strong>底层const</strong>指针所指对象是一个常量，可以改变指针指向；</p>
+<h4 id="常量表达式">常量表达式</h4>
+<blockquote>
+<p>值不会变并且在编译过程中就能得到计算结果的表达式。</p>
+</blockquote>
+<pre><code class="language-c++">const int amx_files = 20;  // 常量表达式
+const int sz = get_size(); // 不是常量表达式，在运行后才知道具体数值
+</code></pre>
+<h4 id="constexpr常量">constexpr常量</h4>
+<blockquote>
+<p>C++11规定，允许将变量声明为constexpr类型，一边用编译器验证</p>
+<p>你认定一个变量时常量表达式，就把他声明为constexpr类型</p>
+</blockquote>
+<pre><code class="language-c++">// P是一个指向整型常数的指针
+const int *p = nullptr;
+// q是一个指向整数的常量指针
+constexpr int *q = nullptr;
+</code></pre>
+
+            </div>
+            
+              <div class="tag-container">
+                
+                  <a href="https://duder-git.github.io/tag/NQUNpmwdyZ/" class="tag">
+                    C++
+                  </a>
+                
+              </div>
+            
+            
+              <div class="next-post">
+                <div class="next">下一篇</div>
+                <a href="https://duder-git.github.io/post/如何使用Git/">
+                  <h3 class="post-title">
+                    如何使用Git
+                  </h3>
+                </a>
+              </div>
+            
+
+            
+              
+                <div id="gitalk-container" data-aos="fade-in"></div>
+              
+
+              
+            
+
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+<script type="application/javascript">
+
+AOS.init();
+
+var app = new Vue({
+  el: '#app',
+  data: {
+    menuVisible: false,
+  },
+})
+
+</script>
+
+
+
+
+
+  
+    <script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+    <script>
+
+      var gitalk = new Gitalk({
+        clientID: '67e2d5e357b5ec7e7b54',
+        clientSecret: 'c407722209762f44616a0119d6e2cf53384fbc0c',
+        repo: 'Duder-git.github.io',
+        owner: 'Duder-git',
+        admin: ['Duder-git'],
+        id: (location.pathname).substring(0, 49),      // Ensure uniqueness and length less than 50
+        distractionFreeMode: false  // Facebook-like distraction free mode
+      })
+
+      gitalk.render('gitalk-container')
+
+    </script>
+  
+
+  
+
+
+
+
+  </body>
+</html>

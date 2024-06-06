@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" >
+
+<title>如何使用Git | Duder&#39;s Blog</title>
+
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+<link rel="shortcut icon" href="https://duder-git.github.io//favicon.ico?v=1717654629635">
+<link rel="stylesheet" href="https://duder-git.github.io//styles/main.css">
+
+
+  
+    <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css" />
+  
+
+  
+
+
+<link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+
+
+
+    <meta name="description" content="学习视频
+笔记资料
+Git简明指南
+Git历史
+Git是一个开源的分布式版本控制系统
+当下最流行的版本控制工具
+版本控制
+版本控制（Revision control）是一种在开发的过程中用于管理我们对文件、目录或工程等内容的修改历史，方便查..." />
+    <meta name="keywords" content="Git" />
+  </head>
+  <body>
+    <div id="app" class="main">
+
+      <div class="sidebar" :class="{ 'full-height': menuVisible }">
+  <div class="top-container" data-aos="fade-right">
+    <div class="top-header-container">
+      <a class="site-title-container" href="https://duder-git.github.io/">
+        <img src="https://duder-git.github.io//images/avatar.png?v=1717654629635" class="site-logo">
+        <h1 class="site-title">Duder&#39;s Blog</h1>
+      </a>
+      <div class="menu-btn" @click="menuVisible = !menuVisible">
+        <div class="line"></div>
+      </div>
+    </div>
+    <div>
+      
+        
+          <a href="/" class="site-nav">
+            首页
+          </a>
+        
+      
+        
+          <a href="/archives" class="site-nav">
+            归档
+          </a>
+        
+      
+        
+          <a href="/tags" class="site-nav">
+            标签
+          </a>
+        
+      
+        
+          <a href="/post/about" class="site-nav">
+            关于
+          </a>
+        
+      
+    </div>
+  </div>
+  <div class="bottom-container" data-aos="flip-up" data-aos-offset="0">
+    <div class="social-container">
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    </div>
+    <div class="site-description">
+      苟日新 日日新 又日新
+    </div>
+    <div class="site-footer">
+      Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a> | <a class="rss" href="https://duder-git.github.io//atom.xml" target="_blank">RSS</a>
+    </div>
+  </div>
+</div>
+
+
+      <div class="main-container">
+        <div class="content-container" data-aos="fade-up">
+          <div class="post-detail">
+            <h2 class="post-title">如何使用Git</h2>
+            <div class="post-date">2023-03-18</div>
+            
+            <div class="post-content" v-pre>
+              <p><a href="https://www.bilibili.com/video/BV1FE411P7B3/?spm_id_from=333.337.search-card.all.click&amp;vd_source=a76b8a2a6d9a18738abcb916b7836085">学习视频</a></p>
+<p><a href="https://www.kuangstudy.com/bbs/1532247011263672321">笔记资料</a></p>
+<p><a href="https://www.runoob.com/manual/git-guide/">Git简明指南</a></p>
+<p><a href="https://www.jianshu.com/p/8821e9846773">Git历史</a></p>
+<p>Git是一个开源的分布式<strong>版本控制</strong>系统</p>
+<p>当下最流行的版本控制工具</p>
+<h2 id="版本控制">版本控制</h2>
+<p>版本控制（Revision control）是一种在开发的过程中用于管理我们对文件、目录或工程等内容的修改历史，方便查看更改历史记录，备份以便恢复以前的版本的软件工程技术。</p>
+<p>作用：</p>
+<ul>
+<li>实现跨区域多人协同开发</li>
+<li>追踪和记载一个或者多个文件的历史记录</li>
+<li>组织和保护你的源代码和文档</li>
+<li>统计工作量 并行开发、提高开发效率</li>
+<li>跟踪记录整个软件的开发过程</li>
+<li>减轻开发人员的负担，节省时间，同时降低人为错误</li>
+</ul>
+<ol>
+<li>
+<p>本地版本控制</p>
+<p>记录文件每次更新，对版本快照，记录补丁信息</p>
+</li>
+<li>
+<p>集中版本控制</p>
+<p>所有的版本数据保存在服务器上，协同开发者从服务器上同步更新自己修改</p>
+</li>
+<li>
+<p>分布式版本控制</p>
+<p>不会因为服务器损坏或网络问题，造成不能工作的情况</p>
+<p>每个人拥有全部代码，有安全隐患</p>
+</li>
+</ol>
+<h2 id="git安装">Git安装</h2>
+<p>git官网：http://git-scm.com/downloads</p>
+<p>镜像：https://npm.taobao.org/mirrors/git-for-windows/</p>
+<p>卸载：反安装即可</p>
+<ul>
+<li>
+<p>清理环境变量</p>
+</li>
+<li>
+<p>卸载</p>
+</li>
+</ul>
+<p>安装</p>
+<ul>
+<li>下载软件安装包</li>
+<li>默认安装</li>
+<li>右键看到对应程序</li>
+</ul>
+<p>Git Bach：Unix与linux风格命令行，使用最多、推荐最多</p>
+<p>Git CMD：Windows风格命令行</p>
+<p>Git GUI：图形化Git，不建议新手使用</p>
+<h2 id="基本的linux命令">基本的Linux命令</h2>
+<p>cd：改变目录，直接cd进入默认目录</p>
+<p>cd..：退回上一个目录</p>
+<p>pwd：显示当前所在的目录路径</p>
+<p>ls：列出当前目录中的所有文件，ls(ll)更详细</p>
+<p>touch：新建一个文件，touch index。.</p>
+<p>rm：删除一个文件</p>
+<p>mkdir：新建一个目录，新建文件夹</p>
+<p>rm -r：删除一个文件夹rm-r src 删除src目录 rm -rf f表示根，删除-rf，删除所有</p>
+<p>mv：移动文件，mv index.html src 移动index文件到src目录下</p>
+<p>reset：重新初始化终端，清屏</p>
+<p>clear：清屏</p>
+<p>history：查看命令历史</p>
+<p>help：帮助</p>
+<p>exit：退出</p>
+<p>git config -l：查看配置</p>
+<blockquote>
+<p>git config —system —list 系统配置 Git\etc\gitconfig</p>
+<p>git config —global —list  用户配置 C:users\Adminstrator\.gitconfig</p>
+</blockquote>
+<h2 id="git基本理论">Git基本理论</h2>
+<ul>
+<li><strong>工作区(Workspace)</strong>：平时存放项目代码的地方。</li>
+<li>**暂存区(Stage/Index)：**暂存区，用于临时存放你的改动，事实上它只是一个文件，保存即将提交到文件列 表信息</li>
+<li>**版本库(Repository)：**又称本地仓库，这个不算工作区，而是 Git 的版本库，里面有你提交到所有版本的数据。</li>
+<li><strong>远程仓库(Remote)</strong>：托管代码的服务器github、gitee</li>
+</ul>
+<figure data-type="image" tabindex="1"><img src="D:%5C%E6%96%87%E6%A1%A3%5CTypora%E6%96%87%E6%A1%A3%5Cimages%5C%E5%A6%82%E4%BD%95%E4%BD%BF%E7%94%A8Git%5Cimage-20230306135917942.png" alt="image-20230306135917942" loading="lazy"></figure>
+<figure data-type="image" tabindex="2"><img src="https://kuangstudy.oss-cn-beijing.aliyuncs.com/bbs/2022/06/01/kuangstudy3c1708a2-4e6e-4433-9c51-6d8b4257ce72.png" alt="img" loading="lazy"></figure>
+<p>创建仓库</p>
+<pre><code class="language-bash"># 使用当前目录作为 Git 仓库，我们只需使它初始化。
+git init
+</code></pre>
+<p>克隆远程仓库项目，相当于SVN导出项目</p>
+<pre><code class="language-bash">git clone &lt;url&gt;
+</code></pre>
+<h2 id="git文件操作">Git文件操作</h2>
+<p>文件四种状态</p>
+<ul>
+<li>Untracked：未跟踪，此文件在文件夹中，但并没有加入到git库，不参与版本控制，通过git add状态变为staged</li>
+<li>Unmodify：文件已经入库，未修改，版本库中的文件快照内容与文件夹中一致。这种文件如果被修改，变为Modified。如果使用git rm移除版本库，则变为Untracked文件。</li>
+<li>Modified：文件已修改，仅仅是修改，并没有进行其他操作。可以通过git add进入暂存staged状态，使用git checkout则丢弃修改，返回unmodify</li>
+<li>Staged：暂存状态，执行git commit修改同步到库中，这是库中文件与本地文件变为一致，文件unmodify状态。执行git rest HEAD filedname取消暂存，文件状态为modeified。</li>
+</ul>
+<pre><code class="language-bash"># 查看指定文件状态
+git status [filename]
+# 查看所有文件状态
+git satus
+# 添加所有文件到暂存区
+git add .
+# 提交暂存区数据到本地
+git comit -m “消息内容”
+# 提交暂存区文件到远程
+git push
+</code></pre>
+<p>忽略文件</p>
+<pre><code class="language-bash">*.txt 		# 忽略所有.txt结尾文件
+!lib.txt 	# 忽略所有.txt结尾文件，但lib.txt除外
+build/ 		# 忽略build/目录下所有文件
+/temp 		# 仅忽略项目根目录下的TODO文件，不包括其他目录的temp
+doc/*.txt 	# 忽略某一文件夹下的文件
+</code></pre>
+<h2 id="使用码云">使用码云</h2>
+<p>设置本机SSH公钥，免密码登录</p>
+<pre><code class="language-bash">ssh-key #默认存放位置C:\Users\MPI_1070\.ssh
+</code></pre>
+<pre><code class="language-bash"># 找到放置位置
+git clone 
+</code></pre>
+<p>本地项目复制到git仓库文件夹，或者git仓库文件内容复制到项目文件</p>
+<pre><code>git add. # 添加所有文件到暂存区
+git commit -m “消息内容”
+git push # 提交到远程仓库
+</code></pre>
+<h2 id="使用github">使用Github</h2>
+<h2 id="git分支">Git分支</h2>
+<p>多线程：主线程在走，不影响子影响。平行，互不影响。可以进行合并。在合并的时候就需要做一些处理。</p>
+<pre><code class="language-bash"># 列出所有本地分支
+git branch
+# 列出所有远程分支
+git branch -r
+# 新建一个分支，但依然停留在当前分支
+git branch [branch-name]
+# 新建一个分支，并切换到该分支
+git checkout -b [branch]
+# 合并指定分支到当前分支
+$ git merge [branch]
+# 删除分支
+$ git branch -d [branch-name]
+# 删除远程分支
+$ git push origin --delete [branch-name]
+$ git branch -dr [remote/branch]
+</code></pre>
+
+            </div>
+            
+              <div class="tag-container">
+                
+                  <a href="https://duder-git.github.io/tag/uA4oNU0QD_/" class="tag">
+                    Git
+                  </a>
+                
+              </div>
+            
+            
+              <div class="next-post">
+                <div class="next">下一篇</div>
+                <a href="https://duder-git.github.io/post/人民币汇率与人民币国际化/">
+                  <h3 class="post-title">
+                    人民币汇率与人民币国际化
+                  </h3>
+                </a>
+              </div>
+            
+
+            
+              
+                <div id="gitalk-container" data-aos="fade-in"></div>
+              
+
+              
+            
+
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+<script type="application/javascript">
+
+AOS.init();
+
+var app = new Vue({
+  el: '#app',
+  data: {
+    menuVisible: false,
+  },
+})
+
+</script>
+
+
+
+
+
+  
+    <script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+    <script>
+
+      var gitalk = new Gitalk({
+        clientID: '67e2d5e357b5ec7e7b54',
+        clientSecret: 'c407722209762f44616a0119d6e2cf53384fbc0c',
+        repo: 'Duder-git.github.io',
+        owner: 'Duder-git',
+        admin: ['Duder-git'],
+        id: (location.pathname).substring(0, 49),      // Ensure uniqueness and length less than 50
+        distractionFreeMode: false  // Facebook-like distraction free mode
+      })
+
+      gitalk.render('gitalk-container')
+
+    </script>
+  
+
+  
+
+
+
+
+  </body>
+</html>

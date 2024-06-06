@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" >
+
+<title>自适应滤波方法 LMS  | Duder&#39;s Blog</title>
+
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+<link rel="shortcut icon" href="https://duder-git.github.io//favicon.ico?v=1717654629635">
+<link rel="stylesheet" href="https://duder-git.github.io//styles/main.css">
+
+
+  
+    <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css" />
+  
+
+  
+
+
+<link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+
+
+
+    <meta name="description" content="浏览招聘信息时看到对自适应滤波方法要求，惊呼之前竟然没有听过，赶紧学来一学
+
+LMS
+自适应滤波器： 一种能够根据输入信号自动调整自身参数的数字滤波器。
+对于我们无法提前知道参数的信号，使用自适应的系数进行处理。不需要提前知道信号的输入和噪..." />
+    <meta name="keywords" content="信号处理" />
+  </head>
+  <body>
+    <div id="app" class="main">
+
+      <div class="sidebar" :class="{ 'full-height': menuVisible }">
+  <div class="top-container" data-aos="fade-right">
+    <div class="top-header-container">
+      <a class="site-title-container" href="https://duder-git.github.io/">
+        <img src="https://duder-git.github.io//images/avatar.png?v=1717654629635" class="site-logo">
+        <h1 class="site-title">Duder&#39;s Blog</h1>
+      </a>
+      <div class="menu-btn" @click="menuVisible = !menuVisible">
+        <div class="line"></div>
+      </div>
+    </div>
+    <div>
+      
+        
+          <a href="/" class="site-nav">
+            首页
+          </a>
+        
+      
+        
+          <a href="/archives" class="site-nav">
+            归档
+          </a>
+        
+      
+        
+          <a href="/tags" class="site-nav">
+            标签
+          </a>
+        
+      
+        
+          <a href="/post/about" class="site-nav">
+            关于
+          </a>
+        
+      
+    </div>
+  </div>
+  <div class="bottom-container" data-aos="flip-up" data-aos-offset="0">
+    <div class="social-container">
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    </div>
+    <div class="site-description">
+      苟日新 日日新 又日新
+    </div>
+    <div class="site-footer">
+      Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a> | <a class="rss" href="https://duder-git.github.io//atom.xml" target="_blank">RSS</a>
+    </div>
+  </div>
+</div>
+
+
+      <div class="main-container">
+        <div class="content-container" data-aos="fade-up">
+          <div class="post-detail">
+            <h2 class="post-title">自适应滤波方法 LMS </h2>
+            <div class="post-date">2023-08-28</div>
+            
+            <div class="post-content" v-pre>
+              <p>浏览招聘信息时看到对自适应滤波方法要求，惊呼之前竟然没有听过，赶紧学来一学</p>
+<!-- more -->
+<h2 id="lms">LMS</h2>
+<p><strong>自适应滤波器：</strong> 一种能够根据输入信号自动调整自身参数的数字滤波器。</p>
+<p>对于我们无法提前知道参数的信号，使用自适应的系数进行处理。不需要提前知道信号的输入和噪声特性，滤波器在工作过程中学习估计信号统计特征，调整参数以获得最优滤波效果。</p>
+<p>一旦信号统计特性发生变化，还可以跟踪这种变化，重新调节参数，使滤波性能重新达到最优。</p>
+<p><strong>维纳滤波，也即最小均方误差滤波（Least Mean Square Error Filter）</strong></p>
+<p><strong>核心计算：梯度下降法，均方误差，令导数为0；</strong></p>
+<h3 id="自适应滤波器">自适应滤波器</h3>
+<p>自适应滤波器不需要关于输入信号的先验知识，计算量小，特别适用于实时处理。</p>
+<p>​	<strong>维纳滤波器</strong>参数是固定的，适合于平稳随机信号。</p>
+<p>​	<strong>卡尔曼滤波器</strong>参数是时变的，适合于非平稳随机信号。</p>
+<h3 id="lms算法的优缺点"><strong>LMS算法的优缺点：</strong></h3>
+<ul>
+<li>
+<p><strong>优点</strong>：算法简单，易于实现，算法复杂度低，能够抑制旁瓣效应；</p>
+</li>
+<li>
+<p><strong>缺点</strong></p>
+<ol>
+<li>
+<p><strong>收敛速率较慢</strong>，LMS滤波器系数逐点更新，每一次采样点梯度的估计对于真实梯度会存在误差，导致滤波器系数的每次更新不会严格按照真实梯度方向更新，而是有一定的偏差；</p>
+</li>
+<li>
+<p>跟踪性能较差，并且随着滤波器步长增大，系统的稳定性下降；</p>
+</li>
+<li>
+<p>LMS要求不同时刻的<strong>输入向量x(n)线性无关</strong>——LMS 的独立性假设。如果输入信号存在相关性，会导致前一次迭代产生的梯度噪声传播到下一次迭代，造成误差的反复传播，收敛速度变慢，跟踪性能变差。</p>
+</li>
+</ol>
+</li>
+</ul>
+<h2 id="block-lms">block LMS</h2>
+<p>块更新自适应迭代</p>
+<p>使用<strong>overlap</strong> m组平行信号构建系数向量</p>
+<pre><code class="language-matlab">%% block LSM最小均方算法
+%close all;
+clear,clc;
+
+%% 产生测试信号
+fs = 1;
+f0 = 0.02;
+n = 1000;
+t = (0:n-1)'/fs;
+xs = cos(2*pi*f0*t);           % 原始信号
+ws = awgn(xs, 30, 'measured'); % 含噪信号
+
+figure;
+subplot(211);plot(t, xs);title('原始信号');
+subplot(212);plot(t, ws);title('加噪信号');
+
+%%
+M  = 20 ;   % 滤波器的阶数
+xn = ws;                        % 含噪信号
+dn = xs;                        % 理想信号
+% rho_max = max(eig(ws*ws.'));   % 输入信号相关矩阵的最大特征值
+% mu = (1/rho_max) ;    % 收敛因子 0 &lt; mu &lt; 1/rho
+mu = 0.001;
+[yn,W,en] = lmsFunc(xn,dn,M,mu);
+
+figure;
+ax1 = subplot(211);
+plot(t,ws);grid on;ylabel('幅值');xlabel('时间');
+ylim([-1.5 1.5]);title('LMS滤波器输入信号');
+
+ax2 = subplot(212);
+plot(t,yn);grid on;ylabel('幅值');xlabel('时间');title('LMS滤波器输出信号');
+ylim([-1.5 1.5]);linkaxes([ax1, ax2],'xy');
+
+figure;plot(en);grid on;title('误差');
+</code></pre>
+<p>函数</p>
+<pre><code class="language-matlab">% 输入参数:
+%   xn   输入的信号
+%   dn   所期望的响应
+%   M    滤波器的阶数
+%   mu   收敛因子(步长)
+% 输出参数:
+%   W    滤波器系数矩阵  
+%   en   误差序列 
+%   yn   滤波器输出    
+%%  block LMS
+function [yn, W, en]=lmsFunc(xn, dn, M, mu)
+itr = length(xn);
+en = zeros(itr,1);            
+W  = zeros(M,itr);    % M迭代,itr信号
+% 迭代计算
+for k = M:itr                  % 第k次迭代
+    x = xn(k:-1:k-M+1);        % 滤波器M个抽头的输入
+    y = W(:,k-1).' * x;        % 滤波器的输出
+    en(k) = dn(k) - y ;        % 第k次迭代的误差
+    % 滤波器权值计算的迭代式
+    W(:,k) = W(:,k-1) + 2*mu*en(k)*x;
+end
+
+yn = inf * ones(size(xn)); % 初值为无穷大是绘图使用，无穷大处不会绘图
+for k = M:length(xn)
+    x = xn(k:-1:k-M+1);
+    yn(k) = W(:,end).'* x;  % 最终输出结果
+end
+</code></pre>
+<h2 id="normalize-lsm">normalize LSM</h2>
+<p>归一化LSM，抑制X的过大迭代过快</p>
+<pre><code class="language-matlab">%% normalize LMS最小均方算法
+%close all;
+clear,clc;
+
+%% 产生测试信号
+fs = 1;
+f0 = 0.02;
+n = 1000;
+t = (0:n-1)'/fs;
+xs = cos(2*pi*f0*t);
+ws = awgn(xs, 20, 'measured');
+
+figure;
+subplot(211);plot(t, xs);title('原始信号');
+subplot(212);plot(t, ws);title('加噪信号');
+
+%% 
+M  = 20 ;   % 滤波器的阶数
+xn = ws;
+dn = xs;
+% rho_max = max(eig(ws*ws.'));   % 输入信号相关矩阵的最大特征值
+% mu = (1/rho_max) ;    % 收敛因子 0 &lt; mu &lt; 1/rho
+mu = 0.001;
+delta = 1e-3;
+%[yn,W,en] = lmsFunc(xn,dn,M,mu1);
+[yn,W,en] = nlmsFunc(xn, dn, M, mu, delta);
+
+figure;
+ax1 = subplot(211);
+plot(t,ws);grid on;ylabel('幅值');xlabel('时间');
+ylim([-1.5 1.5]);title('LMS滤波器输入信号');
+
+ax2 = subplot(212);
+plot(t,yn);grid on;ylabel('幅值');xlabel('时间');title('LMS滤波器输出信号');
+ylim([-1.5 1.5]);linkaxes([ax1, ax2],'xy');
+
+figure;plot(en);grid on;title('误差');
+</code></pre>
+<p>函数</p>
+<pre><code class="language-matlab">% 输入参数:
+%   xn   输入的信号，列向量
+%   dn   所期望的响应
+%   M    滤波器的阶数
+%   mu   收敛因子(步长)
+% 输出参数:
+%   W    滤波器系数矩阵  
+%   en   误差序列 
+%   yn   滤波器输出   
+%% normalize LMS
+function [yn, W, en]=nlmsFunc(xn, dn, M, mu, delta)
+itr = length(xn);
+en = zeros(itr,1);            
+W  = zeros(M,itr);    % 每一列代表-次迭代,初始为0
+% 迭代计算
+for k = M:itr                  % 第k次迭代
+    x = xn(k:-1:k-M+1);        % 滤波器M个抽头的输入
+    y = W(:,k-1).' * x;        % 滤波器的输出
+    en(k) = dn(k) - y ;        % 第k次迭代的误差
+    % 滤波器权值计算的迭代式 % 主要为限制x的占比过大
+    W(:,k) = W(:,k-1) + mu*en(k)*x/(delta+x.' * x); % A.'是一般转置 A'是共轭转置
+end
+
+yn = inf * ones(size(xn)); % 初值为无穷大是绘图使用，无穷大处不会绘图
+for k = M:length(xn)
+    x = xn(k:-1:k-M+1);
+    yn(k) = W(:,end).'* x;  % 最终输出结果
+end
+</code></pre>
+<h2 id="参考链接">参考链接</h2>
+<p><a href="https://zhuanlan.zhihu.com/p/510942468">五、维纳滤波器LMS和自适应滤波器及其应用 - 知乎 (zhihu.com)</a></p>
+<p><a href="https://zhuanlan.zhihu.com/p/358236441">自适应滤波器（一）LMS自适应滤波器 - 知乎 (zhihu.com)</a></p>
+<p><a href="https://zhuanlan.zhihu.com/p/360333421">自适应滤波器（二）NLMS自适应滤波器 - 知乎 (zhihu.com)</a></p>
+<p><a href="https://zhuanlan.zhihu.com/p/365758583">自适应滤波方法——LMS算法 - 知乎 (zhihu.com)</a></p>
+
+            </div>
+            
+              <div class="tag-container">
+                
+                  <a href="https://duder-git.github.io/tag/xin-hao-chu-li/" class="tag">
+                    信号处理
+                  </a>
+                
+              </div>
+            
+            
+              <div class="next-post">
+                <div class="next">下一篇</div>
+                <a href="https://duder-git.github.io/post/jian-zhi-offer-64-qiu-12n/">
+                  <h3 class="post-title">
+                    剑指 Offer 64. 求1+2+…+n
+                  </h3>
+                </a>
+              </div>
+            
+
+            
+              
+                <div id="gitalk-container" data-aos="fade-in"></div>
+              
+
+              
+            
+
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+<script type="application/javascript">
+
+AOS.init();
+
+var app = new Vue({
+  el: '#app',
+  data: {
+    menuVisible: false,
+  },
+})
+
+</script>
+
+
+
+
+
+  
+    <script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+    <script>
+
+      var gitalk = new Gitalk({
+        clientID: '67e2d5e357b5ec7e7b54',
+        clientSecret: 'c407722209762f44616a0119d6e2cf53384fbc0c',
+        repo: 'Duder-git.github.io',
+        owner: 'Duder-git',
+        admin: ['Duder-git'],
+        id: (location.pathname).substring(0, 49),      // Ensure uniqueness and length less than 50
+        distractionFreeMode: false  // Facebook-like distraction free mode
+      })
+
+      gitalk.render('gitalk-container')
+
+    </script>
+  
+
+  
+
+
+
+
+  </body>
+</html>

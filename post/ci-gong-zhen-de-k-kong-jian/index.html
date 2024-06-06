@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" >
+
+<title>磁共振的K空间 | Duder&#39;s Blog</title>
+
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+<link rel="shortcut icon" href="https://duder-git.github.io//favicon.ico?v=1717654629635">
+<link rel="stylesheet" href="https://duder-git.github.io//styles/main.css">
+
+
+  
+    <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css" />
+  
+
+  
+
+
+<link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+
+
+
+    <meta name="description" content="今天和师兄讨论关于如何实现MPI的稀疏重建，聊着聊着聊到了MRI成像过程，发现我对MRI一知半解，尤其是K空间的转换是如何实现的更是不甚了解。想到MPI、MRI两者的相似性，或许K空间的方法也可以用于MPI中。这里记录一下学习磁共振成像K空..." />
+    <meta name="keywords" content="" />
+  </head>
+  <body>
+    <div id="app" class="main">
+
+      <div class="sidebar" :class="{ 'full-height': menuVisible }">
+  <div class="top-container" data-aos="fade-right">
+    <div class="top-header-container">
+      <a class="site-title-container" href="https://duder-git.github.io/">
+        <img src="https://duder-git.github.io//images/avatar.png?v=1717654629635" class="site-logo">
+        <h1 class="site-title">Duder&#39;s Blog</h1>
+      </a>
+      <div class="menu-btn" @click="menuVisible = !menuVisible">
+        <div class="line"></div>
+      </div>
+    </div>
+    <div>
+      
+        
+          <a href="/" class="site-nav">
+            首页
+          </a>
+        
+      
+        
+          <a href="/archives" class="site-nav">
+            归档
+          </a>
+        
+      
+        
+          <a href="/tags" class="site-nav">
+            标签
+          </a>
+        
+      
+        
+          <a href="/post/about" class="site-nav">
+            关于
+          </a>
+        
+      
+    </div>
+  </div>
+  <div class="bottom-container" data-aos="flip-up" data-aos-offset="0">
+    <div class="social-container">
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    </div>
+    <div class="site-description">
+      苟日新 日日新 又日新
+    </div>
+    <div class="site-footer">
+      Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a> | <a class="rss" href="https://duder-git.github.io//atom.xml" target="_blank">RSS</a>
+    </div>
+  </div>
+</div>
+
+
+      <div class="main-container">
+        <div class="content-container" data-aos="fade-up">
+          <div class="post-detail">
+            <h2 class="post-title">磁共振的K空间</h2>
+            <div class="post-date">2023-07-17</div>
+            
+            <div class="post-content" v-pre>
+              <p>今天和师兄讨论关于如何实现MPI的稀疏重建，聊着聊着聊到了MRI成像过程，发现我对MRI一知半解，尤其是K空间的转换是如何实现的更是不甚了解。想到MPI、MRI两者的相似性，或许K空间的方法也可以用于MPI中。这里记录一下学习磁共振成像K空间的过程。</p>
+<!-- more -->
+<h2 id="参考资料">参考资料</h2>
+<p><a href="https://zhuanlan.zhihu.com/p/137255997">MRI成像原理</a><br>
+<a href="https://zhuanlan.zhihu.com/p/139047870">MRI原理-K空间和傅里叶变换</a><br>
+磁共振扫描参数——<a href="https://www.bilibili.com/video/BV1vY4y1B7cS/?spm_id_from=333.337.search-card.all.click&amp;vd_source=a76b8a2a6d9a18738abcb916b7836085">磁共振k空间专题</a><br>
+磁共振原理三维展示——<a href="https://www.bilibili.com/video/BV1JN4y1T7Cj/?vd_source=a76b8a2a6d9a18738abcb916b7836085">三维磁共振成像原理</a><br>
+<a href="https://www.bilibili.com/video/BV1di4y1y7au/?vd_source=a76b8a2a6d9a18738abcb916b7836085">【老奇】核磁共振为何知道</a></p>
+<h2 id="质子模型">质子模型</h2>
+<p>质子具有自旋特质，处于外部磁场中的质子，磁矩倾向于与磁场平行排列<br>
+低能态：平行同向排列为较低能量状态，高能态：平行反向排列为较高能量状态</p>
+<p>根据 塞曼方程、玻尔兹曼分布、温度可以计算<br>
+绝对零度下，大部分位于低能态<br>
+当外部磁场为1.5T或3.0T，绝对问题310k，低能态仅略多于高能态<br>
+略微多出的合成磁矩是后续一系列磁共振信号的来源。<br>
+<img src="https://duder-git.github.io//post-images/1689683879386.JPG" alt="" loading="lazy"></p>
+<p>拉莫进动：质子围绕外部磁场旋转<br>
+<img src="https://duder-git.github.io//post-images/1689684135514.JPG" alt="" loading="lazy"></p>
+<h3 id="射频脉冲作用开始旋转">射频脉冲作用——开始旋转</h3>
+<p>与外部主磁场方向垂直的方向施加旋转磁场，且旋转频率与进动频率接近，质子发生共振，<br>
+磁质方向表现出围绕主磁场螺旋进动，进动倾斜角称为翻转角。<br>
+共振频率一般在MHz，因此旋转磁场也被成为射频信号，通常只开几毫秒。<br>
+调整射频脉冲幅度或者时间可以控制翻转角度。</p>
+<h3 id="纵向弛豫和横向弛豫">纵向弛豫和横向弛豫</h3>
+<p>横向T2弛豫<br>
+纵向T1弛豫<br>
+<img src="https://duder-git.github.io//post-images/1689685526866.JPG" alt="" loading="lazy"></p>
+<figure data-type="image" tabindex="1"><img src="https://duder-git.github.io//post-images/1689685610611.JPG" alt="" loading="lazy"></figure>
+<h3 id="空间定位方法">空间定位方法</h3>
+<p>开启纵向梯度场（主磁场方向），实现选层<br>
+同时叠加射频信号，使得特定目标切片发生共振<br>
+射频脉冲关闭，纵向梯度场关闭</p>
+<p>开启横向Y轴梯度场——相位编码<br>
+质子进动成Y轴差异，根据相位不同，不同位置的质子进动速度不同<br>
+进动相位随时间出现差异</p>
+<p>关闭梯度场<br>
+质子进度频率恢复一致，进动相位差保留</p>
+<p>开启横向X轴梯度——频率编码<br>
+质子进度频率成X轴差异<br>
+同时进行信号采集<br>
+频率分量由单个回波信号的傅里叶变换分解得到</p>
+<h3 id="k空间编码">K空间编码</h3>
+<p>回波信号的前后采样点恰好对应逐渐升高的空间频率<br>
+通过正交方法采样信号，简单计算得到幅度和相位</p>
+<h2 id="mri重建过程">MRI重建过程</h2>
+<figure data-type="image" tabindex="2"><img src="https://duder-git.github.io//post-images/1689580182557.JPG" alt="" loading="lazy"></figure>
+<h3 id="空间编码">空间编码</h3>
+<p>层面选择<br>
+<img src="https://duder-git.github.io//post-images/1689656237145.JPG" alt="" loading="lazy"><br>
+原子核共振频率与磁场强度相关。射频信号打到人体上(比如64MHz)，原子核处于共振频率将被激发。<br>
+在z轴施加梯度场，在z方向产生梯度变化，实现选层操作。使得每个平面内质子进动频率和相位相同。<br>
+梯度场 磁场低进动频率慢，磁场高进动频率快<br>
+射频脉冲 具有一定带宽 中心频率64M赫兹，人体内64M赫兹质子共振，形成选层。<br>
+<img src="https://duder-git.github.io//post-images/1689664399301.JPG" alt="" loading="lazy"></p>
+<h3 id="相位编码">相位编码</h3>
+<p>施加一个y向梯度场，产生线性变化的磁场。同样，磁场强度低的地方进动频率慢，磁场强度高进动频率快。<br>
+不同方向的磁场强度，使得一个层面的质子产生相位差，用于鉴别每一行的信息。<br>
+<img src="https://duder-git.github.io//post-images/1689664720166.JPG" alt="" loading="lazy"></p>
+<h3 id="频率编码">频率编码</h3>
+<p>施加一个x向梯度场，产生线性变化的磁场。<br>
+这样，空间三维的质子进动频率都不相同。<br>
+<img src="https://duder-git.github.io//post-images/1689664793138.JPG" alt="" loading="lazy"></p>
+<h3 id="信号采集">信号采集</h3>
+<p>在频率编码同时，采集信号，采样，作为K空间的一条线。对应于特定相位的频率编码线。<br>
+改变相位编码，重新采集信号。生成第二条K空间频率编码线。<br>
+以此，产生完整K空间平面。<br>
+<img src="https://duder-git.github.io//post-images/1689665092007.JPG" alt="" loading="lazy"></p>
+<h3 id="图像重建">图像重建</h3>
+<p>傅里叶逆变换</p>
+<h2 id="k空间">k空间</h2>
+<p>傅里叶编码频率空间</p>
+<h3 id="k空间每一行">K空间每一行</h3>
+<p>K空间的每一行表示为一条相位编码线，代表脉冲序列采集的一个回波</p>
+<ol>
+<li>相位编码线的极性:K空间上半部分的每一行使用的正的相位编码梯度，下半部分使用负的相位编码</li>
+<li>相位编码线的幅度:越靠近边缘相位编码幅度越大，越靠近中心，幅度越小，K空间中心为0相位编码线</li>
+<li>相位编码线的数量为相位编码方向知阵的大小</li>
+</ol>
+<h3 id="为何时域信号可以携带频域信息">为何时域信号可以携带频域信息</h3>
+<p>公式推导<br>
+<a href="https://zhuanlan.zhihu.com/p/137255997">MRI成像原理</a></p>
+<h2 id="线圈接收信号的原理">线圈接收信号的原理</h2>
+<p>FID，自由感应衰减信号<br>
+信号强度与横向磁矩分量相关<br>
+经过公式推导可知，信号强度与质子量相关，因此可以使用接收线圈接收信号的大小表示图像信息。<br>
+<img src="https://duder-git.github.io//post-images/1689686710565.JPG" alt="" loading="lazy"></p>
+<h2 id="空间编码-2">空间编码</h2>
+<figure data-type="image" tabindex="3"><img src="https://duder-git.github.io//post-images/1689687316621.JPG" alt="" loading="lazy"></figure>
+<h2 id="总结">总结</h2>
+<figure data-type="image" tabindex="4"><img src="https://duder-git.github.io//post-images/1689690577127.JPG" alt="" loading="lazy"></figure>
+<p>只能感叹一句，MRI的大佬太强了！</p>
+
+            </div>
+            
+            
+              <div class="next-post">
+                <div class="next">下一篇</div>
+                <a href="https://duder-git.github.io/post/tu-xiang-fu-yuan-yu-chong-jian-/">
+                  <h3 class="post-title">
+                    图像复原与重建
+                  </h3>
+                </a>
+              </div>
+            
+
+            
+              
+                <div id="gitalk-container" data-aos="fade-in"></div>
+              
+
+              
+            
+
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+<script type="application/javascript">
+
+AOS.init();
+
+var app = new Vue({
+  el: '#app',
+  data: {
+    menuVisible: false,
+  },
+})
+
+</script>
+
+
+
+
+
+  
+    <script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+    <script>
+
+      var gitalk = new Gitalk({
+        clientID: '67e2d5e357b5ec7e7b54',
+        clientSecret: 'c407722209762f44616a0119d6e2cf53384fbc0c',
+        repo: 'Duder-git.github.io',
+        owner: 'Duder-git',
+        admin: ['Duder-git'],
+        id: (location.pathname).substring(0, 49),      // Ensure uniqueness and length less than 50
+        distractionFreeMode: false  // Facebook-like distraction free mode
+      })
+
+      gitalk.render('gitalk-container')
+
+    </script>
+  
+
+  
+
+
+
+
+  </body>
+</html>

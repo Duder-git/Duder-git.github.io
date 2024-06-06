@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" >
+
+<title>动脉压力重博点自动检测算法 | Duder&#39;s Blog</title>
+
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+<link rel="shortcut icon" href="https://duder-git.github.io//favicon.ico?v=1717654629635">
+<link rel="stylesheet" href="https://duder-git.github.io//styles/main.css">
+
+
+  
+    <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css" />
+  
+
+  
+
+
+<link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+
+
+
+    <meta name="description" content="理邦项目竞赛题目，2023.08.29尝试解决
+
+要求：
+
+使用MATLAB编程；
+检测ABP波形，实时检测每个压力波型的重博点；
+算法准确性（Mean+-SD)和普适性（鲁棒性）
+
+什么是重博点
+动脉压力波形的重博点是指动脉压力波形中的一..." />
+    <meta name="keywords" content="信号处理" />
+  </head>
+  <body>
+    <div id="app" class="main">
+
+      <div class="sidebar" :class="{ 'full-height': menuVisible }">
+  <div class="top-container" data-aos="fade-right">
+    <div class="top-header-container">
+      <a class="site-title-container" href="https://duder-git.github.io/">
+        <img src="https://duder-git.github.io//images/avatar.png?v=1717654629635" class="site-logo">
+        <h1 class="site-title">Duder&#39;s Blog</h1>
+      </a>
+      <div class="menu-btn" @click="menuVisible = !menuVisible">
+        <div class="line"></div>
+      </div>
+    </div>
+    <div>
+      
+        
+          <a href="/" class="site-nav">
+            首页
+          </a>
+        
+      
+        
+          <a href="/archives" class="site-nav">
+            归档
+          </a>
+        
+      
+        
+          <a href="/tags" class="site-nav">
+            标签
+          </a>
+        
+      
+        
+          <a href="/post/about" class="site-nav">
+            关于
+          </a>
+        
+      
+    </div>
+  </div>
+  <div class="bottom-container" data-aos="flip-up" data-aos-offset="0">
+    <div class="social-container">
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    </div>
+    <div class="site-description">
+      苟日新 日日新 又日新
+    </div>
+    <div class="site-footer">
+      Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a> | <a class="rss" href="https://duder-git.github.io//atom.xml" target="_blank">RSS</a>
+    </div>
+  </div>
+</div>
+
+
+      <div class="main-container">
+        <div class="content-container" data-aos="fade-up">
+          <div class="post-detail">
+            <h2 class="post-title">动脉压力重博点自动检测算法</h2>
+            <div class="post-date">2023-08-29</div>
+            
+            <div class="post-content" v-pre>
+              <p>理邦项目竞赛题目，2023.08.29尝试解决</p>
+<!-- more -->
+<p>要求：</p>
+<blockquote>
+<p>使用MATLAB编程；</p>
+<p>检测ABP波形，实时检测每个压力波型的重博点；</p>
+<p>算法准确性（Mean+-SD)和普适性（鲁棒性）</p>
+</blockquote>
+<h2 id="什么是重博点">什么是重博点</h2>
+<p>动脉压力波形的重博点是指动脉压力波形中的一个特殊点，通常用于评估心脏收缩功能和动脉弹性。在动脉压力波形中，重博点位于收缩期峰值之后、降支斜率变化的拐点处。</p>
+<p>通过分析动脉压力波形的形态、特征和参数，可以了解心脏的收缩力、动脉的弹性和阻力、血管的狭窄程度以及心血管疾病的风险等信息。重博点自动检测可以提供可靠、快速、非侵入性的心血管功能评估，并为心血管疾病的诊断、研究和监测提供支持。</p>
+<h2 id="动脉血压波形">动脉血压波形</h2>
+<p>正常ABP波形的产生是由于血液在心脏收缩期被射入主动脉，随后在舒张期继续流入外周血管。可将ABP看作由两部分组成：收缩期（陡峭的上升支、波峰和下降支的开始段）和舒张期（血液继续流向外周）。若重温心电图(ECG)波形，ABP的收缩期上升支总是紧随ECG的R波之后，并略延迟约120-180mm。这一时间间隔是电除极波沿心脏传导系统及心肌传导、左心室(LV)等容收缩期、主动脉瓣开放、LV射血、压力波形从主动脉根部传导至外周血管及动脉压力信号从穿刺血管传导至传感器所需要的时间。</p>
+<figure data-type="image" tabindex="1"><img src="https://duder-git.github.io//post-images/1693291717443.jpg" alt="" loading="lazy"></figure>
+<p>如图所示为采集到的段动脉压信号，其中AB 段即为动脉压信号中的一个节拍信号，从图可见动脉压信号中个节拍信号通常由**上升支(AO段)<strong>和</strong>下降支(OB段)**构成。</p>
+<p>**上升支(AO段)**是由于心室快速射血期动脉压力迅速上升,管壁突然扩张而形成；上升支A0 的斜率(上升速度)以及峰值点0的幅度可以反映心输出量、射血速度、外周阻力及主动脉和大动脉管壁的弹性，当心输出量增加，射血速度加快，外周阻力成小以及主动脉和大动脉管壁的弹性降低时，则斜率大，波幅高，反之则斜率小、幅度低。</p>
+<p><strong>下降支(OB段)</strong> 是由于心室射血后期速度减慢,输出量减少进入动脉的血量少于流至外周的血量，故动脉压力降低，动脉弹性回缩，形成下降支的前段(ON段)，通常也将上升支AO以及下降支前段ON形成的峰波称为主波；</p>
+<p>随着心室舒张，主动脉压力迅速下降，在主动脉瓣关闭的一瞬间，血液向心室方向倒流，管壁回缩使下降支急促下降，形成一个切迹点N，称为重搏切迹；</p>
+<p>由于此时主动脉瓣已关闭，倒流的血液被主动脉瓣弹回，动脉压再次稍有上升，故又形成一个短暂上升的小波(ND段)，称为重搏波(部分文献也称作降中波)；</p>
+<p>随后在心室舒张期中，动脉血液继续流向外周，管壁继续回缩，脉搏波继续下降，形成了下降支的后段(DB段)。</p>
+<h2 id="为什么要用重搏点信号">为什么要用重搏点信号</h2>
+<p>动脉压信号下降支的形状能够反映动脉血管的弹性情况；</p>
+<p>动脉血管健康、弹性较好，则动脉外周阻力小，下降支前段下降速度较快，重搏切迹位置较低，重搏波以后的下降支后段坡度较平坦 ；</p>
+<p>相反，如果动脉血管发生硬化、弹性减弱，动脉外周阻力增大，则下降支前段下降速度较慢，重搏切迹位置较高，重搏波以后的下降支后段坡度较陡。</p>
+<p>同时，主动脉瓣不够健全、心搏节律有异常等情况,也会导致重拨波发生波形圆钝、波形抖动、甚至模糊不清等不同情况的形状变化。</p>
+<p>由此可见，动脉压信号中的重搏切迹和重拨波携带由诸多重要的心脏生理、病理信息，是体现心脏功能的重要参数；</p>
+<p>同时，重搏波又以重搏切迹为起点因此动脉压信号中重搏切迹点的位置是反映上述心脏功能信息的关键。</p>
+<h2 id="重搏点的不确定性">重搏点的不确定性</h2>
+<p>重搏切迹位于动脉压信号下降支的中段，并且所在位置根据病理特征具有一定的不确定性，同时，该动脉压信号与憋气、用力等情况产生明显的基线起伏，动脉压检测仪信号采集探头的抖动等情况也会在动脉压信号中形成干扰波，因此动脉压信号中重搏切迹点的位置难以利用常规的计算机手段进行有效识别，通常都依靠医师的经验进行人工识别，而人工识别不但费时费力，并且由于不同临床医师的认知观点不尽相同，识别标准参差不齐，导致识别效率低、准确性也难以得到保证。</p>
+<h2 id="处理流程">处理流程</h2>
+<ol>
+<li>
+<p>采集一个节拍构建模板信号</p>
+<ol>
+<li>重采样为k个点；</li>
+<li>建立模板信号中重博点位置（对数极坐标？）；</li>
+</ol>
+</li>
+<li>
+<p>识别待测动脉信号重搏切迹点</p>
+<ol>
+<li>对待测信号逐拍分析，使用信号最小值分割，并作重采样</li>
+<li>识别待采信号中第i个节拍的重搏切迹点；
+<ol>
+<li>预设曲率阈值tao0，计算各采样点的曲率信号，大于tao0的记为第i个信号的可能点；</li>
+<li>建立第i个节拍信号各个目标点的（对数极坐标）分布模型，与模板做匹配运算，识别出重搏切迹点。</li>
+</ol>
+</li>
+<li>重复2，识别所有拍节</li>
+<li>存储并显示结果</li>
+</ol>
+</li>
+</ol>
+<h2 id="动脉信号">动脉信号</h2>
+<h3 id="病理诊断">病理诊断</h3>
+<p><strong>肺动脉压力波形形态</strong></p>
+<p><strong>主动脉瓣狭窄</strong></p>
+<p><strong>主动脉瓣关闭不全</strong></p>
+<p><strong>肥厚型心肌病</strong></p>
+<h3 id="形态变异">形态变异</h3>
+<p><strong>A. 交替脉</strong></p>
+<p>● 脉压忽大忽小交替出现波动</p>
+<p>● 常见于严重的左心收缩功能障碍时，多发于晚期主动脉瓣狭窄</p>
+<p>● 可发生于全身麻醉期间，因为原有左心收缩障碍的患者交感神经系统活性下降</p>
+<p>● 交替脉要注意与二联脉相区别，因为这二者都可以引起脉压的交替改变，但交替脉的节律是规则的</p>
+<h2 id="code">code</h2>
+<p>考虑脉动频率变化</p>
+<p>选择信号大值作为分割条件</p>
+<figure data-type="image" tabindex="2"><img src="../../Typora%E6%96%87%E6%A1%A3/images/%E5%8A%A8%E8%84%89%E5%8E%8B%E5%8A%9B%E9%87%8D%E5%8D%9A%E7%82%B9%E6%A3%80%E6%B5%8B/image-20230830113658145.png" alt="image-20230830113658145" loading="lazy"></figure>
+<p>选择信号小值作为分割条件</p>
+<figure data-type="image" tabindex="3"><img src="../../Typora%E6%96%87%E6%A1%A3/images/%E5%8A%A8%E8%84%89%E5%8E%8B%E5%8A%9B%E9%87%8D%E5%8D%9A%E7%82%B9%E6%A3%80%E6%B5%8B/image-20230830113743239.png" alt="image-20230830113743239" loading="lazy"></figure>
+<p>明显观察到大值分割效果较好</p>
+<p>标准化后效果</p>
+<figure data-type="image" tabindex="4"><img src="../../Typora%E6%96%87%E6%A1%A3/images/%E5%8A%A8%E8%84%89%E5%8E%8B%E5%8A%9B%E9%87%8D%E5%8D%9A%E7%82%B9%E6%A3%80%E6%B5%8B/image-20230830113857881.png" alt="image-20230830113857881" loading="lazy"></figure>
+<p>使用二阶导无法区分</p>
+<figure data-type="image" tabindex="5"><img src="../../Typora%E6%96%87%E6%A1%A3/images/%E5%8A%A8%E8%84%89%E5%8E%8B%E5%8A%9B%E9%87%8D%E5%8D%9A%E7%82%B9%E6%A3%80%E6%B5%8B/image-20230830153315535.png" alt="image-20230830153315535" loading="lazy"></figure>
+<h2 id="参考">参考</h2>
+<p>CN102334986A-动脉压信号中重搏切迹点识别方法</p>
+<p>范保存，王彦，黄晨晨，等 . 基于时域微分周期比的脉搏波信号特征识别［J］.光子学报，2020，49（12）：1206003</p>
+<p>田紫微, 贾芸芳. 基于光电容积脉搏波的心血管疾病相关体征参数提取算法[J]. 传感器技术与应用, 2023, 11(1): 20-27. DOI: 10.12677/jsta.2023.111003</p>
+<p>Chapter 45 Cardiovascular Monitoring</p>
+<p><a href="http://www.maibobo.cn/466.html">脉搏波速度(PWV)分析</a></p>
+
+            </div>
+            
+              <div class="tag-container">
+                
+                  <a href="https://duder-git.github.io/tag/xin-hao-chu-li/" class="tag">
+                    信号处理
+                  </a>
+                
+              </div>
+            
+            
+              <div class="next-post">
+                <div class="next">下一篇</div>
+                <a href="https://duder-git.github.io/post/自适应滤波LMS/">
+                  <h3 class="post-title">
+                    自适应滤波方法 LMS 
+                  </h3>
+                </a>
+              </div>
+            
+
+            
+              
+                <div id="gitalk-container" data-aos="fade-in"></div>
+              
+
+              
+            
+
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+<script type="application/javascript">
+
+AOS.init();
+
+var app = new Vue({
+  el: '#app',
+  data: {
+    menuVisible: false,
+  },
+})
+
+</script>
+
+
+
+
+
+  
+    <script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+    <script>
+
+      var gitalk = new Gitalk({
+        clientID: '67e2d5e357b5ec7e7b54',
+        clientSecret: 'c407722209762f44616a0119d6e2cf53384fbc0c',
+        repo: 'Duder-git.github.io',
+        owner: 'Duder-git',
+        admin: ['Duder-git'],
+        id: (location.pathname).substring(0, 49),      // Ensure uniqueness and length less than 50
+        distractionFreeMode: false  // Facebook-like distraction free mode
+      })
+
+      gitalk.render('gitalk-container')
+
+    </script>
+  
+
+  
+
+
+
+
+  </body>
+</html>

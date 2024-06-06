@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" >
+
+<title>处理.tdms数据 | Duder&#39;s Blog</title>
+
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+<link rel="shortcut icon" href="https://duder-git.github.io//favicon.ico?v=1717654629635">
+<link rel="stylesheet" href="https://duder-git.github.io//styles/main.css">
+
+
+  
+    <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css" />
+  
+
+  
+
+
+<link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+
+
+
+    <meta name="description" content="滨哥采集了一组tdms数据，需要分析一下
+
+如何读取tdms数据
+excle
+Package Manager
+NI的解决方法，下载插件可以在excle中查看tdms数据
+matlab
+matlab中有两种，一种conventTDMS函数，一..." />
+    <meta name="keywords" content="" />
+  </head>
+  <body>
+    <div id="app" class="main">
+
+      <div class="sidebar" :class="{ 'full-height': menuVisible }">
+  <div class="top-container" data-aos="fade-right">
+    <div class="top-header-container">
+      <a class="site-title-container" href="https://duder-git.github.io/">
+        <img src="https://duder-git.github.io//images/avatar.png?v=1717654629635" class="site-logo">
+        <h1 class="site-title">Duder&#39;s Blog</h1>
+      </a>
+      <div class="menu-btn" @click="menuVisible = !menuVisible">
+        <div class="line"></div>
+      </div>
+    </div>
+    <div>
+      
+        
+          <a href="/" class="site-nav">
+            首页
+          </a>
+        
+      
+        
+          <a href="/archives" class="site-nav">
+            归档
+          </a>
+        
+      
+        
+          <a href="/tags" class="site-nav">
+            标签
+          </a>
+        
+      
+        
+          <a href="/post/about" class="site-nav">
+            关于
+          </a>
+        
+      
+    </div>
+  </div>
+  <div class="bottom-container" data-aos="flip-up" data-aos-offset="0">
+    <div class="social-container">
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    </div>
+    <div class="site-description">
+      苟日新 日日新 又日新
+    </div>
+    <div class="site-footer">
+      Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a> | <a class="rss" href="https://duder-git.github.io//atom.xml" target="_blank">RSS</a>
+    </div>
+  </div>
+</div>
+
+
+      <div class="main-container">
+        <div class="content-container" data-aos="fade-up">
+          <div class="post-detail">
+            <h2 class="post-title">处理.tdms数据</h2>
+            <div class="post-date">2024-01-10</div>
+            
+            <div class="post-content" v-pre>
+              <p>滨哥采集了一组tdms数据，需要分析一下</p>
+<!-- more -->
+<h1 id="如何读取tdms数据">如何读取tdms数据</h1>
+<h2 id="excle">excle</h2>
+<p><a href="https://www.ni.com/zh-cn/support/downloads/software-products/download.package-manager.html#322516">Package Manager</a><br>
+NI的解决方法，下载插件可以在excle中查看tdms数据</p>
+<h2 id="matlab">matlab</h2>
+<p>matlab中有两种，一种conventTDMS函数，一种MATLAB TDMS<br>
+第二种是导入数据显示波形，<br>
+第一种是导入数据并可以生成mat数据，因为要做后面的信号分析处理，这个更方便一点.<a href="https://ww2.mathworks.cn/matlabcentral/fileexchange/44206-converttdms-v10">conventTDMS</a></p>
+<h2 id="问题">问题</h2>
+<p>使用excle可以成功读取数据，但是excle展示数据量有限<br>
+conventTDMS可以读取测试数据，但是针对采集数据存在问题，一直报“数组索引必须为正整数或逻辑值”的错误。同样数据excle是可以打开的。</p>
+<p>定位到原因是index结构体中Object对象中的rawdatacont为0，这导致索引数据出现0.<br>
+代码中针对这个问题解决方案是判断kTocNewObjectList，=1则加一，=0则不处理，但是这里问题就是=0，但是不处理索引为0.</p>
+<p>使用测试数据进行分析，<br>
+测试数据并没有进入报错代码。</p>
+<p>阅读代码官网讨论区，发现存在很多问题。</p>
+<p>解决方案，使用NI转excle功能转存xlsx格式，使用MATLAB读取数据并转换为mat文件<br>
+绕开MATLAB直接读取TDMS格式保存问题。</p>
+<h2 id="matlab-tdms">MATLAB TDMS</h2>
+<p>https://blog.csdn.net/ccy648701789/article/details/109556920<br>
+tdms打开转excle再用matlab打开，数据量小，不确定是不是excle数据截断了，也有可能是采集的问题。<br>
+因此又用tdm64-gcc的搞了一下，软件装了一晚上。然后配置位置环境<br>
+需要安装MW_MINGW64，从MATLAB官网下载<br>
+测试用例可以通过，但是读取采集数据闪退，这下彻底没戏了。</p>
+
+            </div>
+            
+            
+              <div class="next-post">
+                <div class="next">下一篇</div>
+                <a href="https://duder-git.github.io/post/chao-sheng-bo-chong-jian-fang-fa/">
+                  <h3 class="post-title">
+                    超声波重建方法
+                  </h3>
+                </a>
+              </div>
+            
+
+            
+              
+                <div id="gitalk-container" data-aos="fade-in"></div>
+              
+
+              
+            
+
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+<script type="application/javascript">
+
+AOS.init();
+
+var app = new Vue({
+  el: '#app',
+  data: {
+    menuVisible: false,
+  },
+})
+
+</script>
+
+
+
+
+
+  
+    <script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+    <script>
+
+      var gitalk = new Gitalk({
+        clientID: '67e2d5e357b5ec7e7b54',
+        clientSecret: 'c407722209762f44616a0119d6e2cf53384fbc0c',
+        repo: 'Duder-git.github.io',
+        owner: 'Duder-git',
+        admin: ['Duder-git'],
+        id: (location.pathname).substring(0, 49),      // Ensure uniqueness and length less than 50
+        distractionFreeMode: false  // Facebook-like distraction free mode
+      })
+
+      gitalk.render('gitalk-container')
+
+    </script>
+  
+
+  
+
+
+
+
+  </body>
+</html>

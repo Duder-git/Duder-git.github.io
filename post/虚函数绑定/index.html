@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" >
+
+<title>虚函数的绑定问题 | Duder&#39;s Blog</title>
+
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+<link rel="shortcut icon" href="https://duder-git.github.io//favicon.ico?v=1717654629635">
+<link rel="stylesheet" href="https://duder-git.github.io//styles/main.css">
+
+
+  
+    <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css" />
+  
+
+  
+
+
+<link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+
+
+
+    <meta name="description" content="做题遇到虚函数绑定问题，以前学过，记得又不太清楚了
+
+题目
+#include &lt;iostream&gt;
+using namespace std;
+
+struct A{
+    virtual void fun1( ){
+      ..." />
+    <meta name="keywords" content="C++" />
+  </head>
+  <body>
+    <div id="app" class="main">
+
+      <div class="sidebar" :class="{ 'full-height': menuVisible }">
+  <div class="top-container" data-aos="fade-right">
+    <div class="top-header-container">
+      <a class="site-title-container" href="https://duder-git.github.io/">
+        <img src="https://duder-git.github.io//images/avatar.png?v=1717654629635" class="site-logo">
+        <h1 class="site-title">Duder&#39;s Blog</h1>
+      </a>
+      <div class="menu-btn" @click="menuVisible = !menuVisible">
+        <div class="line"></div>
+      </div>
+    </div>
+    <div>
+      
+        
+          <a href="/" class="site-nav">
+            首页
+          </a>
+        
+      
+        
+          <a href="/archives" class="site-nav">
+            归档
+          </a>
+        
+      
+        
+          <a href="/tags" class="site-nav">
+            标签
+          </a>
+        
+      
+        
+          <a href="/post/about" class="site-nav">
+            关于
+          </a>
+        
+      
+    </div>
+  </div>
+  <div class="bottom-container" data-aos="flip-up" data-aos-offset="0">
+    <div class="social-container">
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    </div>
+    <div class="site-description">
+      苟日新 日日新 又日新
+    </div>
+    <div class="site-footer">
+      Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a> | <a class="rss" href="https://duder-git.github.io//atom.xml" target="_blank">RSS</a>
+    </div>
+  </div>
+</div>
+
+
+      <div class="main-container">
+        <div class="content-container" data-aos="fade-up">
+          <div class="post-detail">
+            <h2 class="post-title">虚函数的绑定问题</h2>
+            <div class="post-date">2023-09-07</div>
+            
+            <div class="post-content" v-pre>
+              <p>做题遇到虚函数绑定问题，以前学过，记得又不太清楚了</p>
+<!-- more -->
+<h2 id="题目">题目</h2>
+<pre><code class="language-C++">#include &lt;iostream&gt;
+using namespace std;
+
+struct A{
+    virtual void fun1( ){
+        cout &lt;&lt; &quot;A:fun1&quot; &lt;&lt; endl;
+    }
+    
+    void fun2( ){
+        cout &lt;&lt; &quot;A:fun2&quot; &lt;&lt; endl;
+    }
+};
+
+struct B : public A{
+    virtual void fun1( ){
+        cout &lt;&lt; &quot;B:fun1&quot; &lt;&lt; endl;
+    }
+
+    void fun2( ){
+        cout &lt;&lt; &quot;B:fun2&quot; &lt;&lt; endl;
+    }
+};
+
+int main(){
+    A a;
+    B b;
+    ((A*)(&amp;b))-&gt;fun1();
+    ((A*)(&amp;b))-&gt;fun2();
+    ((B*)(&amp;a))-&gt;fun1();
+    ((B*)(&amp;a))-&gt;fun2();
+    return 0;
+}
+</code></pre>
+<p>这样一个函数，他的输出应该是怎么样的</p>
+<pre><code class="language-C++">B:fun1
+A:fun2
+A:fun1
+B:fun2
+</code></pre>
+<h2 id="为什么">为什么？</h2>
+<p>chart GPT回答<br>
+这个程序的输出将取决于虚函数的动态绑定和指针的强制类型转换：</p>
+<p>**A a; **和 <strong>B b;</strong> 分别创建了一个类型为 A 和 B 的对象。</p>
+<p>** ((A*)(&amp;b))-&gt;fun1(); **<br>
+通过将 B 类型的对象 b 的地址强制转换为 A 类型的指针，然后调用 fun1。由于 fun1 是虚函数，它会根据实际对象的类型进行动态绑定。因此，它将调用 B 类型对象的 fun1，输出 &quot;B:fun1&quot;。</p>
+<p>*<em>((A</em>)(&amp;b))-&gt;fun2(); **<br>
+类似地，这里也将 B 类型的对象 b 的地址强制转换为 A 类型的指针，但是 fun2 不是虚函数，所以它将在编译时绑定到 A 类型的 fun2，输出 &quot;A:fun2&quot;。</p>
+<p>*<em>((B</em>)(&amp;a))-&gt;fun1(); **<br>
+这里将 A 类型的对象 a 的地址强制转换为 B 类型的指针，然后调用 fun1。由于动态绑定，它将调用 A 类型对象的 fun1，输出 &quot;A:fun1&quot;。这是因为 B 类型对象的 fun1 虽然重写了 A 类型的 fun1，但是由于指针的静态类型是 B 类型，所以编译器会将它绑定到 B 类型的 fun1。</p>
+<p><em><em>((B</em>)(&amp;a))-&gt;fun2();</em>*<br>
+类似地，这里将 A 类型的对象 a 的地址强制转换为 B 类型的指针，然后调用 fun2。由于 fun2 不是虚函数，它将在编译时绑定到 B 类型的 fun2，输出 &quot;B:fun2&quot;。</p>
+<h2 id="再解释一下关于ba-fun1">再解释一下关于((B*)(&amp;a))-&gt;fun1();</h2>
+<p>当你执行 ((B*)(&amp;a))-&gt;fun1(); 时，你正在尝试将一个 A 类型的对象 a 的地址强制转换为 B 类型的指针，然后调用 fun1 函数。这行代码看起来似乎在尝试调用 B 类型对象的 fun1 函数，但实际情况并非如此，因为 a 是一个 A 类型的对象。</p>
+<p>这里的关键是要理解强制类型转换只是告诉编译器将一个指针视为不同的类型，并不改变实际对象的类型。在这种情况下，将 a 强制转换为 B 类型的指针 ((B*)(&amp;a)) 只是编译器的假设，它认为你希望将 a 视为 B 类型的对象。</p>
+<p>然而，实际上，<strong>a 仍然是一个 A 类型的对象，它的虚函数表指向 A 类型的虚函数</strong>。因此，无论如何进行强制类型转换，调用 ((B*)(&amp;a))-&gt;fun1(); 实际上仍然调用的是 A 类型对象的 fun1，输出 &quot;A:fun1&quot;。</p>
+<p>这是因为强制类型转换只是告诉编译器如何解释指针，但不会改变对象的类型。虚函数的动态绑定仍然基于对象的实际类型，而不是指针的类型。</p>
+<h2 id="再解释一下ba-fun2">再解释一下((B*)(&amp;a))-&gt;fun2();</h2>
+<p>当你执行 ((B*)(&amp;a))-&gt;fun2(); 时，你将 A 类型的对象 a 的地址强制转换为 B 类型的指针，然后调用 fun2 函数。在这种情况下，虽然 a 是 A 类型的对象，但强制转换将其视为 B 类型的对象。</p>
+<p>然而，<strong>与虚函数不同，fun2 是非虚函数，它在编译时绑定，而不是动态绑定</strong>。由于强制类型转换后的指针类型是 B 类型，编译器将使用 B 类型的 fun2 实现，而不考虑对象的实际类型。</p>
+<p>因此，((B*)(&amp;a))-&gt;fun2(); 将调用 B 类型对象的 fun2，输出 &quot;B:fun2&quot;，尽管实际对象 a 是 A 类型的。这是由于非虚函数 fun2 在编译时绑定到指针的静态类型，而不是动态绑定到对象的实际类型。</p>
+
+            </div>
+            
+              <div class="tag-container">
+                
+                  <a href="https://duder-git.github.io/tag/NQUNpmwdyZ/" class="tag">
+                    C++
+                  </a>
+                
+              </div>
+            
+            
+              <div class="next-post">
+                <div class="next">下一篇</div>
+                <a href="https://duder-git.github.io/post/动脉压力重博点检测/">
+                  <h3 class="post-title">
+                    动脉压力重博点自动检测算法
+                  </h3>
+                </a>
+              </div>
+            
+
+            
+              
+                <div id="gitalk-container" data-aos="fade-in"></div>
+              
+
+              
+            
+
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+<script type="application/javascript">
+
+AOS.init();
+
+var app = new Vue({
+  el: '#app',
+  data: {
+    menuVisible: false,
+  },
+})
+
+</script>
+
+
+
+
+
+  
+    <script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+    <script>
+
+      var gitalk = new Gitalk({
+        clientID: '67e2d5e357b5ec7e7b54',
+        clientSecret: 'c407722209762f44616a0119d6e2cf53384fbc0c',
+        repo: 'Duder-git.github.io',
+        owner: 'Duder-git',
+        admin: ['Duder-git'],
+        id: (location.pathname).substring(0, 49),      // Ensure uniqueness and length less than 50
+        distractionFreeMode: false  // Facebook-like distraction free mode
+      })
+
+      gitalk.render('gitalk-container')
+
+    </script>
+  
+
+  
+
+
+
+
+  </body>
+</html>

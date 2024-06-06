@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" >
+
+<title>C++Primer | Duder&#39;s Blog</title>
+
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+<link rel="shortcut icon" href="https://duder-git.github.io//favicon.ico?v=1717654629635">
+<link rel="stylesheet" href="https://duder-git.github.io//styles/main.css">
+
+
+  
+    <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css" />
+  
+
+  
+
+
+<link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+
+
+
+    <meta name="description" content="C++ Primer 学习笔记
+西安 大唐芙蓉园 望春阁
+
+写在前面
+本文学习教材是《C++Priner中文版》第五版，主要用于记录C++学习过程中的要点，对于初学者（本人）起到提示和快速复习的作用。
+本文以时间为轴，记录系统学习C++的过..." />
+    <meta name="keywords" content="学习,C++" />
+  </head>
+  <body>
+    <div id="app" class="main">
+
+      <div class="sidebar" :class="{ 'full-height': menuVisible }">
+  <div class="top-container" data-aos="fade-right">
+    <div class="top-header-container">
+      <a class="site-title-container" href="https://duder-git.github.io/">
+        <img src="https://duder-git.github.io//images/avatar.png?v=1717654629635" class="site-logo">
+        <h1 class="site-title">Duder&#39;s Blog</h1>
+      </a>
+      <div class="menu-btn" @click="menuVisible = !menuVisible">
+        <div class="line"></div>
+      </div>
+    </div>
+    <div>
+      
+        
+          <a href="/" class="site-nav">
+            首页
+          </a>
+        
+      
+        
+          <a href="/archives" class="site-nav">
+            归档
+          </a>
+        
+      
+        
+          <a href="/tags" class="site-nav">
+            标签
+          </a>
+        
+      
+        
+          <a href="/post/about" class="site-nav">
+            关于
+          </a>
+        
+      
+    </div>
+  </div>
+  <div class="bottom-container" data-aos="flip-up" data-aos-offset="0">
+    <div class="social-container">
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    </div>
+    <div class="site-description">
+      苟日新 日日新 又日新
+    </div>
+    <div class="site-footer">
+      Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a> | <a class="rss" href="https://duder-git.github.io//atom.xml" target="_blank">RSS</a>
+    </div>
+  </div>
+</div>
+
+
+      <div class="main-container">
+        <div class="content-container" data-aos="fade-up">
+          <div class="post-detail">
+            <h2 class="post-title">C++Primer</h2>
+            <div class="post-date">2023-04-03</div>
+            
+            <div class="post-content" v-pre>
+              <h1 id="c-primer-学习笔记">C++ Primer 学习笔记</h1>
+<p>西安 大唐芙蓉园 望春阁</p>
+<figure data-type="image" tabindex="1"><img src="/images/%E6%9C%9B%E6%98%A5%E9%98%81.JPG" alt="" loading="lazy"></figure>
+<h2 id="写在前面">写在前面</h2>
+<p>本文学习教材是《C++Priner中文版》第五版，主要用于记录C++学习过程中的要点，对于初学者（本人）起到提示和快速复习的作用。</p>
+<p>本文以时间为轴，记录系统学习C++的过程，意在不虚度光阴，不沉浸虚无。</p>
+<p>在科研之余抽身出来，从更广大的视角俯视当前所学，避免思维精力锁死单一方向。</p>
+<h2 id="20230330">2023.03.30</h2>
+<h3 id="变量">变量</h3>
+<h4 id="字符变量">字符变量</h4>
+<blockquote>
+<p>一个字 四字节</p>
+<p>一个字节 8比特</p>
+<p>一个字 32比特或者64比特</p>
+</blockquote>
+<blockquote>
+<ul>
+<li>
+<p>(a) 'a', L'a', &quot;a&quot;, L&quot;a&quot;</p>
+<p>字符字面量、宽字符字面量、字符串字面量、字符串宽字符字面量</p>
+</li>
+<li>
+<p>(b) 10、10u、10L、10uL、012、0xC</p>
+<p>十进制、无符号十进制、长十进制、无符号长十进制、八进制、十六进制</p>
+</li>
+<li>
+<p>(c) 3.14、3.14f、3.14L</p>
+<p>double、float、long double</p>
+</li>
+<li>
+<p>(d) 10, 10u, 10., 10e-2</p>
+<p>十进制、无符号十进制、double、double</p>
+</li>
+</ul>
+</blockquote>
+<p>定义变量时没有指定初值，变量被默认初始化</p>
+<blockquote>
+<p>内置类型变量 未被显式初始化</p>
+<p>​	函数体之外的初始化为0</p>
+<p>​	函数体内部内置类型变量不被初始化</p>
+</blockquote>
+<p>！ 建议初始化每一个内置类型变量</p>
+<h4 id="声明和定义">声明和定义</h4>
+<p>声明：使名字为程序所知</p>
+<p>定义：创建与名字关联的实体</p>
+<blockquote>
+<p>如果要声明而非定义，在变量前添加关键字extern</p>
+<p>试图初始化extern关键字标记的变量，将引发错误</p>
+</blockquote>
+<h4 id="变量名规范">变量名规范</h4>
+<blockquote>
+<ul>
+<li>体现实际含义</li>
+<li>一般小写</li>
+<li>自定义类名大学字母开头</li>
+<li>多个单词组成使用“_”连接</li>
+</ul>
+</blockquote>
+<h2 id="20230331">2023.03.31</h2>
+<p>###引用和指针</p>
+<h4 id="引用">引用</h4>
+<p>在初始化变量时，初始值会被拷贝到新建对象中。在定义引用时，程序把引用和初始值绑定在一起，而不是将初始值拷贝给引用。</p>
+<blockquote>
+<p>引用并非对象，相反，他只是为一个已经存在的对象七点另一个名字</p>
+</blockquote>
+<pre><code class="language-c++">int i, &amp;ri = i;
+i = 5; ri = 10
+std::cout&lt;&lt;i&lt;&lt;&quot; &quot;&lt;&lt;ri&lt;&lt;std::endl;
+</code></pre>
+<blockquote>
+<p>10 10</p>
+</blockquote>
+<h4 id="指针">指针</h4>
+<p>指针本身是一个对象，允许对指针赋值和拷贝，而且在指针的声明周期内可以先后指向几个不同的对象。</p>
+<p>无需在定义时赋初值。</p>
+<pre><code class="language-c++">int ival = 42;
+int *p = &amp;ival;
+cout&lt;&lt;*p;    	// 由符号*得到指针p所指对象，，输出42
+double dval;
+double *pd = &amp;dval;
+int *pi = pd; 	//错误，指针类型不匹配
+pi = &amp;dval;		// 错误，试图把double地址赋给int
+</code></pre>
+<blockquote>
+<p>指针存放在某个对象地址，获取地址使用取地址符&amp;。</p>
+<p>指针类型要与指向对象严格匹配</p>
+</blockquote>
+<h4 id="符号多重含义">符号多重含义</h4>
+<pre><code class="language-c++">int i = 42;
+int &amp;r = i; 	// 引用，&amp;是声明的一部分
+int *p;     	// 指针，*是声明的一部分
+p = &amp;i;     	// 取地址符
+*p = i;     	// 解引用
+int &amp;r2 = *p; 	// &amp;引用，*解引用
+</code></pre>
+<h4 id="赋值和指针">赋值和指针</h4>
+<p>指针和引用都能提供对其他对象的间接访问，但引用本身并非为一个对象，指针可以存放一个新的地址，从而指向一个新的对象</p>
+<pre><code class="language-c++">int i = 42;
+int *pi = 0; 	// pi被初始化，但没有指向任何对象
+int *pi2 = &amp;i;	// pi2被初始化，存有i的地址
+int *pi3; 		// pi3定义于块内，则pi3的值无法确定
+
+pi3 = pi2; 		// pi3和pi2指向同一个对象i
+
+pi = &amp;ival; 	// pi值改变，指向ival
+*pi = 0;   		// ival值被改变，指针pi并没有改变
+</code></pre>
+<blockquote>
+<p>一条赋值语句到底改变了指针的值还是改变了指针所指对象的值，赋值永远改变的是等号左侧的对象</p>
+</blockquote>
+<pre><code class="language-c++">int *p
+if(p)  	// 判断p是否为nullptr
+if(*p)  // 判断p指向的值是否为0
+</code></pre>
+<blockquote>
+<p>任何非0指针对应的条件值都是true</p>
+</blockquote>
+<h4 id="void-指针">void* 指针</h4>
+<pre><code class="language-c++">double obj = 3.14,
+double *pd = &amp;obj;
+void *pv = &amp;obj;   // 成立，obj可以是任意类型的对象
+pv = pd; 		   // pv可以存放任意类型指针
+</code></pre>
+<h4 id="指针和引用的主要区别">指针和引用的主要区别</h4>
+<blockquote>
+<ol>
+<li>引用是已存在对象的另一个名字,指针本身就是一个对象</li>
+<li>初始化,引用仍然绑定到他的初始对象,无法重新绑定,指针可以分配和复制</li>
+<li>引用始终获取引用最初绑定的对象,单个指针在其生命周期内可以指向多个不同对象</li>
+<li>必须初始化引用,指针在定义时无需初始化</li>
+</ol>
+</blockquote>
+<h4 id="指向指针的指针">指向指针的指针</h4>
+<pre><code class="language-c++">int ival =1024;
+int *p = &amp;ival;
+int **p2 = &amp;p;
+cout&lt;&lt; ival&lt;&lt;endl;
+cout&lt;&lt; *p &lt;&lt;endl; // 解引用
+cout&lt;&lt; **P2 &lt;&lt;endl;  // 解两层引用
+</code></pre>
+<h4 id="指向指针的引用">指向指针的引用</h4>
+<pre><code class="language-c++">int i= 42;
+int *p;			// p是一个int指针
+int *&amp;r = p;    // r是一个对指针p的引用
+r = &amp;i;			// 给r幅值&amp;i,令p指向i
+*r = 0;     	// 解引用r得到i,p指向i,i值改为0
+</code></pre>
+<h3 id="const">const</h3>
+<blockquote>
+<p>常量引用是对const引用</p>
+</blockquote>
+<pre><code class="language-c++">int i = 42;
+const int &amp;r1 = i;		// 合法
+const int &amp;r2 = r1;		// 合法
+const int &amp;r3 = r1*2;   // 合法
+int &amp;r4 = r1 * 2;		// 错误，r4是一个普通非常量引用
+</code></pre>
+<h4 id="指针和const">指针和const</h4>
+<p>与引用一样，可以令指针指向常量或非常量。</p>
+<p>指向常量的指针不能用于改变其所指对象的值。</p>
+<pre><code class="language-c++">const double pi = 3.14;
+const double *cptr = &amp;pi;
+*cptr = 42; // 错误，不能给*cptr赋值
+</code></pre>
+<pre><code class="language-c++">int i = -1, &amp;r = 0;         // 不合法, r必须引用对象.
+int *const p2 = &amp;i2;        // 合法.
+const int i = -1, &amp;r = 0;   // 合法.
+const int *const p3 = &amp;i2;  // 合法.
+const int *p1 = &amp;i2;        // 合法.
+const int &amp;const r2;       // 不合法, r2引用不可以是常量
+const int i2 = i, &amp;r = i;   // 合法.
+</code></pre>
+<h4 id="顶层const">顶层const</h4>
+<p><strong>顶层const</strong>指针本身是常量，不能改变本身的值；</p>
+<p><strong>底层const</strong>指针所指对象是一个常量，可以改变指针指向；</p>
+<h4 id="常量表达式">常量表达式</h4>
+<blockquote>
+<p>值不会变并且在编译过程中就能得到计算结果的表达式。</p>
+</blockquote>
+<pre><code class="language-c++">const int amx_files = 20;  // 常量表达式
+const int sz = get_size(); // 不是常量表达式，在运行后才知道具体数值
+</code></pre>
+<h4 id="constexpr常量">constexpr常量</h4>
+<blockquote>
+<p>C++11规定，允许将变量声明为constexpr类型，一边用编译器验证</p>
+<p>你认定一个变量时常量表达式，就把他声明为constexpr类型</p>
+</blockquote>
+<pre><code class="language-c++">// P是一个指向整型常数的指针
+const int *p = nullptr;
+// q是一个指向整数的常量指针
+constexpr int *q = nullptr;
+</code></pre>
+<h2 id="20230402">2023.04.02</h2>
+<h3 id="类型">类型</h3>
+<h4 id="类型别名">类型别名</h4>
+<p>typedef</p>
+<pre><code class="language-c++">typedef double wages; // wages是double的同义词
+typeeef wages base, *p;  // base是double的同义词，p是double*的同义词
+</code></pre>
+<p>别名声明</p>
+<pre><code class="language-c++">using SI = Sales_item; // SI是Sale_item的同义词
+</code></pre>
+<h4 id="auto">auto</h4>
+<blockquote>
+<p>auto可以在一条语句中声明多个变量，但是一个声明语句只能有一个基本数据类型，所以该语句中所有变量的初始基本数据类型必须一样。</p>
+</blockquote>
+<pre><code class="language-c++">auto i = 0, *p = &amp;i; // 正确
+auto sz = 0, pi = 3.14; // 错误
+</code></pre>
+<h4 id="decltype">decltype</h4>
+<blockquote>
+<p>从表达式类型推断定义变量的类型，但不想用该表达式的值初始化变量</p>
+<p>decltype(()) 结果永远是引用，decltype()只有当本身是一个引用时才是引用</p>
+<p>赋值产生引用效果</p>
+</blockquote>
+<pre><code class="language-c++">decltype(f()) sum = x; // sum的类型就是函数f的返回类型
+decltype((i)) d;    	// 错误，d是int&amp;，必须初始化
+decltype(i) e;			// 正确，e是一个未初始化的int
+decltype(i = a) b=c;   	// b是引用 
+</code></pre>
+<h3 id="自定义数据结构">自定义数据结构</h3>
+<pre><code class="language-c++"># ifndef SALES_DATA_H
+# define SALES_DATA_H
+#include &lt;string&gt;
+struct Sales_data {
+
+};
+# endef
+</code></pre>
+<h2 id="20230403">2023.04.03</h2>
+<h4 id="string">string</h4>
+<pre><code class="language-c++">string S1;		   	// 默认初始化
+string S2(S1);		// s2是s1的副本
+string S2 = S1;		// s2是s1的副本
+string S3(&quot;value&quot;);	// S3是value副本
+string S3 = &quot;value&quot;;// S3是value副本
+string S4(n,'c')	// 把s4初始化为连续n个字符c组成的串
+</code></pre>
+<p>直接初始化和拷贝初始化</p>
+<pre><code class="language-c++">string s5 = &quot;hiya&quot;;		// 拷贝初始化
+string s6(&quot;hiya&quot;);		// 直接初始化
+string S7(5,'c');		// ccccc
+</code></pre>
+<p>读取未知数量string</p>
+<pre><code class="language-c++">int main()
+{
+	string word;
+	while (cin&gt;&gt;word)
+		cout &lt;&lt; word &lt;&lt; endl;
+	return 0;
+}
+
+int main()
+{
+    string line;
+    while(getline(cin,line))
+        cout&lt;&lt;line&lt;&lt;endl;
+    return 0;
+}
+</code></pre>
+<p>empty()</p>
+<p>size()</p>
+<pre><code class="language-c++">string s1 = &quot;hello&quot;;
+string s2 = s1 + &quot;,&quot;;
+string s3 = &quot;Hello&quot; + &quot;World&quot;;  // 错误
+string s4 = &quot;Hello&quot; + &quot;，&quot; + s1； // 错误
+</code></pre>
+<pre><code class="language-c++">string s(&quot;Hello World!!!&quot;);
+for (auto &amp;c : s)
+    c = toupper(c); // c是引用，改变s值
+cout &lt;&lt; s &lt;&lt; endl;
+</code></pre>
+<p>while for auto &amp;c</p>
+<pre><code class="language-c++">int main()
+{
+    string str(&quot;a simple string&quot;);
+    
+    // while
+    decltype(str.size()) i = 0;
+    while (i &lt; str.size()) str[i++] = 'X';
+    cout &lt;&lt; str &lt;&lt; endl;
+
+    // for
+    decltype(str.size()) i = 0;
+    for (i = 0; i &lt; str.size(); str[i++] = 'Y');
+    cout &lt;&lt; str &lt;&lt; endl;
+	
+    // string
+    for (auto &amp;c : str) c = 'X';
+    cout &lt;&lt; str &lt;&lt; endl;
+    
+    return 0;
+}
+</code></pre>
+
+            </div>
+            
+              <div class="tag-container">
+                
+                  <a href="https://duder-git.github.io/tag/1dbsjEEXK/" class="tag">
+                    学习
+                  </a>
+                
+                  <a href="https://duder-git.github.io/tag/NQUNpmwdyZ/" class="tag">
+                    C++
+                  </a>
+                
+              </div>
+            
+            
+              <div class="next-post">
+                <div class="next">下一篇</div>
+                <a href="https://duder-git.github.io/post/引用指针常量/">
+                  <h3 class="post-title">
+                    引用、指针、常数
+                  </h3>
+                </a>
+              </div>
+            
+
+            
+              
+                <div id="gitalk-container" data-aos="fade-in"></div>
+              
+
+              
+            
+
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+<script type="application/javascript">
+
+AOS.init();
+
+var app = new Vue({
+  el: '#app',
+  data: {
+    menuVisible: false,
+  },
+})
+
+</script>
+
+
+
+
+
+  
+    <script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+    <script>
+
+      var gitalk = new Gitalk({
+        clientID: '67e2d5e357b5ec7e7b54',
+        clientSecret: 'c407722209762f44616a0119d6e2cf53384fbc0c',
+        repo: 'Duder-git.github.io',
+        owner: 'Duder-git',
+        admin: ['Duder-git'],
+        id: (location.pathname).substring(0, 49),      // Ensure uniqueness and length less than 50
+        distractionFreeMode: false  // Facebook-like distraction free mode
+      })
+
+      gitalk.render('gitalk-container')
+
+    </script>
+  
+
+  
+
+
+
+
+  </body>
+</html>
