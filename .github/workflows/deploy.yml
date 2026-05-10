@@ -5,6 +5,9 @@ on:
     branches:
       - main
 
+permissions:
+  contents: write
+
 jobs:
   build-deploy:
     runs-on: ubuntu-latest
@@ -29,9 +32,13 @@ jobs:
         run: hugo --gc --minify
 
       - name: Deploy to GitHub Pages
-        uses: peaceiris/actions-gh-pages@v4
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./public
-          publish_branch: gh-pages
-          force_orphan: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          cd public
+          git init
+          git remote add origin https://x-access-token:${GITHUB_TOKEN}@github.com/Duder-git/Duder-git.github.io.git
+          git checkout -b gh-pages
+          git add --all
+          git commit -m "Deploy from GitHub Actions"
+          git push -f origin gh-pages
