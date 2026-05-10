@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>C&#43;&#43; on Duder`s Blog</title>
+    <link>https://duder-git.github.io/tags/c&#43;&#43;/</link>
+    <description>Recent content in C&#43;&#43; on Duder`s Blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-cn</language>
+    <lastBuildDate>Mon, 03 Apr 2023 22:12:49 +0800</lastBuildDate><atom:link href="https://duder-git.github.io/tags/c++/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>C&#43;&#43;Primer</title>
+      <link>https://duder-git.github.io/2023/c-primer-%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/</link>
+      <pubDate>Mon, 03 Apr 2023 22:12:49 +0800</pubDate>
+      
+      <guid>https://duder-git.github.io/2023/c-primer-%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/</guid>
+      <description>C++ Primer 学习笔记 西安 大唐芙蓉园 望春阁 写在前面 本文学习教材是《C++Priner中文版》第五版，主要用于记录C++学习过程中的要点，对于初学者（本</description>
+    </item>
+    
+    <item>
+      <title>引用、指针、常数</title>
+      <link>https://duder-git.github.io/2023/%E5%BC%95%E7%94%A8%E6%8C%87%E9%92%88%E5%B8%B8%E9%87%8F/</link>
+      <pubDate>Fri, 31 Mar 2023 17:53:10 +0800</pubDate>
+      
+      <guid>https://duder-git.github.io/2023/%E5%BC%95%E7%94%A8%E6%8C%87%E9%92%88%E5%B8%B8%E9%87%8F/</guid>
+      <description>###引用和指针 引用 在初始化变量时，初始值会被拷贝到新建对象中。在定义引用时，程序把引用和初始值绑定在一起，而不是将初始值拷贝给引用。 引用并</description>
+    </item>
+    
+  </channel>
+</rss>
