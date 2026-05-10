@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Git on Duder`s Blog</title>
+    <link>https://duder-git.github.io/tags/git/</link>
+    <description>Recent content in Git on Duder`s Blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-cn</language>
+    <lastBuildDate>Sat, 18 Mar 2023 13:17:37 +0800</lastBuildDate><atom:link href="https://duder-git.github.io/tags/git/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>如何使用Git</title>
+      <link>https://duder-git.github.io/2023/%E5%A6%82%E4%BD%95%E4%BD%BF%E7%94%A8git/</link>
+      <pubDate>Sat, 18 Mar 2023 13:17:37 +0800</pubDate>
+      
+      <guid>https://duder-git.github.io/2023/%E5%A6%82%E4%BD%95%E4%BD%BF%E7%94%A8git/</guid>
+      <description>学习视频 笔记资料 Git简明指南 Git历史 Git是一个开源的分布式版本控制系统 当下最流行的版本控制工具 版本控制 版本控制（Revision con</description>
+    </item>
+    
+  </channel>
+</rss>
