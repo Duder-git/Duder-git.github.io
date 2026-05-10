@@ -34,4 +34,6 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./public
           publish_branch: gh-pages
-          force_orphan: true
+          external_repository: Duder-git/Duder-git.github.io
+          publish_commit_user_name: Duder-git
+          publish_commit_user_email: Dudergit@users.noreply.github.com
