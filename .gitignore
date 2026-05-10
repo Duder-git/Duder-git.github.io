@@ -1,0 +1,7 @@
+# Hugo
+public/
+resources/
+themes/.git
+themes/LeaveIt/.git
+themes/mogege/.git
+.hugo_build.lock
