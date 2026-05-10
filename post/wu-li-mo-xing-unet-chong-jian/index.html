@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" >
+
+<title>物理模型+UNet重建 | Duder&#39;s Blog</title>
+
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+<link rel="shortcut icon" href="https://duder-git.github.io//favicon.ico?v=1717654629635">
+<link rel="stylesheet" href="https://duder-git.github.io//styles/main.css">
+
+
+  
+    <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css" />
+  
+
+  
+
+
+<link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+
+
+
+    <meta name="description" content="github: https://github.com/Duder-git/Phy_MPI_DNN
+An effective reconstruction method for magnetic particle imaging based ..." />
+    <meta name="keywords" content="Python,深度学习" />
+  </head>
+  <body>
+    <div id="app" class="main">
+
+      <div class="sidebar" :class="{ 'full-height': menuVisible }">
+  <div class="top-container" data-aos="fade-right">
+    <div class="top-header-container">
+      <a class="site-title-container" href="https://duder-git.github.io/">
+        <img src="https://duder-git.github.io//images/avatar.png?v=1717654629635" class="site-logo">
+        <h1 class="site-title">Duder&#39;s Blog</h1>
+      </a>
+      <div class="menu-btn" @click="menuVisible = !menuVisible">
+        <div class="line"></div>
+      </div>
+    </div>
+    <div>
+      
+        
+          <a href="/" class="site-nav">
+            首页
+          </a>
+        
+      
+        
+          <a href="/archives" class="site-nav">
+            归档
+          </a>
+        
+      
+        
+          <a href="/tags" class="site-nav">
+            标签
+          </a>
+        
+      
+        
+          <a href="/post/about" class="site-nav">
+            关于
+          </a>
+        
+      
+    </div>
+  </div>
+  <div class="bottom-container" data-aos="flip-up" data-aos-offset="0">
+    <div class="social-container">
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    </div>
+    <div class="site-description">
+      苟日新 日日新 又日新
+    </div>
+    <div class="site-footer">
+      Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a> | <a class="rss" href="https://duder-git.github.io//atom.xml" target="_blank">RSS</a>
+    </div>
+  </div>
+</div>
+
+
+      <div class="main-container">
+        <div class="content-container" data-aos="fade-up">
+          <div class="post-detail">
+            <h2 class="post-title">物理模型+UNet重建</h2>
+            <div class="post-date">2023-07-06</div>
+            
+            <div class="post-content" v-pre>
+              <p>github: https://github.com/Duder-git/Phy_MPI_DNN</p>
+<p><a href="https://www.journal.iwmpi.org/index.php/iwmpi/article/view/543">An effective reconstruction method for magnetic particle imaging based on deep neural networks constrained by a physical model</a></p>
+<!-- more -->
+<h1 id="实现">实现</h1>
+<h2 id="目标">目标：</h2>
+<p>基于物理模型约束的MPI重建图像<br>
+实现从信号的重建图像的两步走，从随机图像到信号——从信号到图像</p>
+<h2 id="过程">过程：</h2>
+<p>网络模型<br>
+-- 输入随机图像<br>
+-- 输出重建图像<br>
+物理模型约束<br>
+* 输入实测电压信号<br>
+* 基于迭代图像计算电压信号<br>
+* 计算损失函数：实测电压信号与迭代图像计算电压L1范数<br>
+* 反向传递损失函数，更新网络<br>
+* 计算新的迭代图像</p>
+<h2 id="结果">结果：</h2>
+<p>重建结果较传统XSpace重建有较大提升</p>
+<h1 id="物理模型">物理模型</h1>
+<p>与MATLAB编写MPI仿真类似，代码方式改成面向对象编程，整体结构上确实要好看很多。<br>
+面向对象编程要求将对象抽象，处理它相关的数据和函数都在它的类中实现。<br>
+并且与一般在Python上构架的物理模型不太一样的地方，这里全部使用torch替代numpy数据格式</p>
+<h2 id="phantom">Phantom</h2>
+<p>在仿体类中，需要考虑几个主要参数：仿体、粒子特性、弛豫时间<br>
+其中粒子特性的计算需要用到很多参数，包括弛豫时间，但在本项目中的深度学习部分涉及到对弛豫时间的计算，因此单列一项。</p>
+<h3 id="仿体">仿体</h3>
+<p>仿体本身代表粒子浓度分布，在数据上体现为二维信息，这里主要使用CV2读取信息，根据系统参数缩放图像，归一化处理。</p>
+<h3 id="粒子特性">粒子特性</h3>
+<p>粒子特性核心是langevin函数，代表着当前粒子在不同磁场条件下的非线性变化。这个函数相关粒子浓度，磁饱和强度、温度、粒径等参数，是MPI物理模型的核心。</p>
+<h2 id="scanner">Scanner</h2>
+<p>扫描类的主要功能是构建磁场条件和扫描轨迹，并基于当前磁场环境和扫描轨迹计算粒子磁化信号，达到仿真的效果。可以说重建的好坏就取决于仿真模型和真实粒子信号的差距。<br>
+这里从磁场分布、驱动场构建、获取电压介绍</p>
+<h3 id="磁场分布">磁场分布</h3>
+<p>磁场在设备搭建完成后，参数就固定不变了。仿真不同设备需要根据磁场强度进行调整<br>
+构建磁场强度的方式也有一些，这里假设磁场分布是均匀的，因此磁场范围就是成像视野*磁场梯度<br>
+主要注意离散化参数，离散越密，重建图像的分辨率越高<br>
+但如果扫描轨迹不跟着变密的，图像质量可能会下降</p>
+<h3 id="驱动场构建">驱动场构建</h3>
+<p>驱动场参数与电流和线圈灵敏度相关，1A电流产生3mT磁场强度，那线圈灵敏度就是3mT/A，根据这个可以估算覆盖FOV区域需要多大的电流。<br>
+常用正弦做驱动信号</p>
+<h3 id="计算电压信号">计算电压信号</h3>
+<p>得到磁场分布和随时间变化的驱动场信号，我们可以计算出FFP位置<br>
+根据FFP位置定位各个时刻的信号，建立起时间和空间的关系</p>
+<p>那电压如何计算？<br>
+为了方便GPU加速，这里使用矩阵块输入，即构建[]50,50,1000]的矩阵，0维和1维表示图像信息，2维表示时间关系。<br>
+将矩阵输入朗之万函数，乘以粒子浓度分布就可以得到粒子磁化信号，<br>
+进一步，由于电磁线圈接收到整个FOV的磁场变换，因此需要对单个时间片求和，构建时间线<br>
+进一步，电磁线圈接收信号的核心是磁通量变化，因此需要对时间线求导，加上线圈灵敏度的变化得到实测的电压信号</p>
+<p>需要解释一下，代码中使用的是磁化曲线的导数，即对上述的过程进行简化的操作<br>
+到这里，物理模型的约束条件完成，剩下就是一些缝缝补补的工作了</p>
+<h1 id="unet网络模型">UNet网络模型</h1>
+<p>典型的UNet网络模型<br>
+<img src="https://duder-git.github.io//post-images/1688627417122.JPG" alt="" loading="lazy"><br>
+调参的事情我就不太擅长了</p>
+<h1 id="写在末尾">写在末尾</h1>
+<p>写的比较快，主要分享这样一个思路，如有不理解的地方看书或者联系我</p>
+<p>感谢发现我的小空间😋</p>
+
+            </div>
+            
+              <div class="tag-container">
+                
+                  <a href="https://duder-git.github.io/tag/python/" class="tag">
+                    Python
+                  </a>
+                
+                  <a href="https://duder-git.github.io/tag/shen-du-xue-xi/" class="tag">
+                    深度学习
+                  </a>
+                
+              </div>
+            
+            
+              <div class="next-post">
+                <div class="next">下一篇</div>
+                <a href="https://duder-git.github.io/post/an-zhuang-pytorch/">
+                  <h3 class="post-title">
+                    安装Pytorch
+                  </h3>
+                </a>
+              </div>
+            
+
+            
+              
+                <div id="gitalk-container" data-aos="fade-in"></div>
+              
+
+              
+            
+
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+<script type="application/javascript">
+
+AOS.init();
+
+var app = new Vue({
+  el: '#app',
+  data: {
+    menuVisible: false,
+  },
+})
+
+</script>
+
+
+
+
+
+  
+    <script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+    <script>
+
+      var gitalk = new Gitalk({
+        clientID: '67e2d5e357b5ec7e7b54',
+        clientSecret: 'c407722209762f44616a0119d6e2cf53384fbc0c',
+        repo: 'Duder-git.github.io',
+        owner: 'Duder-git',
+        admin: ['Duder-git'],
+        id: (location.pathname).substring(0, 49),      // Ensure uniqueness and length less than 50
+        distractionFreeMode: false  // Facebook-like distraction free mode
+      })
+
+      gitalk.render('gitalk-container')
+
+    </script>
+  
+
+  
+
+
+
+
+  </body>
+</html>

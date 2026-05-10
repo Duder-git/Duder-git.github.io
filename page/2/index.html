@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" >
+
+<title>Duder&#39;s Blog</title>
+
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+<link rel="shortcut icon" href="https://duder-git.github.io//favicon.ico?v=1717654629635">
+<link rel="stylesheet" href="https://duder-git.github.io//styles/main.css">
+
+
+
+<link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+
+
+
+    <meta name="description" content="苟日新 日日新 又日新">
+    
+  </head>
+  <body>
+    <div id="app" class="main">
+
+      <div class="sidebar" :class="{ 'full-height': menuVisible }">
+  <div class="top-container" data-aos="fade-right">
+    <div class="top-header-container">
+      <a class="site-title-container" href="https://duder-git.github.io/">
+        <img src="https://duder-git.github.io//images/avatar.png?v=1717654629635" class="site-logo">
+        <h1 class="site-title">Duder&#39;s Blog</h1>
+      </a>
+      <div class="menu-btn" @click="menuVisible = !menuVisible">
+        <div class="line"></div>
+      </div>
+    </div>
+    <div>
+      
+        
+          <a href="/" class="site-nav">
+            首页
+          </a>
+        
+      
+        
+          <a href="/archives" class="site-nav">
+            归档
+          </a>
+        
+      
+        
+          <a href="/tags" class="site-nav">
+            标签
+          </a>
+        
+      
+        
+          <a href="/post/about" class="site-nav">
+            关于
+          </a>
+        
+      
+    </div>
+  </div>
+  <div class="bottom-container" data-aos="flip-up" data-aos-offset="0">
+    <div class="social-container">
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    </div>
+    <div class="site-description">
+      苟日新 日日新 又日新
+    </div>
+    <div class="site-footer">
+      Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a> | <a class="rss" href="https://duder-git.github.io//atom.xml" target="_blank">RSS</a>
+    </div>
+  </div>
+</div>
+
+
+      <div class="main-container">
+        <div class="content-container" data-aos="fade-up">
+          
+            <article class="post-item">
+              <div class="left">
+                <a href="https://duder-git.github.io/post/JEPG_DCT/">
+                  <h2 class="post-title">图像压缩技术——离散余弦变换（DCT）</h2>
+                </a>
+                <div class="post-date">
+                  2023-07-10
+                </div>
+                <div class="post-abstract">
+                  <p>学习杜克大学图像和视频处理课程，了解到图像JEPG的图像压缩技术，这里借以week2测试练习题实现DCT<br>
+图像压缩与解压缩</p>
+
+                </div>
+              </div>
+              
+            </article>
+          
+            <article class="post-item">
+              <div class="left">
+                <a href="https://duder-git.github.io/post/3a-suan-fa-yi-zi-dong-bai-ping-heng-awb/">
+                  <h2 class="post-title">3A算法（一）——自动白平衡（AWB ）</h2>
+                </a>
+                <div class="post-date">
+                  2023-07-06
+                </div>
+                <div class="post-abstract">
+                  <p>今天看大疆招聘岗位时看到了图像算法岗，斗胆看了一眼岗位要求，咱就是说，高低搞过医学图像处理，不要怂就是干。看了眼面经就查到了今天的主题：什么是3A算法？以及自动白平衡方法</p>
+
+                </div>
+              </div>
+              
+            </article>
+          
+            <article class="post-item">
+              <div class="left">
+                <a href="https://duder-git.github.io/post/wu-li-mo-xing-unet-chong-jian/">
+                  <h2 class="post-title">物理模型+UNet重建</h2>
+                </a>
+                <div class="post-date">
+                  2023-07-06
+                </div>
+                <div class="post-abstract">
+                  <p>github: https://github.com/Duder-git/Phy_MPI_DNN</p>
+<p><a href="https://www.journal.iwmpi.org/index.php/iwmpi/article/view/543">An effective reconstruction method for magnetic particle imaging based on deep neural networks constrained by a physical model</a></p>
+
+                </div>
+              </div>
+              
+            </article>
+          
+            <article class="post-item">
+              <div class="left">
+                <a href="https://duder-git.github.io/post/an-zhuang-pytorch/">
+                  <h2 class="post-title">安装Pytorch</h2>
+                </a>
+                <div class="post-date">
+                  2023-07-02
+                </div>
+                <div class="post-abstract">
+                  <p>使用Anaconda 管理环境，直接搜索下载pytorch包，能够看到版本信息，却在pycharm中无法使用。<br>
+查找发现系统没装Tootkit，应该是上次重装系统后没搞了。</p>
+
+                </div>
+              </div>
+              
+            </article>
+          
+            <article class="post-item">
+              <div class="left">
+                <a href="https://duder-git.github.io/post/剑指offer 26. 树的子结构/">
+                  <h2 class="post-title">剑指 Offer 26. 树的子结构</h2>
+                </a>
+                <div class="post-date">
+                  2023-06-09
+                </div>
+                <div class="post-abstract">
+                  <p>树的匹配与递归方法</p>
+
+                </div>
+              </div>
+              
+            </article>
+          
+            <article class="post-item">
+              <div class="left">
+                <a href="https://duder-git.github.io/post/二分方法/">
+                  <h2 class="post-title">二分法</h2>
+                </a>
+                <div class="post-date">
+                  2023-06-06
+                </div>
+                <div class="post-abstract">
+                  <p>总结一下这几天遇到的二分方法解决问题</p>
+
+                </div>
+              </div>
+              
+            </article>
+          
+            <article class="post-item">
+              <div class="left">
+                <a href="https://duder-git.github.io/post/剑指 Offer 59-xx的最大值/">
+                  <h2 class="post-title">剑指 Offer 59. xx的最大值</h2>
+                </a>
+                <div class="post-date">
+                  2023-06-02
+                </div>
+                <div class="post-abstract">
+                  <p>连做两道队列的题，根本思想是一样的，找到最大值的方法就是维护一个有序队列，使用双指针deque容器。算法有点意思。</p>
+
+                </div>
+              </div>
+              
+            </article>
+          
+            <article class="post-item">
+              <div class="left">
+                <a href="https://duder-git.github.io/post/剑指 Offer 58 - I. 翻转单词顺序/">
+                  <h2 class="post-title">剑指 Offer 58 - I. 翻转单词顺序</h2>
+                </a>
+                <div class="post-date">
+                  2023-06-01
+                </div>
+                <div class="post-abstract">
+                  
+                </div>
+              </div>
+              
+            </article>
+          
+            <article class="post-item">
+              <div class="left">
+                <a href="https://duder-git.github.io/post/jian-zhi-offer-67-ba-zi-fu-chuan-zhuan-huan-cheng-zheng-shu/">
+                  <h2 class="post-title">剑指 Offer 67. 把字符串转换成整数</h2>
+                </a>
+                <div class="post-date">
+                  2023-05-31
+                </div>
+                <div class="post-abstract">
+                  
+                </div>
+              </div>
+              
+            </article>
+          
+            <article class="post-item">
+              <div class="left">
+                <a href="https://duder-git.github.io/post/chatgpt提问的艺术/">
+                  <h2 class="post-title">ChatGPT提问的艺术</h2>
+                </a>
+                <div class="post-date">
+                  2023-05-27
+                </div>
+                <div class="post-abstract">
+                  <p>如何向GPT提出问题，如何了解一个不清楚的概念，如何就具体问题让GPT解决，你需要了解GPT提问的艺术。</p>
+
+                </div>
+              </div>
+              
+            </article>
+          
+
+          <div class="pagination-container">
+  
+    <a href="https://duder-git.github.io/" class="prev"><i class="icon-arrow-ios-back-outline"></i> 上一页</a>
+  
+  
+    <a href="https://duder-git.github.io/page/3/" class="next">下一页 <i class="icon-arrow-ios-forward-outline"></i></a>
+  
+</div>
+
+        </div>
+      </div>
+    </div>
+
+    <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+<script type="application/javascript">
+
+AOS.init();
+
+var app = new Vue({
+  el: '#app',
+  data: {
+    menuVisible: false,
+  },
+})
+
+</script>
+
+
+
+
+
+
+  </body>
+</html>

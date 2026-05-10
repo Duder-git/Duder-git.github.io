@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" >
+
+<title>超声波重建方法 | Duder&#39;s Blog</title>
+
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+<link rel="shortcut icon" href="https://duder-git.github.io//favicon.ico?v=1717654629635">
+<link rel="stylesheet" href="https://duder-git.github.io//styles/main.css">
+
+
+  
+    <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css" />
+  
+
+  
+
+
+<link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+
+
+
+    <meta name="description" content="单边MPI跟超声类似，学习超声如何成像
+
+超声的几种分类
+超声示波诊断法（A型超声）：将回声以波幅的形式显示。
+二维超声显像诊断法（B型超声）：回声信号以光点形式显示出来，回声强则光点强，回声弱则光点弱。光点随探头的移动或晶片的交替轮换而移..." />
+    <meta name="keywords" content="" />
+  </head>
+  <body>
+    <div id="app" class="main">
+
+      <div class="sidebar" :class="{ 'full-height': menuVisible }">
+  <div class="top-container" data-aos="fade-right">
+    <div class="top-header-container">
+      <a class="site-title-container" href="https://duder-git.github.io/">
+        <img src="https://duder-git.github.io//images/avatar.png?v=1717654629635" class="site-logo">
+        <h1 class="site-title">Duder&#39;s Blog</h1>
+      </a>
+      <div class="menu-btn" @click="menuVisible = !menuVisible">
+        <div class="line"></div>
+      </div>
+    </div>
+    <div>
+      
+        
+          <a href="/" class="site-nav">
+            首页
+          </a>
+        
+      
+        
+          <a href="/archives" class="site-nav">
+            归档
+          </a>
+        
+      
+        
+          <a href="/tags" class="site-nav">
+            标签
+          </a>
+        
+      
+        
+          <a href="/post/about" class="site-nav">
+            关于
+          </a>
+        
+      
+    </div>
+  </div>
+  <div class="bottom-container" data-aos="flip-up" data-aos-offset="0">
+    <div class="social-container">
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    </div>
+    <div class="site-description">
+      苟日新 日日新 又日新
+    </div>
+    <div class="site-footer">
+      Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a> | <a class="rss" href="https://duder-git.github.io//atom.xml" target="_blank">RSS</a>
+    </div>
+  </div>
+</div>
+
+
+      <div class="main-container">
+        <div class="content-container" data-aos="fade-up">
+          <div class="post-detail">
+            <h2 class="post-title">超声波重建方法</h2>
+            <div class="post-date">2023-11-14</div>
+            
+            <div class="post-content" v-pre>
+              <p>单边MPI跟超声类似，学习超声如何成像</p>
+<!-- more -->
+<h2 id="超声的几种分类">超声的几种分类</h2>
+<p><strong>超声示波诊断法（A型超声）</strong>：将回声以波幅的形式显示。<br>
+<strong>二维超声显像诊断法（B型超声）</strong>：回声信号以光点形式显示出来，回声强则光点强，回声弱则光点弱。光点随探头的移动或晶片的交替轮换而移动扫查。由于扫查连续，可以由点、线而扫描出脏器的解剖切面，是二维空间显示，又称二维法。<br>
+<strong>超声光点扫描法（M型超声）</strong>：在灰度调制型中加入满扫查锯齿波，使回声光点从左向右自行移动扫描。它是B型超声诊断法中的一种特殊显示方式，常用于探测心脏，通称M型超声心动图。</p>
+<p><strong>多普勒超声诊法（D型超声）</strong>：应用多普勒效应原理，将接收到的多普勒信号显示为频谱图和可闻声信号，以测定心脏血管内血流方向和速度。用于检查心脏疾病、周围血管疾病、实质器官及其病变的血流灌注、胎儿血液循环及围生期监护。</p>
+<h2 id="超声波声学特征">超声波声学特征</h2>
+<p>超声图像特点：根据不同组织的声阻抗及其均质性，可将人体组织器官分成四种声学类型。</p>
+<ol>
+<li>无回声型：尿、胆汁、血液、胸水、腹水及心包积液、羊水等； 液性暗区。</li>
+<li>低回声型：肝、脾、心肌；均匀细小中等强度的光点。</li>
+<li>强回声型：心内膜、心瓣膜、肾包膜、胆囊壁等；较强的密集光点回声。</li>
+<li>含气型：肺、胃肠道等；强反射，界面后方的组织结构不能显示。</li>
+</ol>
+<h2 id="超声波信号产生和接收">超声波信号产生和接收</h2>
+<p>压电晶体，施加电压收缩，移除恢复<br>
+快速改变电压，压电晶体产生超声波</p>
+<p>使用压电晶体接收超声波</p>
+<h2 id="超声波变化">超声波变化</h2>
+<p>通过人体过程中<strong>信号衰减</strong>，人体组织吸收超声波能量。难以在更深层次成像。<br>
+在两种不同物质（声阻抗不同）发生<strong>折射</strong>现象。一部分信号直接返回探头，另一部分继续前进，到下一层组织。<br>
+反射。漫反射和镜面反射。</p>
+<h2 id="超声波模式">超声波模式</h2>
+<h2 id="参考">参考</h2>
+<p><a href="https://zhuanlan.zhihu.com/p/104823668">现代医学主要诊断方法和技术（三）之 超声成像</a><br>
+<a href="https://zhuanlan.zhihu.com/p/359077343">简单解释超声波成像的工作原理</a><br>
+<a href="https//www.howequipmentworks.com/ultrasound_basics/">How ultrasound imaging works explained simply</a> 链接挂了<br>
+《医学成像的基本原理》——黄力宇<br>
+<a href="https://zhuanlan.zhihu.com/p/148698108">无损检测学习日志</a></p>
+
+            </div>
+            
+            
+              <div class="next-post">
+                <div class="next">下一篇</div>
+                <a href="https://duder-git.github.io/post/渣渣豪的秋招历程/">
+                  <h3 class="post-title">
+                    渣渣豪的秋招历程
+                  </h3>
+                </a>
+              </div>
+            
+
+            
+              
+                <div id="gitalk-container" data-aos="fade-in"></div>
+              
+
+              
+            
+
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+<script type="application/javascript">
+
+AOS.init();
+
+var app = new Vue({
+  el: '#app',
+  data: {
+    menuVisible: false,
+  },
+})
+
+</script>
+
+
+
+
+
+  
+    <script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+    <script>
+
+      var gitalk = new Gitalk({
+        clientID: '67e2d5e357b5ec7e7b54',
+        clientSecret: 'c407722209762f44616a0119d6e2cf53384fbc0c',
+        repo: 'Duder-git.github.io',
+        owner: 'Duder-git',
+        admin: ['Duder-git'],
+        id: (location.pathname).substring(0, 49),      // Ensure uniqueness and length less than 50
+        distractionFreeMode: false  // Facebook-like distraction free mode
+      })
+
+      gitalk.render('gitalk-container')
+
+    </script>
+  
+
+  
+
+
+
+
+  </body>
+</html>

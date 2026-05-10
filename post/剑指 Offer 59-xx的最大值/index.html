@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" >
+
+<title>剑指 Offer 59. xx的最大值 | Duder&#39;s Blog</title>
+
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+<link rel="shortcut icon" href="https://duder-git.github.io//favicon.ico?v=1717654629635">
+<link rel="stylesheet" href="https://duder-git.github.io//styles/main.css">
+
+
+  
+    <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css" />
+  
+
+  
+
+
+<link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+
+
+
+    <meta name="description" content="连做两道队列的题，根本思想是一样的，找到最大值的方法就是维护一个有序队列，使用双指针deque容器。算法有点意思。
+
+I 滑动窗口的最大值
+题目表述
+给定一个数组 nums 和滑动窗口的大小 k，请找出所有滑动窗口里的最大值。
+优先队列
+维..." />
+    <meta name="keywords" content="力扣刷题" />
+  </head>
+  <body>
+    <div id="app" class="main">
+
+      <div class="sidebar" :class="{ 'full-height': menuVisible }">
+  <div class="top-container" data-aos="fade-right">
+    <div class="top-header-container">
+      <a class="site-title-container" href="https://duder-git.github.io/">
+        <img src="https://duder-git.github.io//images/avatar.png?v=1717654629635" class="site-logo">
+        <h1 class="site-title">Duder&#39;s Blog</h1>
+      </a>
+      <div class="menu-btn" @click="menuVisible = !menuVisible">
+        <div class="line"></div>
+      </div>
+    </div>
+    <div>
+      
+        
+          <a href="/" class="site-nav">
+            首页
+          </a>
+        
+      
+        
+          <a href="/archives" class="site-nav">
+            归档
+          </a>
+        
+      
+        
+          <a href="/tags" class="site-nav">
+            标签
+          </a>
+        
+      
+        
+          <a href="/post/about" class="site-nav">
+            关于
+          </a>
+        
+      
+    </div>
+  </div>
+  <div class="bottom-container" data-aos="flip-up" data-aos-offset="0">
+    <div class="social-container">
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    </div>
+    <div class="site-description">
+      苟日新 日日新 又日新
+    </div>
+    <div class="site-footer">
+      Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a> | <a class="rss" href="https://duder-git.github.io//atom.xml" target="_blank">RSS</a>
+    </div>
+  </div>
+</div>
+
+
+      <div class="main-container">
+        <div class="content-container" data-aos="fade-up">
+          <div class="post-detail">
+            <h2 class="post-title">剑指 Offer 59. xx的最大值</h2>
+            <div class="post-date">2023-06-02</div>
+            
+            <div class="post-content" v-pre>
+              <p>连做两道队列的题，根本思想是一样的，找到最大值的方法就是维护一个有序队列，使用双指针deque容器。算法有点意思。</p>
+<!-- more -->
+<h2 id="i-滑动窗口的最大值">I 滑动窗口的最大值</h2>
+<h3 id="题目表述">题目表述</h3>
+<p>给定一个数组 nums 和滑动窗口的大小 k，请找出所有滑动窗口里的最大值。</p>
+<h3 id="优先队列">优先队列</h3>
+<p>维护一个最大优先队列(堆)，堆顶就是当前队列的最大值，出队出最大值<br>
+使用pair方式存放当前值和其位置</p>
+<ol>
+<li>初始化滑动窗，存放k个元素到队列，存放当前最大值到最大优先队列，插入第一个最大值到容器中。</li>
+<li>插入第k+1个数值，同时应排出第一个数值，在剩下数值中寻找最大值。根据位置（pair.second），找到应该在窗里的最大优先队列维护的最大值（循环，pop索引小于窗的值）</li>
+<li>将当前最大值插入回答容器中。</li>
+</ol>
+<p><strong>时间复杂度：</strong><br>
+O(nlogn)，其中 n 是数组nums 的长度。在最坏情况下，数组 nums中的元素单调递增，那么最终优先队列中包含了所有元素，没有元素被移除。由于将一个元素放入优先队列的时间复杂度为 O(logn)，因此总时间复杂度为 O(nlogn)。<br>
+<strong>空间复杂度</strong><br>
+O(n)，优先队列所需使用的空间。</p>
+<pre><code class="language-cpp">class Solution {
+public:
+    vector&lt;int&gt; maxSlidingWindow(vector&lt;int&gt;&amp; nums, int k) {
+
+        priority_queue&lt;pair&lt;int,int&gt;&gt; q;
+        vector&lt;int&gt; ans;
+
+        // 初始化队列
+        for (int i = 0;i&lt;k;i++){
+            q.emplace(nums[i],i);
+        }
+        ans.push_back(q.top().first);
+
+        for(int i = k; i&lt;nums.size(); i++){
+            // 插入数据
+            q.emplace(nums[i],i);
+
+            // 找到应在窗内的最大值
+            while(q.top().second&lt;=i-k){ // 不应该出现在维护窗里的数
+                q.pop(); //删除
+            }
+            ans.push_back(q.top().first);
+        }
+        return ans;
+    }
+};
+</code></pre>
+<h3 id="单调队列">单调队列</h3>
+<p>使用队列存放最大值，维护一个单调递减的队列。<br>
+每次最大值放入单调队列，有更大值时排出并重放，保证单调递减<br>
+最后根据窗的位置确定最大值范围，超过范围的最大值不使用。</p>
+<p><strong>时间复杂度</strong><br>
+O(n)，n 是数组nums 的长度.<br>
+<strong>空间复杂度</strong><br>
+双向有序队列，不超过k+1个元素，O(k).</p>
+<pre><code class="language-cpp">class Solution {
+public:
+    vector&lt;int&gt; maxSlidingWindow(vector&lt;int&gt;&amp; nums, int k) {
+         vector&lt;int&gt; ans；
+        deque&lt;int&gt; q;
+        // 初始化
+        for (int i = 0; i &lt; k; ++i) {
+            // 找到当前窗中的最大值存放，只存放一个值
+            while (!q.empty() &amp;&amp; nums[i] &gt;= nums[q.back()]) {
+                q.pop_back();
+            }
+            // 当 当前值比单调队列中的值都小
+            q.push_back(i);
+        }
+        ans.push_back(nums[q.front()]);
+
+        // 后续节点
+        for (int i = k; i &lt; nums.size(); ++i) {
+            // 找到比当前值大的值
+            while (!q.empty() &amp;&amp; nums[i] &gt;= nums[q.back()]) {
+                q.pop_back();
+            }
+            q.push_back(i);
+
+            // 弹出不在队列中的最大值，维护单调队列
+            while (q.front() &lt;= i - k) {
+                q.pop_front();
+            }
+            // 将当前窗中的最大值放到ans中
+            ans.push_back(nums[q.front()]);
+        }
+
+        return ans;
+    }
+};
+
+</code></pre>
+<h2 id="ii-队列的最大值">II 队列的最大值</h2>
+<h3 id="题目表述-2">题目表述</h3>
+<p>请定义一个队列并实现函数 max_value 得到队列里的最大值，<br>
+要求函数max_value、push_back 和 pop_front 的均摊时间复杂度都是O(1)。</p>
+<p>若队列为空，pop_front 和 max_value 需要返回 -1</p>
+<h3 id="解题思路">解题思路</h3>
+<p>维护一个单调的双端队列<br>
+使用队列存放要求数据，使用单调双端队列表示当前最大值，该最大值不与队列一一对应，<br>
+当维护的双端队列与插入新的值时比较，如果插入值较大意味着在该数值出队前，队列最大值都是该值，即取出当前双端队列所有小于的值，输入当前值；<br>
+如果插入值小于当前值，则将当前值放入双端队列中，因为索引到当前值时意味着之前的值都已经出栈了<br>
+这样维护，实现一个单调递减的双端队列。</p>
+<h3 id="代码">代码</h3>
+<pre><code class="language-cpp">class MaxQueue {
+private:
+    queue&lt;int&gt; q;
+    deque&lt;int&gt; d;
+
+public:
+    MaxQueue() {
+
+    }
+    
+    int max_value() {
+        if(d.empty()) return -1;
+        return d.front();
+    }
+    
+    void push_back(int value) {
+        while(!d.empty()&amp;&amp;d.back()&lt;value){
+            d.pop_back();
+        }
+        d.push_back(value);
+        q.push(value);
+    }
+    
+    int pop_front() {
+        if(q.empty()) return -1;
+
+        int ans = q.front();
+        if(ans==d.front()){
+            d.pop_front();
+        }
+        q.pop();
+        return ans;
+    }
+};
+
+/**
+ * Your MaxQueue object will be instantiated and called as such:
+ * MaxQueue* obj = new MaxQueue();
+ * int param_1 = obj-&gt;max_value();
+ * obj-&gt;push_back(value);
+ * int param_3 = obj-&gt;pop_front();
+ */
+</code></pre>
+
+            </div>
+            
+              <div class="tag-container">
+                
+                  <a href="https://duder-git.github.io/tag/li-kou-shua-ti/" class="tag">
+                    力扣刷题
+                  </a>
+                
+              </div>
+            
+            
+              <div class="next-post">
+                <div class="next">下一篇</div>
+                <a href="https://duder-git.github.io/post/剑指 Offer 58 - I. 翻转单词顺序/">
+                  <h3 class="post-title">
+                    剑指 Offer 58 - I. 翻转单词顺序
+                  </h3>
+                </a>
+              </div>
+            
+
+            
+              
+                <div id="gitalk-container" data-aos="fade-in"></div>
+              
+
+              
+            
+
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+<script type="application/javascript">
+
+AOS.init();
+
+var app = new Vue({
+  el: '#app',
+  data: {
+    menuVisible: false,
+  },
+})
+
+</script>
+
+
+
+
+
+  
+    <script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+    <script>
+
+      var gitalk = new Gitalk({
+        clientID: '67e2d5e357b5ec7e7b54',
+        clientSecret: 'c407722209762f44616a0119d6e2cf53384fbc0c',
+        repo: 'Duder-git.github.io',
+        owner: 'Duder-git',
+        admin: ['Duder-git'],
+        id: (location.pathname).substring(0, 49),      // Ensure uniqueness and length less than 50
+        distractionFreeMode: false  // Facebook-like distraction free mode
+      })
+
+      gitalk.render('gitalk-container')
+
+    </script>
+  
+
+  
+
+
+
+
+  </body>
+</html>

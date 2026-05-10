@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" >
+
+<title>前向投影的数值计算 | Duder&#39;s Blog</title>
+
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+<link rel="shortcut icon" href="https://duder-git.github.io//favicon.ico?v=1717654629635">
+<link rel="stylesheet" href="https://duder-git.github.io//styles/main.css">
+
+
+  
+    <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css" />
+  
+
+  
+
+
+<link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+
+
+
+    <meta name="description" content="前向投影的数值计算
+要求
+
+
+编程实现扇形束或平行束CT前向投影数值计算（射线驱动、像素驱动、距离驱动，图像旋转+像素累加，或者其他投影方式），获取Shepp Logan仿体的前向投影, 显示对应的sinogram图，并将结果与上次作业中解..." />
+    <meta name="keywords" content="医学图像处理,MATLAB" />
+  </head>
+  <body>
+    <div id="app" class="main">
+
+      <div class="sidebar" :class="{ 'full-height': menuVisible }">
+  <div class="top-container" data-aos="fade-right">
+    <div class="top-header-container">
+      <a class="site-title-container" href="https://duder-git.github.io/">
+        <img src="https://duder-git.github.io//images/avatar.png?v=1717654629635" class="site-logo">
+        <h1 class="site-title">Duder&#39;s Blog</h1>
+      </a>
+      <div class="menu-btn" @click="menuVisible = !menuVisible">
+        <div class="line"></div>
+      </div>
+    </div>
+    <div>
+      
+        
+          <a href="/" class="site-nav">
+            首页
+          </a>
+        
+      
+        
+          <a href="/archives" class="site-nav">
+            归档
+          </a>
+        
+      
+        
+          <a href="/tags" class="site-nav">
+            标签
+          </a>
+        
+      
+        
+          <a href="/post/about" class="site-nav">
+            关于
+          </a>
+        
+      
+    </div>
+  </div>
+  <div class="bottom-container" data-aos="flip-up" data-aos-offset="0">
+    <div class="social-container">
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    </div>
+    <div class="site-description">
+      苟日新 日日新 又日新
+    </div>
+    <div class="site-footer">
+      Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a> | <a class="rss" href="https://duder-git.github.io//atom.xml" target="_blank">RSS</a>
+    </div>
+  </div>
+</div>
+
+
+      <div class="main-container">
+        <div class="content-container" data-aos="fade-up">
+          <div class="post-detail">
+            <h2 class="post-title">前向投影的数值计算</h2>
+            <div class="post-date">2022-04-25</div>
+            
+            <div class="post-content" v-pre>
+              <h1 id="前向投影的数值计算">前向投影的数值计算</h1>
+<h2 id="要求">要求</h2>
+<ol>
+<li>
+<p>编程实现扇形束或平行束CT前向投影数值计算（射线驱动、像素驱动、距离驱动，图像旋转+像素累加，或者其他投影方式），获取Shepp Logan仿体的前向投影, 显示对应的sinogram图，并将结果与上次作业中解析解获取的前向投影结果相对比，分析二者差异</p>
+</li>
+<li>
+<p>修改数值计算仿体图像的大小（比如256*256，512×512,1024×1024等），分析不同情形下计算的投影计算的差异</p>
+</li>
+</ol>
+<h2 id="思路">思路</h2>
+<p>​		前向投影的实现方式有很多，例如上面提到的射线驱动、像素驱动、距离驱动、图像旋转累加等方式，其中图像旋转加累加的方式计算Sheep Logan仿体的前向投影最为简便。</p>
+<p>​		除了使用图像旋转累加的方法计算sinogram图，本文还实现了射线驱动的方法计算前向投影。</p>
+<img src="https://s2.loli.net/2022/05/10/iGW5yHr8eXPhvZK.png" alt="shepp-logan" style="zoom:150%;" />
+<h2 id="图像旋转像素累加">图像旋转+像素累加</h2>
+<p>可以拆分成两个步骤：</p>
+<pre><code>1. 使用双线性插值的方法旋转图像；
+2. 沿探测器垂线方向累加像素值；
+</code></pre>
+<figure data-type="image" tabindex="1"><img src="https://s2.loli.net/2022/05/04/GrYhm3yBXeILO2p.png" alt="1" loading="lazy"></figure>
+<img src="https://s2.loli.net/2022/05/04/zkc1y7QDVPbgOtF.png" alt="图像旋转+像素累加" style="zoom:150%;" />
+<p>由sinogram图可以看到，先旋转图像再累加的方式能够较好的得到前向投影图</p>
+<pre><code class="language-matlab">clc,clear
+% 生成 Shepp Logan仿体图像
+P = phantom(128);  % 生成128*128像素值的图像
+K = imrotate(P,45,'bilinear','crop');
+figure
+subplot(1,2,1)
+imshow(P)
+title('Original image')
+subplot(1,2,2)
+imshow(K)
+title('Rotate theta 45°')
+
+
+% 参数设定
+NumDetector = 128;      % 探测器数量
+NumAngle = 360;         % 旋转角度
+
+Rdata = zeros(NumDetector,NumAngle);    
+for i=1:NumAngle
+    K = imrotate(P,i,'bilinear','crop');
+    Rdata(:,i) = sum(K,1);
+end
+
+figure
+imshow(Rdata,[])
+colorbar()
+colormap(gray)
+title(&quot;Shepp-Logan数值法投影图&quot;)
+</code></pre>
+<h2 id="射线驱动">射线驱动</h2>
+<p>射线驱动方式可以分为以下几步：</p>
+<ol>
+<li>旋转探测器并计算每个探测晶体中心的垂线</li>
+<li>计算该垂线穿过图像中的像素，并累加像素值</li>
+</ol>
+<img src="https://s2.loli.net/2022/05/04/mT7h8yOGAXlZMwq.png" alt="射线驱动" style="zoom:150%;" />
+<p>由投影结果可以看到，在某些特定角度如90°和270°，前向投影结果较差，原因是在这些位置k = 0，函数表达式y = b。</p>
+<pre><code class="language-matlab">clc,clear
+% 生成 Shepp Logan仿体图像
+P = phantom(128); 
+figure
+imshow(P)
+title('Shepp-Logan')
+
+% 参数设定
+NumDetector = 150;      % 探测器数量
+NumAngle = 360;         % 旋转角度
+
+
+Rdata = zeros(NumDetector,NumAngle);    
+for i=1:NumAngle
+    for j =1:NumDetector
+        [k,b] = CalSlope(size(P),i,j,NumDetector);
+        Rdata(j,i) = CalDis(k,b,P);
+    end 
+end
+
+figure
+imshow(Rdata,[])
+colorbar()
+colormap(gray)
+title(&quot;射线驱动&quot;)
+
+</code></pre>
+<pre><code class="language-matlab">function [k,b] = CalSlope(ImgSize, angle, num, NumDetector)
+% 本函数用于计算探测器在特定偏转角度，穿过特定探测晶体中心的直线方程
+% Imgsize 图像大小
+% angle 偏转角度
+% num 晶体排序
+% NumberDetector 晶体总数
+
+DisAbord = 100;
+%角度弧度制转换
+anglePi = pi*angle / 180;
+%计算k
+%k1 = tan(anglePi);
+if angle == 0
+    k = 1;
+elseif angle == 90
+    k = 0;
+else
+    k = -1/tan(anglePi);
+end
+%计算最中心的传感器的坐标
+center_x = ImgSize(2)/2+sin(anglePi)*DisAbord;
+center_y = ImgSize(1)/2-cos(anglePi)*DisAbord;
+%算出第num个传感器距离中心的距离
+DisCenter = (num-(NumDetector+1)/2);
+%计算第num个传感器的坐标
+x = center_x + DisCenter*cos(anglePi);
+y = center_y + DisCenter*sin(anglePi);
+%根据y=kx+b计算b
+b = y - k*x;
+
+end
+</code></pre>
+<pre><code class="language-matlab">%% function
+function value = CalDis(k,b,Img)
+value = 0;
+for i = 1:size(Img,2)
+    for j = 1:size(Img,1)
+        dis = abs(k*(i-0.5)-(j-0.5)+b)/sqrt(k^2+1);
+        if k == 0||k == 1
+            judge = 1/2;
+        else
+            judge = 1/2*abs(k/sqrt(k^2+1));
+        end
+        if dis &lt; judge
+            value = value + Img(j,i);
+        end
+    end
+end
+end
+</code></pre>
+<h2 id="结果">结果</h2>
+<h3 id="投影数值法与解析法比较">投影数值法与解析法比较</h3>
+<figure data-type="image" tabindex="2"><img src="https://s2.loli.net/2022/05/05/t7WwEfOabcHRg9F.png" alt="解析数值对比图" loading="lazy"></figure>
+<p>​	从图中可以看出解析法的结果更为平滑，过度较为自然。在数值法投影图中能够较为明显的看到投影图的缝隙，在细节上有所缺失。</p>
+<h3 id="不同图像尺寸的比较">不同图像尺寸的比较</h3>
+<p>在数值法求解投影图中，使用<code>phantom(N)</code>创建特定尺寸大小的灰度图</p>
+<pre><code class="language-matlab">P = phantom(128);  % 生成128*128像素值的图像
+</code></pre>
+<figure data-type="image" tabindex="3"><img src="https://s2.loli.net/2022/05/05/VPOtpHCKI1MueiU.png" alt="数值投影128" loading="lazy"></figure>
+<figure data-type="image" tabindex="4"><img src="%E6%95%B0%E5%80%BC%E6%8A%95%E5%BD%B1256.png" alt="数值投影256" loading="lazy"></figure>
+<p>​	在图像中可以看出，256*256图像的sinogram图较128*128投影图有比较明显的改进，在细节上更加细腻，并且图像colorbar更长，所表达的灰度梯度更多。</p>
+
+            </div>
+            
+              <div class="tag-container">
+                
+                  <a href="https://duder-git.github.io/tag/LHeF8-EOa/" class="tag">
+                    医学图像处理
+                  </a>
+                
+                  <a href="https://duder-git.github.io/tag/7hazwf96d/" class="tag">
+                    MATLAB
+                  </a>
+                
+              </div>
+            
+            
+              <div class="next-post">
+                <div class="next">下一篇</div>
+                <a href="https://duder-git.github.io/post/1. 图像读取与显示/">
+                  <h3 class="post-title">
+                    图像读取与显示
+                  </h3>
+                </a>
+              </div>
+            
+
+            
+              
+                <div id="gitalk-container" data-aos="fade-in"></div>
+              
+
+              
+            
+
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+<script type="application/javascript">
+
+AOS.init();
+
+var app = new Vue({
+  el: '#app',
+  data: {
+    menuVisible: false,
+  },
+})
+
+</script>
+
+
+
+
+
+  
+    <script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+    <script>
+
+      var gitalk = new Gitalk({
+        clientID: '67e2d5e357b5ec7e7b54',
+        clientSecret: 'c407722209762f44616a0119d6e2cf53384fbc0c',
+        repo: 'Duder-git.github.io',
+        owner: 'Duder-git',
+        admin: ['Duder-git'],
+        id: (location.pathname).substring(0, 49),      // Ensure uniqueness and length less than 50
+        distractionFreeMode: false  // Facebook-like distraction free mode
+      })
+
+      gitalk.render('gitalk-container')
+
+    </script>
+  
+
+  
+
+
+
+
+  </body>
+</html>

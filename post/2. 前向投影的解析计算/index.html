@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" >
+
+<title>前向投影的解析计算 | Duder&#39;s Blog</title>
+
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+<link rel="shortcut icon" href="https://duder-git.github.io//favicon.ico?v=1717654629635">
+<link rel="stylesheet" href="https://duder-git.github.io//styles/main.css">
+
+
+  
+    <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css" />
+  
+
+  
+
+
+<link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+
+
+
+    <meta name="description" content="前向投影的解析计算
+要求
+编写实现扇形束或平行束CT前向投影解析计算的代码，获取Shepp Logan仿体的前向投影, 并显示对应的sinogram图；将Shepp Logan修改为一个非常小的点源，采用前向投影解析计算的代码，计算该点源的..." />
+    <meta name="keywords" content="医学图像处理,MATLAB" />
+  </head>
+  <body>
+    <div id="app" class="main">
+
+      <div class="sidebar" :class="{ 'full-height': menuVisible }">
+  <div class="top-container" data-aos="fade-right">
+    <div class="top-header-container">
+      <a class="site-title-container" href="https://duder-git.github.io/">
+        <img src="https://duder-git.github.io//images/avatar.png?v=1717654629635" class="site-logo">
+        <h1 class="site-title">Duder&#39;s Blog</h1>
+      </a>
+      <div class="menu-btn" @click="menuVisible = !menuVisible">
+        <div class="line"></div>
+      </div>
+    </div>
+    <div>
+      
+        
+          <a href="/" class="site-nav">
+            首页
+          </a>
+        
+      
+        
+          <a href="/archives" class="site-nav">
+            归档
+          </a>
+        
+      
+        
+          <a href="/tags" class="site-nav">
+            标签
+          </a>
+        
+      
+        
+          <a href="/post/about" class="site-nav">
+            关于
+          </a>
+        
+      
+    </div>
+  </div>
+  <div class="bottom-container" data-aos="flip-up" data-aos-offset="0">
+    <div class="social-container">
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    </div>
+    <div class="site-description">
+      苟日新 日日新 又日新
+    </div>
+    <div class="site-footer">
+      Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a> | <a class="rss" href="https://duder-git.github.io//atom.xml" target="_blank">RSS</a>
+    </div>
+  </div>
+</div>
+
+
+      <div class="main-container">
+        <div class="content-container" data-aos="fade-up">
+          <div class="post-detail">
+            <h2 class="post-title">前向投影的解析计算</h2>
+            <div class="post-date">2022-04-25</div>
+            
+            <div class="post-content" v-pre>
+              <h1 id="前向投影的解析计算">前向投影的解析计算</h1>
+<h2 id="要求">要求</h2>
+<p>编写实现扇形束或平行束CT前向投影解析计算的代码，获取<code>Shepp Logan</code>仿体的前向投影, 并显示对应的<code>sinogram</code>图；将<code>Shepp Logan</code>修改为一个非常小的<code>点源</code>，采用前向投影解析计算的代码，计算该点源的<code>Sinogram</code>图并显示。</p>
+<p>注意：Shepp Logan仿体定义有很多变体，实现是选取其中一个即可。</p>
+<h2 id="思路">思路</h2>
+<p>前向投影的解析计算方法，计算对应图像的每一个点投影到探测器对应位置，统计每个角度每个探测器上的数值。</p>
+<p>可以通过两步进行计算：</p>
+<p>（1）根据探测器角度与探测器编号计算对应探测器的直线方程，该直线从探测器上一点到图像；</p>
+<p>（2）计算该直线方程穿过的椭圆长度，并结合椭圆强度值，计算穿过的所有椭圆长度乘强度之和作为该探测器的接收值；</p>
+<p>通过两个函数分别实现:</p>
+<blockquote>
+<p><code>CalSlope()</code>：对直线方程的计算；</p>
+<p><code>CalDis3()</code>：统计探测器接收的信号；</p>
+</blockquote>
+<h2 id="sheep-logan仿体">Sheep Logan仿体</h2>
+<p>使用椭圆函数定义的方法构建Sheep-Logan图像</p>
+<pre><code class="language-matlab">%           强度 半长轴 半短轴  位置x 位置y 倾斜度
+ellipse = [   1  .69    .92     0     0     0
+            -.8  .6624  .8740   0   -.0184  0
+            -.2  .1100  .3100  .22    0    -18
+            -.2  .1600  .4100 -.22    0     18
+             .1  .2100  .2500   0    .35    0
+             .1  .0460  .0460   0    .1     0
+             .1  .0460  .0460   0   -.1     0
+             .1  .0460  .0230 -.08  -.605   0 
+             .1  .0230  .0230   0   -.606   0
+             .1  .0230  .0460  .06  -.605   0   ];
+I = phantom(ellipse,256);
+figure
+imshow(I,[])
+</code></pre>
+<img src="https://s2.loli.net/2022/05/10/iGW5yHr8eXPhvZK.png" alt="shepp-logan" style="zoom:150%;" />
+<figure data-type="image" tabindex="1"><img src="https://s2.loli.net/2022/05/04/FxSkM2Oudbp6Ufc.png" alt="Sheep-Logan解析法360" loading="lazy"></figure>
+<p>由投影结果可以看出，解析法在<code>θ</code>为0度和180度时出现比较明显的错误，原因是函数定义直线<code>y = k*x + b</code>。在探测器旋转过程中，当<code>k = ∞</code>时，直线函数变为<code>x = a</code>。</p>
+<h2 id="点源仿体">点源仿体</h2>
+<p>使用较小的圆</p>
+<pre><code class="language-matlab">%点源参数（一个较小的圆）
+point   = [   1   .01   .01    0    0.3     0   ];
+I = phantom(point,256);
+figure
+imshow(I,[])
+</code></pre>
+<img src="https://s2.loli.net/2022/05/10/fzLcuO1nrSV9Thl.png" alt="point"  />
+<figure data-type="image" tabindex="2"><img src="https://s2.loli.net/2022/05/10/P58IwmAeD6QMpWy.png" alt="Point解析法360" loading="lazy"></figure>
+<p>由投影结果可以看到，对于单个点源图像的计算由比较大的误差，其中部分角度缺失，投影质量较差。</p>
+<h2 id="代码">代码</h2>
+<p><strong>主程序</strong></p>
+<pre><code class="language-matlab">clc,clear
+%shepp-logan模型的参数
+%           强度 半长轴 半短轴  位置x 位置y 倾斜度
+ellipse = [   1  .69    .92     0     0     0
+            -.8  .6624  .8740   0   -.0184  0
+            -.2  .1100  .3100  .22    0    -18
+            -.2  .1600  .4100 -.22    0     18
+             .1  .2100  .2500   0    .35    0
+             .1  .0460  .0460   0    .1     0
+             .1  .0460  .0460   0   -.1     0
+             .1  .0460  .0230 -.08  -.605   0 
+             .1  .0230  .0230   0   -.606   0
+             .1  .0230  .0460  .06  -.605   0   ];
+%点源参数（一个较小的圆）
+point   = [   1   .05   .05    0    0.3     0   ];
+
+% 参数设定
+NumDetector = 128;      % 探测器数量
+NumAngle = 360;         % 旋转角度
+ImgSize = [128,128];    % 设定图像大小
+
+P = point;
+I = phantom(P,256);
+figure
+imshow(I,[])
+
+Rdata = zeros(NumDetector,NumAngle); 
+
+for i = 1:NumAngle
+    for j = 1:NumDetector
+        [k,b] = CalSlope(ImgSize,i,j,NumDetector);
+        tmp = 0;
+        for z = 1:size(P,1)
+            tmp = tmp + CalDis3(k,b,P(z,:),ImgSize(1));
+        end
+        Rdata(j,i) = tmp;
+    end
+end
+
+figure
+imshow(Rdata,[0,40])
+colorbar()
+colormap(gray)
+title(&quot;Shepp-Logan解析法投影图&quot;)
+%title(&quot;Point解析法投影图&quot;)
+</code></pre>
+<p><strong>函数</strong></p>
+<pre><code class="language-matlab">function [k,b] = CalSlope(ImgSize, angle, num, NumDetector)
+% 本函数用于计算探测器在特定偏转角度，穿过特定探测晶体中心的直线方程
+% Imgsize 图像大小
+% angle 偏转角度
+% num 晶体排序
+% NumberDetector 晶体总数
+
+DisAbord = 100;
+%角度弧度制转换
+anglePi = pi*angle / 180;
+%计算k
+%k1 = tan(anglePi);
+if angle == 0
+    k = 1;
+elseif angle == 90
+    k = 0;
+else
+    k = -1/tan(anglePi);
+end
+%计算最中心的传感器的坐标
+center_x = ImgSize(2)/2+sin(anglePi)*DisAbord;
+center_y = ImgSize(1)/2-cos(anglePi)*DisAbord;
+%算出第num个传感器距离中心的距离
+DisCenter = (num-(NumDetector+1)/2);
+%计算第num个传感器的坐标
+x = center_x + DisCenter*cos(anglePi);
+y = center_y + DisCenter*sin(anglePi);
+%根据y=kx+b计算b
+b = y - k*x;
+
+end
+
+</code></pre>
+<pre><code class="language-matlab">function value = CalDis3(k_,b_,ellipse,width)
+% 本函数用于计算直线穿过椭圆的长度
+% k_ 直线斜率
+% b_ 直线常量
+% ellipse 以函数形式定义的椭圆
+% width 图像宽度
+
+% 椭圆参数
+A = ellipse(1);
+a = ellipse(2);
+b = ellipse(3);
+x0 = ellipse(4);
+y0 = ellipse(5);
+anglePi = pi*ellipse(6) / 180;
+
+
+% 坐标系转换 (0,0)-&gt;(width/2,width/2)
+b_= k_-1 + b_*2/width;
+
+%将直线方程带入到旋转的椭圆方程中
+% t2、t1、t0分别代表带入后的x的二次、一次以及常数项
+k1 = cos(anglePi)+k_*sin(anglePi);
+b1 = (b_-y0)*sin(anglePi)-x0*cos(anglePi);
+
+k2 = k_*cos(anglePi)-sin(anglePi);
+b2 = x0*sin(anglePi)+(b_-y0)*cos(anglePi);
+
+t2 = b^2*k1^2+a^2*k2^2;
+t1 = 2*b^2*k1*b1+2*a^2*k2*b2;
+t0 = b^2*b1^2+a^2*b2^2-a^2*b^2;
+
+delta = t1^2-4*t2*t0;
+if delta&lt;=0
+    value = 0;
+else
+    x1 = (-t1-delta^0.5)/(2*t2);
+    x2 = (-t1+delta^0.5)/(2*t2);
+    y1 = k_*x1+b_;
+    y2 = k_*x2+b_;
+    value = ((x1-x2)^2+(y1-y2)^2)^0.5;
+end
+
+value = value*width/2*A;
+end
+</code></pre>
+
+            </div>
+            
+              <div class="tag-container">
+                
+                  <a href="https://duder-git.github.io/tag/LHeF8-EOa/" class="tag">
+                    医学图像处理
+                  </a>
+                
+                  <a href="https://duder-git.github.io/tag/7hazwf96d/" class="tag">
+                    MATLAB
+                  </a>
+                
+              </div>
+            
+            
+              <div class="next-post">
+                <div class="next">下一篇</div>
+                <a href="https://duder-git.github.io/post/3. 前向投影的数值计算/">
+                  <h3 class="post-title">
+                    前向投影的数值计算
+                  </h3>
+                </a>
+              </div>
+            
+
+            
+              
+                <div id="gitalk-container" data-aos="fade-in"></div>
+              
+
+              
+            
+
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+<script type="application/javascript">
+
+AOS.init();
+
+var app = new Vue({
+  el: '#app',
+  data: {
+    menuVisible: false,
+  },
+})
+
+</script>
+
+
+
+
+
+  
+    <script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+    <script>
+
+      var gitalk = new Gitalk({
+        clientID: '67e2d5e357b5ec7e7b54',
+        clientSecret: 'c407722209762f44616a0119d6e2cf53384fbc0c',
+        repo: 'Duder-git.github.io',
+        owner: 'Duder-git',
+        admin: ['Duder-git'],
+        id: (location.pathname).substring(0, 49),      // Ensure uniqueness and length less than 50
+        distractionFreeMode: false  // Facebook-like distraction free mode
+      })
+
+      gitalk.render('gitalk-container')
+
+    </script>
+  
+
+  
+
+
+
+
+  </body>
+</html>

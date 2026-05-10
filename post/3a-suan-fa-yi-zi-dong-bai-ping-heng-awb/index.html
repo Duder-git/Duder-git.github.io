@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" >
+
+<title>3A算法（一）——自动白平衡（AWB ） | Duder&#39;s Blog</title>
+
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+<link rel="shortcut icon" href="https://duder-git.github.io//favicon.ico?v=1717654629635">
+<link rel="stylesheet" href="https://duder-git.github.io//styles/main.css">
+
+
+  
+    <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css" />
+  
+
+  
+
+
+<link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+
+
+
+    <meta name="description" content="今天看大疆招聘岗位时看到了图像算法岗，斗胆看了一眼岗位要求，咱就是说，高低搞过医学图像处理，不要怂就是干。看了眼面经就查到了今天的主题：什么是3A算法？以及自动白平衡方法
+
+参考链接：3A算法——自动白平衡算法
+3A算法
+3A算法包括：AW..." />
+    <meta name="keywords" content="" />
+  </head>
+  <body>
+    <div id="app" class="main">
+
+      <div class="sidebar" :class="{ 'full-height': menuVisible }">
+  <div class="top-container" data-aos="fade-right">
+    <div class="top-header-container">
+      <a class="site-title-container" href="https://duder-git.github.io/">
+        <img src="https://duder-git.github.io//images/avatar.png?v=1717654629635" class="site-logo">
+        <h1 class="site-title">Duder&#39;s Blog</h1>
+      </a>
+      <div class="menu-btn" @click="menuVisible = !menuVisible">
+        <div class="line"></div>
+      </div>
+    </div>
+    <div>
+      
+        
+          <a href="/" class="site-nav">
+            首页
+          </a>
+        
+      
+        
+          <a href="/archives" class="site-nav">
+            归档
+          </a>
+        
+      
+        
+          <a href="/tags" class="site-nav">
+            标签
+          </a>
+        
+      
+        
+          <a href="/post/about" class="site-nav">
+            关于
+          </a>
+        
+      
+    </div>
+  </div>
+  <div class="bottom-container" data-aos="flip-up" data-aos-offset="0">
+    <div class="social-container">
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    </div>
+    <div class="site-description">
+      苟日新 日日新 又日新
+    </div>
+    <div class="site-footer">
+      Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a> | <a class="rss" href="https://duder-git.github.io//atom.xml" target="_blank">RSS</a>
+    </div>
+  </div>
+</div>
+
+
+      <div class="main-container">
+        <div class="content-container" data-aos="fade-up">
+          <div class="post-detail">
+            <h2 class="post-title">3A算法（一）——自动白平衡（AWB ）</h2>
+            <div class="post-date">2023-07-06</div>
+            
+            <div class="post-content" v-pre>
+              <p>今天看大疆招聘岗位时看到了图像算法岗，斗胆看了一眼岗位要求，咱就是说，高低搞过医学图像处理，不要怂就是干。看了眼面经就查到了今天的主题：什么是3A算法？以及自动白平衡方法</p>
+<!-- more -->
+<p>参考链接：<a href="https://blog.csdn.net/xiaoyucyt/article/details/105938022">3A算法——自动白平衡算法</a></p>
+<h2 id="3a算法">3A算法</h2>
+<p>3A算法包括：AWB自动白平衡、AE自动曝光、AF自动对焦</p>
+<h2 id="自动白平衡">自动白平衡</h2>
+<p>人眼在观察物体的时候，可以根据不同光源的性质调整被观察到的物体颜色。而相机在不同色温的光源下拍摄到的图像会产生偏色。相机的自动白平衡就是通过改变RGB感光电路信号的放大比例，让受环境光影响的图像颜色保持和物体真实的颜色一致。</p>
+<p>白平衡的本质是使白色物体在任何光源下都显示白色。</p>
+<p>一般的算法通过调节白平衡增益, 使拍摄画面的颜色接近物体真实的颜色, 增益调节的根据是环境光源的色温。</p>
+<p>AWB算法的步骤：</p>
+<ol>
+<li>估计环境光色温<br>
+灰度世界算法、完美反射算法、动态阈值算法。</li>
+<li>计算增益并调节<br>
+通过求取图像的平均颜色分量对应的增益，然后, 对整副图的RGB分量进行调整 。</li>
+</ol>
+<h3 id="灰度世界算法">灰度世界算法</h3>
+<p>灰度世界算法基本原理：对于一幅图像，当有足够的色彩变化时，可认为它的RGB分量均值倾向于“R平均=G平均=B平均”，图像呈现为灰色。</p>
+<ol>
+<li>读取R、G、B分量</li>
+<li>计算各分量均值</li>
+<li>通道均衡化操作，计算各自增益<br>
+算法简单快捷，适用于一般场景，但是当图片颜色比较单一或者单一色块面积较大，处理结果存在偏差</li>
+</ol>
+<pre><code class="language-MATLAB">close all
+clc,clear
+ 
+% 输入图像（存在颜色偏差的原始图像）
+imageInput=imread('test2.JPG');
+
+% 分离各个通道
+imageR=imageInput(:,:,1);    
+imageG=imageInput(:,:,2);   
+imageB=imageInput(:,:,3);
+ 
+% 求RGB分量的均值
+R=mean(mean(imageR));       
+G=mean(mean(imageG));       
+B=mean(mean(imageB));
+ 
+% 计算各分量的增益
+RGB=(R+G+B)/3;  
+kR=RGB/R;   
+kG=RGB/G;               
+kB=RGB/B;
+ 
+% 计算各通道变换后的灰度值
+imageR=imageR*kR;            
+imageG=imageG*kG;           
+imageB=imageB*kB;
+ 
+% 合并成三通道图像
+imageOutput=cat(3,imageR,imageG,imageB);
+ 
+% 输出图像（自动白平衡校正-灰度世界法）
+% figure;imshow(imageInput); title('原始图像');  
+% figure;imshow(imageOutput);title('白平衡后图像'); 
+figure;imshow([imageInput imageOutput]);
+</code></pre>
+<figure data-type="image" tabindex="1"><img src="https://duder-git.github.io//post-images/1688694958932.png" alt="" loading="lazy"></figure>
+<h3 id="完美反射算法">完美反射算法</h3>
+<p>假设图中最亮点就是白点，以此为白点参考对图像进行自动白平衡，亮点定义为R+G+B的最大值。</p>
+<ol>
+<li>计算每个像素点的R+G+B之和并保存；</li>
+<li>按照值的大小计算出其亮点前10%参考点阈值T；</li>
+<li>计算前10%的点的R、G、B分量的平均值；</li>
+<li>计算分量对应的增益<br>
+完美反射算法比灰度世界算法稍好，但是对亮度最亮区域不是白色的图像效果不佳。</li>
+</ol>
+<pre><code class="language-MATLAB">%close all
+clc,clear
+ 
+% 输入图像（存在颜色偏差的原始图像）
+I=im2double(imread('test2.JPG'));
+
+% 分离各个通道
+imageR=I(:,:,1);
+imageG=I(:,:,2);
+imageB=I(:,:,3);
+ 
+% 计算每个RGB灰度值之和
+sumRGB=imageR+imageG+imageB;
+ 
+% 将RGB值的大小进行排序
+sumsort=sort(sumRGB(:),'descend'); % 降序排列
+count=round(length(sumsort)*0.1);
+T=sumsort(count);
+ 
+index=sumRGB&gt;T;
+ 
+KR=max(imageR(:))/mean(imageR(index));
+KG=max(imageG(:))/mean(imageG(index));
+KB=max(imageB(:))/mean(imageB(index));
+ 
+R1=imageR*KR;
+G1=imageG*KG;
+B1=imageB*KB;
+
+out=cat(3,R1,G1,B1);
+
+% 输出图像（自动白平衡校正-完美反射法）
+figure;imshow([I,out]);
+</code></pre>
+<figure data-type="image" tabindex="2"><img src="https://duder-git.github.io//post-images/1688695723650.png" alt="" loading="lazy"></figure>
+<h3 id="动态阈值算法">动态阈值算法</h3>
+<p>动态阈值算法引入YCrBr颜色空间进行评价，其中Y表示亮度，Cr表示RGB输入信号红色部分与RGB信号亮度值之间的差异，Br表示RGB输入信号蓝色部分与RGB信号亮度值之间的差异。<br>
+YCrBr与RGB变换，在MATLAB中使用‘rgb2ycbcr’实现。</p>
+<ol>
+<li>将RGB变化到YCrCb颜色空间；</li>
+<li>对图像分区，计算每个区域的Cr、Br均值和绝对偏差；</li>
+<li>偏差大过一定阈值计入白点区域；</li>
+<li>根据白点存在区域计算白点位置；</li>
+<li>计算前10%的白点的亮度均值；</li>
+<li>计算分量对应的增益；</li>
+</ol>
+<pre><code class="language-MATLAB">%% 基于阈值的动态白平衡
+%close all
+clc
+clear
+ 
+% 输入图像（存在颜色偏差的原始图像）
+I=im2double(imread('test2.jpg'));
+ImageOutput = dynamic_awb(I);
+
+figure;imshow([I ImageOutput]);
+
+
+%% 函数
+function [output] = dynamic_awb(im)
+[m,n,~] = size(im);
+R = im(:,:,1);
+G = im(:,:,2);
+B = im(:,:,3);
+
+map = rgb2ycbcr(im);
+Y = map(:,:,1);
+Cb = map(:,:,2);
+Cr = map(:,:,3);
+
+% Y = 0.257*R+0.504*G+0.098*B+16/255;
+% Cb = -0.148*R-0.291*G+0.439*B+128/255;
+% Cr = 0.439*R-0.368*G-0.071*B+128/255;、
+
+% 将image分块4*4块
+row = m/4; % row为每分块的行数
+col = n/4; % col为列数
+%row = 10;
+%col = 10;
+count = 1;
+
+% 初始化
+MCb = 0;
+MCr = 0;
+DCb = 0;
+DCr = 0;
+for i=1:row:m
+    for j=1:col:n
+        %每分块的Cb值
+        ICb = Cb(i:1:i+row-1,j:1:j+col-1); 
+        ICr = Cr(i:1:i+row-1,j:1:j+col-1);
+
+        MICb = mean(mean(ICb)); % 分块的Cb均值
+        MICr = mean(mean(ICr)); % 分块的Cr均值
+
+        Dbt = sum(sum(abs(ICb-MICb)))/(row*col); % 分块的绝对偏差
+        Drt = sum(sum(abs(ICr-MICr)))/(row*col); % 
+        
+        if Dbt&gt;0.01 &amp;&amp; Drt&gt;0.01     % 判断该分块的
+
+            MCb(count) = MICb;
+            MCr(count) = MICr;
+            DCb(count) = Dbt;
+            DCr(count) = Drt;
+
+            count = count+1;
+        end
+        
+    end
+end
+  
+MCb = mean(MCb); % 得到分块Mb的均值
+MCr = mean(MCr);
+
+DCb = mean(DCb);
+DCr = mean(DCr);
+
+% 测试输出 [Cb,Cr]
+[MCb-0.5*DCb,2.5*DCb+MCb; 1.5*MCr-0.5*DCr, 2.5*DCr+1.5*MCr]
+
+J = zeros(m,n); % 记录候补白点的位置信息，若(i,j)位置为1，则(i,j)像素是候补白点
+  
+for i=1:1:m
+    for j=1:1:n
+        bv = abs(Cb(i,j) - (MCb + DCb*sign(MCb)));
+        rv = abs(Cr(i,j) - (1.5*MCr + DCr*sign(MCr)));
+        if (bv &lt; 1.5*DCb) &amp;&amp; (rv &lt; 1.5*DCr) % 判断是否满足候补条件
+            J(i,j) = 1;
+        end
+    end
+end
+
+% 判断成立 意味着无法筛选亮点
+if sum(sum(J))==0
+    J = ones(m,n);  % 完美反射法
+end
+candidate = Y.*J;
+candidate=sort(candidate(:),'descend'); % 降序
+kk=round(sum(sum(J))*0.1);
+min_v = candidate(kk);    % 得到前10%的最小值
+
+
+index = (Y &gt; min_v);  % 得到参考白点的亮度矩阵
+
+Ravg = mean(R(index));
+Gavg = mean(G(index));
+Bavg = mean(B(index));
+
+Ymax = double(max(max(Y))); % 亮度最大值
+ 
+Rgain = Ymax/Ravg; % 计算增益
+Ggain = Ymax/Gavg;
+Bgain = Ymax/Bavg;
+
+im(:,:,1) = R*Rgain;
+im(:,:,2) = G*Ggain;
+im(:,:,3) = B*Bgain;
+ 
+output = im;
+end
+
+</code></pre>
+<p>分割4X4图块<br>
+<img src="https://duder-git.github.io//post-images/1688698828694.png" alt="" loading="lazy"><br>
+分割40X40图块，效果就要比4X4的好很多<br>
+<img src="https://duder-git.github.io//post-images/1688699201470.png" alt="" loading="lazy"></p>
+<p>更进一步，现在是基于10%白点的亮度均值做增益，可以根据白点的色温分布做矫正<br>
+<a href="https://blog.csdn.net/wzwxiaozheng/article/details/40586293">自动白平衡(AWB)算法---2,色温计算</a></p>
+
+            </div>
+            
+            
+              <div class="next-post">
+                <div class="next">下一篇</div>
+                <a href="https://duder-git.github.io/post/wu-li-mo-xing-unet-chong-jian/">
+                  <h3 class="post-title">
+                    物理模型+UNet重建
+                  </h3>
+                </a>
+              </div>
+            
+
+            
+              
+                <div id="gitalk-container" data-aos="fade-in"></div>
+              
+
+              
+            
+
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+<script type="application/javascript">
+
+AOS.init();
+
+var app = new Vue({
+  el: '#app',
+  data: {
+    menuVisible: false,
+  },
+})
+
+</script>
+
+
+
+
+
+  
+    <script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+    <script>
+
+      var gitalk = new Gitalk({
+        clientID: '67e2d5e357b5ec7e7b54',
+        clientSecret: 'c407722209762f44616a0119d6e2cf53384fbc0c',
+        repo: 'Duder-git.github.io',
+        owner: 'Duder-git',
+        admin: ['Duder-git'],
+        id: (location.pathname).substring(0, 49),      // Ensure uniqueness and length less than 50
+        distractionFreeMode: false  // Facebook-like distraction free mode
+      })
+
+      gitalk.render('gitalk-container')
+
+    </script>
+  
+
+  
+
+
+
+
+  </body>
+</html>

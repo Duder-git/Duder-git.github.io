@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" >
+
+<title>Gridea+github pages搭建blog | Duder&#39;s Blog</title>
+
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+<link rel="shortcut icon" href="https://duder-git.github.io//favicon.ico?v=1717654629635">
+<link rel="stylesheet" href="https://duder-git.github.io//styles/main.css">
+
+
+  
+    <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css" />
+  
+
+  
+
+
+<link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+
+
+
+    <meta name="description" content="之前使用hugo搭建blog，能用是能用，就是每次使用起来太费事了
+前阵子听同学说还有这个Gridea管理软件，今天正好有空，就尝试一下，并写一写搭建过程踩的“坑”。
+
+首先就是Gridea官网
+
+如果你点击申请注册，那么恭喜你，点错了。
+..." />
+    <meta name="keywords" content="日常" />
+  </head>
+  <body>
+    <div id="app" class="main">
+
+      <div class="sidebar" :class="{ 'full-height': menuVisible }">
+  <div class="top-container" data-aos="fade-right">
+    <div class="top-header-container">
+      <a class="site-title-container" href="https://duder-git.github.io/">
+        <img src="https://duder-git.github.io//images/avatar.png?v=1717654629635" class="site-logo">
+        <h1 class="site-title">Duder&#39;s Blog</h1>
+      </a>
+      <div class="menu-btn" @click="menuVisible = !menuVisible">
+        <div class="line"></div>
+      </div>
+    </div>
+    <div>
+      
+        
+          <a href="/" class="site-nav">
+            首页
+          </a>
+        
+      
+        
+          <a href="/archives" class="site-nav">
+            归档
+          </a>
+        
+      
+        
+          <a href="/tags" class="site-nav">
+            标签
+          </a>
+        
+      
+        
+          <a href="/post/about" class="site-nav">
+            关于
+          </a>
+        
+      
+    </div>
+  </div>
+  <div class="bottom-container" data-aos="flip-up" data-aos-offset="0">
+    <div class="social-container">
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    </div>
+    <div class="site-description">
+      苟日新 日日新 又日新
+    </div>
+    <div class="site-footer">
+      Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a> | <a class="rss" href="https://duder-git.github.io//atom.xml" target="_blank">RSS</a>
+    </div>
+  </div>
+</div>
+
+
+      <div class="main-container">
+        <div class="content-container" data-aos="fade-up">
+          <div class="post-detail">
+            <h2 class="post-title">Gridea+github pages搭建blog</h2>
+            <div class="post-date">2023-05-22</div>
+            
+            <div class="post-content" v-pre>
+              <p>之前使用hugo搭建blog，能用是能用，就是每次使用起来太费事了<br>
+前阵子听同学说还有这个Gridea管理软件，今天正好有空，就尝试一下，并写一写搭建过程踩的“坑”。</p>
+<!-- more -->
+<p>首先就是<a href="https://gridea.dev/">Gridea官网</a><br>
+<img src="https://duder-git.github.io//post-images/1684725918613.JPG" alt="" loading="lazy"><br>
+如果你点击申请注册，那么恭喜你，点错了。<br>
+这个是Gridea官网的付费服务，会有一个自己https://duder.ongridea.com/的网站，怎么说，确实挺好用的，但是一年$10价格让我死心，有这钱不如租个服务器自己搭了，毕竟就是<s>想白嫖吗</s></p>
+<p>正确操作是点右上角<strong>开源客户端</strong>，这才是我们想要的Gridea</p>
+<p>第二步就是配置Gridea，这里参考Suremotoo的<a href="https://zhuanlan.zhihu.com/p/385692707">快速上手Gridea</a><br>
+我只说两个注意事项<br>
+<img src="https://duder-git.github.io//post-images/1684726519606.JPG" alt="" loading="lazy"></p>
+<blockquote>
+<ol>
+<li>这里htpps 不要重复写，会导致最终上传的链接失败，检查index发现重复https头，但是在链接和上传时都没有问题，就迷惑</li>
+<li>git分支mian，从2021年5月，新建的git仓库都是main分支，这里要注意一下</li>
+</ol>
+</blockquote>
+<p>其他还有些博客上的问题<br>
+比如图标问题，这个困扰我好久，最后发现你只管传，Gridea最后会根据你的图片生成favicon.ico，也就是说他内部链接，不需要传图像超链接什么的<br>
+还有就是blog图片问题，从编辑器右侧插入本地图片，会自动上传到post-images中，还有一种图片上传方式就是手动拖到images中，然后用相对路径引用。<br>
+比如这样<img src="/images/avatar.png" alt="" loading="lazy"><br>
+但是右侧预览的时候没法显示，需要在主菜单预览才能看到，最后上传git能看到。<br>
+<img src="file://D:/%E6%96%87%E6%A1%A3/Gridea%E6%96%87%E6%A1%A3/images/avatar.png" alt="" loading="lazy"></p>
+
+            </div>
+            
+              <div class="tag-container">
+                
+                  <a href="https://duder-git.github.io/tag/ri-chang/" class="tag">
+                    日常
+                  </a>
+                
+              </div>
+            
+            
+              <div class="next-post">
+                <div class="next">下一篇</div>
+                <a href="https://duder-git.github.io/post/符号代数/">
+                  <h3 class="post-title">
+                    Matlab中的符号代数
+                  </h3>
+                </a>
+              </div>
+            
+
+            
+              
+                <div id="gitalk-container" data-aos="fade-in"></div>
+              
+
+              
+            
+
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+<script type="application/javascript">
+
+AOS.init();
+
+var app = new Vue({
+  el: '#app',
+  data: {
+    menuVisible: false,
+  },
+})
+
+</script>
+
+
+
+
+
+  
+    <script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+    <script>
+
+      var gitalk = new Gitalk({
+        clientID: '67e2d5e357b5ec7e7b54',
+        clientSecret: 'c407722209762f44616a0119d6e2cf53384fbc0c',
+        repo: 'Duder-git.github.io',
+        owner: 'Duder-git',
+        admin: ['Duder-git'],
+        id: (location.pathname).substring(0, 49),      // Ensure uniqueness and length less than 50
+        distractionFreeMode: false  // Facebook-like distraction free mode
+      })
+
+      gitalk.render('gitalk-container')
+
+    </script>
+  
+
+  
+
+
+
+
+  </body>
+</html>

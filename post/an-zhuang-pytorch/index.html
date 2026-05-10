@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" >
+
+<title>安装Pytorch | Duder&#39;s Blog</title>
+
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+<link rel="shortcut icon" href="https://duder-git.github.io//favicon.ico?v=1717654629635">
+<link rel="stylesheet" href="https://duder-git.github.io//styles/main.css">
+
+
+  
+    <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css" />
+  
+
+  
+
+
+<link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+
+
+
+    <meta name="description" content="使用Anaconda 管理环境，直接搜索下载pytorch包，能够看到版本信息，却在pycharm中无法使用。
+查找发现系统没装Tootkit，应该是上次重装系统后没搞了。
+
+1. 查看当前设备是否具有CUDA Toolkit
+nvidia..." />
+    <meta name="keywords" content="" />
+  </head>
+  <body>
+    <div id="app" class="main">
+
+      <div class="sidebar" :class="{ 'full-height': menuVisible }">
+  <div class="top-container" data-aos="fade-right">
+    <div class="top-header-container">
+      <a class="site-title-container" href="https://duder-git.github.io/">
+        <img src="https://duder-git.github.io//images/avatar.png?v=1717654629635" class="site-logo">
+        <h1 class="site-title">Duder&#39;s Blog</h1>
+      </a>
+      <div class="menu-btn" @click="menuVisible = !menuVisible">
+        <div class="line"></div>
+      </div>
+    </div>
+    <div>
+      
+        
+          <a href="/" class="site-nav">
+            首页
+          </a>
+        
+      
+        
+          <a href="/archives" class="site-nav">
+            归档
+          </a>
+        
+      
+        
+          <a href="/tags" class="site-nav">
+            标签
+          </a>
+        
+      
+        
+          <a href="/post/about" class="site-nav">
+            关于
+          </a>
+        
+      
+    </div>
+  </div>
+  <div class="bottom-container" data-aos="flip-up" data-aos-offset="0">
+    <div class="social-container">
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    </div>
+    <div class="site-description">
+      苟日新 日日新 又日新
+    </div>
+    <div class="site-footer">
+      Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a> | <a class="rss" href="https://duder-git.github.io//atom.xml" target="_blank">RSS</a>
+    </div>
+  </div>
+</div>
+
+
+      <div class="main-container">
+        <div class="content-container" data-aos="fade-up">
+          <div class="post-detail">
+            <h2 class="post-title">安装Pytorch</h2>
+            <div class="post-date">2023-07-02</div>
+            
+            <div class="post-content" v-pre>
+              <p>使用Anaconda 管理环境，直接搜索下载pytorch包，能够看到版本信息，却在pycharm中无法使用。<br>
+查找发现系统没装Tootkit，应该是上次重装系统后没搞了。</p>
+<!-- more -->
+<h2 id="1-查看当前设备是否具有cuda-toolkit">1. 查看当前设备是否具有CUDA Toolkit</h2>
+<pre><code class="language-cmd">nvidia-smi
+</code></pre>
+<p><img src="https://duder-git.github.io//post-images/1688268475969.JPG" alt="" loading="lazy"><br>
+这里显示CUDA版本 11.7</p>
+<p>查看对应CUDA Toolkit版本</p>
+<pre><code class="language-cmd">nvcc -V
+</code></pre>
+<h2 id="2-当前设备没有cuda-toolkit">2. 当前设备没有CUDA Toolkit</h2>
+<h3 id="查找对应cuda-toolkit">查找对应CUDA Toolkit</h3>
+<p>win搜索栏搜索NVIDIA<br>
+打开NVIDIA Control Panel<br>
+在左下角系统信息中，可以看到驱动程序版本，本机GTX1070 对应版本：516.94<br>
+同样，在组件栏中可以找到<br>
+<img src="https://duder-git.github.io//post-images/1688269919514.JPG" alt="CUDA版本" loading="lazy"></p>
+<p>在<a href="https://docs.nvidia.com/cuda/cuda-toolkit-release-notes/index.html">官网查表</a>找到对应CUDA Toolkit版本<br>
+<img src="https://duder-git.github.io//post-images/1688270298118.JPG" alt="Toolkit对应表" loading="lazy"></p>
+<h3 id="下载cuda-toolkit">下载CUDA Toolkit</h3>
+<p>确定好所需CUDA Toolkit版本，在<a href="https://developer.nvidia.com/cuda-toolkit-archive">官网</a>下载,这里选择11.7.1<br>
+<img src="https://duder-git.github.io//post-images/1688270362885.JPG" alt="下载链接" loading="lazy"><br>
+下载后按流程安装</p>
+<h3 id="验证是否安装成功">验证是否安装成功</h3>
+<p>cmd 输入 nvcc -V<br>
+<img src="https://duder-git.github.io//post-images/1688275157012.JPG" alt="" loading="lazy"><br>
+成功</p>
+<h2 id="3-找到pytorch版本并安装">3. 找到Pytorch版本并安装</h2>
+<p><a href="https://pytorch.org/get-started/locally/">Pytorch官网</a><br>
+<img src="https://duder-git.github.io//post-images/1688274996128.JPG" alt="" loading="lazy"></p>
+<p>在conda中打开环境命令行界面<br>
+！！注意使用管理员权限！！</p>
+<pre><code>conda install pytorch torchvision torchaudio pytorch-cuda=11.7 -c pytorch -c nvidia
+</code></pre>
+<h2 id="4-检查是否安装成功">4. 检查是否安装成功</h2>
+<pre><code class="language-Python">import torch
+x = torch.rand(5, 3)
+print(x)
+</code></pre>
+<p>检查是否可以使用当前GPU</p>
+<pre><code class="language-Python">import torch
+torch.cuda.is_available()
+</code></pre>
+<figure data-type="image" tabindex="1"><img src="https://duder-git.github.io//post-images/1688276987699.JPG" alt="" loading="lazy"></figure>
+
+            </div>
+            
+            
+              <div class="next-post">
+                <div class="next">下一篇</div>
+                <a href="https://duder-git.github.io/post/剑指offer 26. 树的子结构/">
+                  <h3 class="post-title">
+                    剑指 Offer 26. 树的子结构
+                  </h3>
+                </a>
+              </div>
+            
+
+            
+              
+                <div id="gitalk-container" data-aos="fade-in"></div>
+              
+
+              
+            
+
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+<script type="application/javascript">
+
+AOS.init();
+
+var app = new Vue({
+  el: '#app',
+  data: {
+    menuVisible: false,
+  },
+})
+
+</script>
+
+
+
+
+
+  
+    <script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+    <script>
+
+      var gitalk = new Gitalk({
+        clientID: '67e2d5e357b5ec7e7b54',
+        clientSecret: 'c407722209762f44616a0119d6e2cf53384fbc0c',
+        repo: 'Duder-git.github.io',
+        owner: 'Duder-git',
+        admin: ['Duder-git'],
+        id: (location.pathname).substring(0, 49),      // Ensure uniqueness and length less than 50
+        distractionFreeMode: false  // Facebook-like distraction free mode
+      })
+
+      gitalk.render('gitalk-container')
+
+    </script>
+  
+
+  
+
+
+
+
+  </body>
+</html>

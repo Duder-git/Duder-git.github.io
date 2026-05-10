@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" >
+
+<title>图像读取与显示 | Duder&#39;s Blog</title>
+
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+<link rel="shortcut icon" href="https://duder-git.github.io//favicon.ico?v=1717654629635">
+<link rel="stylesheet" href="https://duder-git.github.io//styles/main.css">
+
+
+  
+    <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css" />
+  
+
+  
+
+
+<link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+
+
+
+    <meta name="description" content="图像读取与显示
+读取并显示raw格式文件
+已知文件data1.raw是按照裸数据的形式保存的一张图片，图像大小512×512，像素存储的数据类型为float型，请编写代码将该图像读出，并以两种不同窗口窗位显示该图像。
+使用fopen()打开..." />
+    <meta name="keywords" content="医学图像处理,MATLAB" />
+  </head>
+  <body>
+    <div id="app" class="main">
+
+      <div class="sidebar" :class="{ 'full-height': menuVisible }">
+  <div class="top-container" data-aos="fade-right">
+    <div class="top-header-container">
+      <a class="site-title-container" href="https://duder-git.github.io/">
+        <img src="https://duder-git.github.io//images/avatar.png?v=1717654629635" class="site-logo">
+        <h1 class="site-title">Duder&#39;s Blog</h1>
+      </a>
+      <div class="menu-btn" @click="menuVisible = !menuVisible">
+        <div class="line"></div>
+      </div>
+    </div>
+    <div>
+      
+        
+          <a href="/" class="site-nav">
+            首页
+          </a>
+        
+      
+        
+          <a href="/archives" class="site-nav">
+            归档
+          </a>
+        
+      
+        
+          <a href="/tags" class="site-nav">
+            标签
+          </a>
+        
+      
+        
+          <a href="/post/about" class="site-nav">
+            关于
+          </a>
+        
+      
+    </div>
+  </div>
+  <div class="bottom-container" data-aos="flip-up" data-aos-offset="0">
+    <div class="social-container">
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    </div>
+    <div class="site-description">
+      苟日新 日日新 又日新
+    </div>
+    <div class="site-footer">
+      Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a> | <a class="rss" href="https://duder-git.github.io//atom.xml" target="_blank">RSS</a>
+    </div>
+  </div>
+</div>
+
+
+      <div class="main-container">
+        <div class="content-container" data-aos="fade-up">
+          <div class="post-detail">
+            <h2 class="post-title">图像读取与显示</h2>
+            <div class="post-date">2022-04-25</div>
+            
+            <div class="post-content" v-pre>
+              <h1 id="图像读取与显示">图像读取与显示</h1>
+<h2 id="读取并显示raw格式文件">读取并显示raw格式文件</h2>
+<p>已知文件<code>data1.raw</code>是按照裸数据的形式保存的一张图片，图像大小512×512，像素存储的数据类型为float型，请编写代码将该图像读出，并以两种不同窗口窗位显示该图像。</p>
+<p>使用<code>fopen()</code>打开文件</p>
+<p>使用<code>fread()</code>以<code>float</code>格式读取文件具体内容</p>
+<p>使用<code>fclose()</code>关闭文件</p>
+<pre><code class="language-matlab">% 本程序用于读取raw格式数据
+clc,clear
+
+% 读取raw数据
+f1 = fopen('data1.raw','rb');
+data = fread(f1,[512,512],'float');
+fclose(f1);
+</code></pre>
+<p>使用<code>subplot()</code>构建二分隔</p>
+<p>使用<code>imshow()</code>控制图像颜色范围</p>
+<pre><code class="language-matlab">%% 绘制图窗
+figure
+subplot(1,2,1)
+imshow(data,[])
+title(&quot;data1.raw []&quot;)
+subplot(1,2,2)
+imshow(data,[0,0.5])
+title(&quot;data1.raw [0,0.5]&quot;)
+</code></pre>
+<img src="https://s2.loli.net/2022/04/25/87CwT6IGXSMWEAB.png" alt="data1" style="zoom: 67%;" />
+<h2 id="读取并显示自定义格式文件">读取并显示自定义格式文件</h2>
+<p>已知文件<code>data2.abc</code>以一种自定义格式的存储的一张图片。</p>
+<p>文件分为两部分，第一部分是128个字节的文件头，第二部分是逐行存储的该图片的各个像素值。</p>
+<p>在128个字节的文件头中，1-4字节按照int类型存储图像的宽，5-8字节按照int类型存储图像的高，第9个字节按照char类型存储数据类型的标识字。</p>
+<p>关于数量类型标识字的定义如下：</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">void</th>
+<th style="text-align:center">bit</th>
+<th style="text-align:center">char</th>
+<th style="text-align:center">unsigned char</th>
+<th style="text-align:center">short</th>
+<th style="text-align:center">unsigned short</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">0</td>
+<td style="text-align:center">1</td>
+<td style="text-align:center">2</td>
+<td style="text-align:center">3</td>
+<td style="text-align:center">4</td>
+<td style="text-align:center">5</td>
+</tr>
+<tr>
+<td style="text-align:center">int</td>
+<td style="text-align:center">unsigned int</td>
+<td style="text-align:center">long</td>
+<td style="text-align:center">unsigned long</td>
+<td style="text-align:center">float</td>
+<td style="text-align:center">double</td>
+</tr>
+<tr>
+<td style="text-align:center">6</td>
+<td style="text-align:center">7</td>
+<td style="text-align:center">8</td>
+<td style="text-align:center">9</td>
+<td style="text-align:center">10</td>
+<td style="text-align:center">11</td>
+</tr>
+</tbody>
+</table>
+<p>请编写代码将该图像读出，并以合适的窗口窗位显示该图像，另以伪彩色的形式显示该图像。</p>
+<p>使用<code>fopen()</code>打开文件</p>
+<p>使用<code>fread()</code>以<code>int</code>格式读取文件具体内容，前八个字节用于存放尺寸信息，正好为两个<code>int</code>大小。指针指在第九个字节上，以<code>char</code>类型读取，为文件储存格式</p>
+<p>使用<code>fseek()</code>跳转到129字节位置，以指定尺寸<code>fsize </code>读取图像信息</p>
+<p>使用<code>fclose()</code>关闭文件</p>
+<pre><code class="language-matlab">%% 读取自定义数据
+f2 = fopen('data2.abc','rb');
+fsize = fread(f2,[1,2],'int');
+fsize = [fsize(2),fsize(1)];
+ftell(f2)
+format = fread(f2,[1,1],'char');
+ftell(f2)
+switch format
+ case 0
+ str = 'void';
+ case 1
+ str = 'bit';
+ case 2
+ str = 'char';
+ case 3
+ str = 'unsigned char';
+ case 4
+ str = 'short';
+ case 5
+ str = 'unsigned short';
+ case 6
+ str = 'int';
+ case 7
+ str = 'unsigned int';
+ case 8
+ str = 'long';
+ case 9
+ str = 'unsigned long';
+ case 10
+ str = 'float';
+ case 11
+ str = 'double';
+end
+
+% 跳转到图像存储空间
+fseek(f2,129,'bof');
+ftell(f2)
+
+data2= fread(f2,fsize,str);
+fclose(f2);
+</code></pre>
+<p>使用<code>imshow()</code>显示图像</p>
+<p>使用<code>colormap</code>为图像赋伪彩</p>
+<pre><code class="language-matlab">%%
+figure
+imshow(data2,[]);
+title(&quot;data2.abc&quot;)
+figure
+imshow(data2,[]);
+colormap default;
+title(&quot;data2.abc, colormap default&quot;)
+</code></pre>
+<p><img src="https://s2.loli.net/2022/05/10/5lQdTYms8vufPHR.png" alt="data2-1" style="zoom: 33%;" /><img src="https://s2.loli.net/2022/05/10/MvThj8m3b1N6I75.png" alt="data2" style="zoom: 33%;" /></p>
+
+            </div>
+            
+              <div class="tag-container">
+                
+                  <a href="https://duder-git.github.io/tag/LHeF8-EOa/" class="tag">
+                    医学图像处理
+                  </a>
+                
+                  <a href="https://duder-git.github.io/tag/7hazwf96d/" class="tag">
+                    MATLAB
+                  </a>
+                
+              </div>
+            
+            
+              <div class="next-post">
+                <div class="next">下一篇</div>
+                <a href="https://duder-git.github.io/post/about/">
+                  <h3 class="post-title">
+                    about
+                  </h3>
+                </a>
+              </div>
+            
+
+            
+              
+                <div id="gitalk-container" data-aos="fade-in"></div>
+              
+
+              
+            
+
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+<script type="application/javascript">
+
+AOS.init();
+
+var app = new Vue({
+  el: '#app',
+  data: {
+    menuVisible: false,
+  },
+})
+
+</script>
+
+
+
+
+
+  
+    <script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+    <script>
+
+      var gitalk = new Gitalk({
+        clientID: '67e2d5e357b5ec7e7b54',
+        clientSecret: 'c407722209762f44616a0119d6e2cf53384fbc0c',
+        repo: 'Duder-git.github.io',
+        owner: 'Duder-git',
+        admin: ['Duder-git'],
+        id: (location.pathname).substring(0, 49),      // Ensure uniqueness and length less than 50
+        distractionFreeMode: false  // Facebook-like distraction free mode
+      })
+
+      gitalk.render('gitalk-container')
+
+    </script>
+  
+
+  
+
+
+
+
+  </body>
+</html>
