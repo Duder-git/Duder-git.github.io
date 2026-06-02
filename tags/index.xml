@@ -6,11 +6,65 @@
     <description>Recent content in Tags on Duder`s Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
-    <lastBuildDate>Sun, 10 May 2026 00:00:00 +0000</lastBuildDate><atom:link href="https://duder-git.github.io/tags/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Tue, 02 Jun 2026 23:06:36 +0800</lastBuildDate><atom:link href="https://duder-git.github.io/tags/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>COMSOL</title>
+      <link>https://duder-git.github.io/tags/comsol/</link>
+      <pubDate>Tue, 02 Jun 2026 23:06:36 +0800</pubDate>
+      
+      <guid>https://duder-git.github.io/tags/comsol/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>LabVIEW</title>
+      <link>https://duder-git.github.io/tags/labview/</link>
+      <pubDate>Tue, 02 Jun 2026 23:06:36 +0800</pubDate>
+      
+      <guid>https://duder-git.github.io/tags/labview/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>MATLAB</title>
+      <link>https://duder-git.github.io/tags/matlab/</link>
+      <pubDate>Tue, 02 Jun 2026 23:06:36 +0800</pubDate>
+      
+      <guid>https://duder-git.github.io/tags/matlab/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>MPI</title>
+      <link>https://duder-git.github.io/tags/mpi/</link>
+      <pubDate>Tue, 02 Jun 2026 23:06:36 +0800</pubDate>
+      
+      <guid>https://duder-git.github.io/tags/mpi/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Python</title>
+      <link>https://duder-git.github.io/tags/python/</link>
+      <pubDate>Tue, 02 Jun 2026 23:06:36 +0800</pubDate>
+      
+      <guid>https://duder-git.github.io/tags/python/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>SOLIDWORKS</title>
+      <link>https://duder-git.github.io/tags/solidworks/</link>
+      <pubDate>Tue, 02 Jun 2026 23:06:36 +0800</pubDate>
+      
+      <guid>https://duder-git.github.io/tags/solidworks/</guid>
+      <description></description>
+    </item>
+    
     <item>
       <title>AI</title>
       <link>https://duder-git.github.io/tags/ai/</link>
-      <pubDate>Sun, 10 May 2026 00:00:00 +0000</pubDate>
+      <pubDate>Tue, 02 Jun 2026 00:00:00 +0000</pubDate>
       
       <guid>https://duder-git.github.io/tags/ai/</guid>
       <description></description>
@@ -19,7 +73,7 @@
     <item>
       <title>Claude</title>
       <link>https://duder-git.github.io/tags/claude/</link>
-      <pubDate>Sun, 10 May 2026 00:00:00 +0000</pubDate>
+      <pubDate>Tue, 02 Jun 2026 00:00:00 +0000</pubDate>
       
       <guid>https://duder-git.github.io/tags/claude/</guid>
       <description></description>
@@ -28,18 +82,9 @@
     <item>
       <title>工具</title>
       <link>https://duder-git.github.io/tags/%E5%B7%A5%E5%85%B7/</link>
-      <pubDate>Sun, 10 May 2026 00:00:00 +0000</pubDate>
+      <pubDate>Tue, 02 Jun 2026 00:00:00 +0000</pubDate>
       
       <guid>https://duder-git.github.io/tags/%E5%B7%A5%E5%85%B7/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>MATLAB</title>
-      <link>https://duder-git.github.io/tags/matlab/</link>
-      <pubDate>Wed, 12 Apr 2023 19:46:15 +0800</pubDate>
-      
-      <guid>https://duder-git.github.io/tags/matlab/</guid>
       <description></description>
     </item>
     
